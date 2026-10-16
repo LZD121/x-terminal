@@ -7,15 +7,14 @@ quick-task: add-an-update-verb-that-upgrades-the-installed-binary
 commits:
   - a7c872c  # 261016-ks5 task 1, the release wire, the verb's row, --check, the transport allowlist's fourth root
   - f94608c  # 261016-ks5 task 2, the download, the published digest, the atomic replacement, the seventh persistence destination
-  - 17f7a08  # 261016-ks5 task 3 (executed part), the RUNBOOK section and the coverage rows
+  - 17f7a08  # 261016-ks5 task 3, the RUNBOOK section and the coverage rows
 scope: |
-  Tasks 1 and 2 in full. Task 3 only as far as it needs no Release newer than v1.1.0: the
-  RUNBOOK.md section, the internal/cli/runbook_test.go coverage rows, and the anonymous probe of
-  the existing v1.1.0 Release including `update --check` against it, live. The live old -> new
-  upgrade proof is NOT performed and is marked pending below, with its reason: it requires a
-  Release newer than v1.1.0, and publishing one is the operator's decision on a public repository.
-  Nothing was pushed, no tag was created, and no file outside the working tree was touched — in
-  particular ~/.local/bin/x-terminal is exactly the binary it was (a working-tree build).
+  Tasks 1, 2 and 3 in full, including Task 3's live gate. The tag v1.2.0 and its Release were
+  published by the operator/dispatcher, not by this executor, which pushed nothing, created no tag
+  and touched no file outside this working tree and /tmp. Section 1 records the read half of the
+  gate against the v1.1.0 Release; section 2 records the install half, the live v1.1.0 -> v1.2.0
+  upgrade, with both --version lines and both digests. ~/.local/bin/x-terminal now holds the
+  published v1.2.0 asset byte for byte (digest c451ac5d...), where it held a working-tree build.
 verified: |
   CGO_ENABLED=0 go test ./... -count=1            1738 passed in 23 packages, no failures
   CGO_ENABLED=0 go vet ./...                      clean
@@ -27,12 +26,20 @@ verified: |
                                                   audit 2 findings; file removed, back to 0
   planted persistence violation                   internal/release/other.go reported at :5, audit
                                                   2 findings; file removed, back to 0
-  x-terminal update --check (live, anonymous)     recorded below, exit 0
+  x-terminal update --check (live, anonymous)     section 1, exit 0
+  x-terminal update (live, anonymous)             section 2, exit 0 on attempt 16; the installed
+                                                  digest equals the published v1.2.0 digest
+  x-terminal --version, after the upgrade         x-terminal v1.2.0 (6a184c6393f0) go1.27.2 linux/amd64
+  second x-terminal update (live, anonymous)      "this build (v1.2.0) is the latest release", exit 0,
+                                                  installed digest unchanged
 unverified: |
-  The live old -> new upgrade proof (plan Task 3 steps 2, 5 and 6): installing the published
-  v1.1.0 asset by hand over ~/.local/bin/x-terminal, then upgrading that stamped build to a newer
-  Release and comparing the two `--version` lines and both digests. Pending the operator's choice
-  between publishing v1.2.0 and upgrading the current unstamped binary to the existing v1.1.0.
+  Nothing the plan's live gate asked for is unrun. One literal step is impossible rather than
+  unproven: the published v1.1.0 asset cannot run `update` at all (`unknown command: update`, exit
+  2), because it was built from a1c2e1b, before the verb existed. The upgrade was therefore
+  performed from a v1.1.0-stamped build of master's tip — the plan's own Task 1 rig, and the only
+  shape in which an old -> new upgrade of the shipped verb is observable. Section 2 says so, records
+  what the 16 attempts measured, and names the environment fact behind them (the transport's 10 s
+  TLS handshake budget against a path whose handshakes measure 5.8-37.7 s through this proxy).
 ---
 
 # 261016-ks5 SUMMARY — `x-terminal update` reads the Release, verifies the digest it publishes, and replaces the running binary atomically
@@ -43,7 +50,7 @@ unverified: |
 |---|---|---|
 | 1 | `a7c872c` | `internal/release/release.go` (the GET-only release wire, tag ordering, the release's own asset picker, `session.Secret` token, `Client.Format`), `internal/cli/update.go` + its row in `internal/cli/cli.go`, `--check` end to end, `internal/audit/readonly.go`'s fourth builder root with `TestTransportPassesTheReleaseRoot`, and the verb list row in `internal/cli/cli_test.go` |
 | 2 | `f94608c` | `internal/release/install.go` (resolve, writability check, digest parse, verify, three shape checks, atomic replace), `Client.Fetch`, the verb's install path and `--force`, `internal/audit/guards.go`'s seventh destination and its anchor, `persistenceDestinationNames`/`persistenceBaseTree`/`TestPersistenceFailsAWriteBesideTheInstaller` |
-| 3 (part) | `17f7a08` | `RUNBOOK.md`'s `## The update path` section and `internal/cli/runbook_test.go`'s three joins (coverage rows, `builtCommands`, `classifierWords`); the live probes below |
+| 3 | `17f7a08` | `RUNBOOK.md`'s `## The update path` section and `internal/cli/runbook_test.go`'s three joins (coverage rows, `builtCommands`, `classifierWords`); the live gate is recorded in sections 1 and 2 |
 
 ### The shipped surface
 
@@ -93,7 +100,7 @@ The transport allowlist (`requestBuilderOK`) now names four roots — `internal/
 comment in the voice of the other three, no exemption, no widened method arm, and no method
 constant other than the existing GET spelling.
 
-## 1. The live gate, executed part — 2026-10-16, anonymously (`env -u GH_TOKEN -u GITHUB_TOKEN`), proxy `http://127.0.0.1:7897`
+## 1. The live gate, read half — 2026-10-16, anonymously (`env -u GH_TOKEN -u GITHUB_TOKEN`), proxy `http://127.0.0.1:7897`
 
 Every attempt below is a hand-made attempt with several seconds between attempts; none of them is a
 loop, and every failure recorded here is the measured proxy flakiness rather than a verb defect.
@@ -165,31 +172,122 @@ update: the release is not reachable: release: GET https://api.github.com/repos/
 exit 1
 ```
 
-## 2. PENDING — the live old → new upgrade proof
+## 2. The live old → new upgrade proof, v1.1.0 → v1.2.0
 
-**Not performed, and not written as though it had been.** Plan Task 3's steps 2, 5 and 6 need a
-Release newer than `v1.1.0`: step 3 of that plan is `git tag v1.2.0 && git push origin v1.2.0`,
-which publishes a second Release on a public repository and cannot be withdrawn quietly. That is
-the operator's decision and it has not been taken, so this executor stopped short of it, and it
-also did not install the published `v1.1.0` asset over `~/.local/bin/x-terminal` by hand (step 2),
-because that is the "before" state of a proof whose second half cannot run yet.
+Run on 2026-10-16, 08:19–08:35Z, from the repository root, anonymously (`env -u GH_TOKEN -u
+GITHUB_TOKEN`), through the same proxy as section 1. `v1.2.0` is the operator's tag at `6a184c6`;
+this executor pushed nothing. Every attempt below is a hand-made, spaced attempt — none of them is a
+loop — and every one that failed is recorded with what it printed.
 
-What remains unproven, precisely:
+### 2.1 The "before" state, installed by hand (the README's documented path)
 
-- that `x-terminal update` (not `--check`) downloads the asset, verifies the published digest,
-  replaces the installed binary, and that the *next* launch's `--version` reports the new tag;
-- that the installed file's digest equals the Release's own published digest for it;
-- that a second `update` on the upgraded machine prints the up-to-date line, exits 0 and leaves the
-  installed file's digest unchanged.
+The published `v1.1.0` asset was fetched anonymously and verified before it was installed:
 
-What *is* proven about that path: every arm of it hermetically (`f94608c`'s tests assert the target's
-bytes, its `0755` mode, its changed inode, the four named failure states leaving the target
-byte-identical, `--force` not reaching past the checks), and the live read half above. The install
-path's own live run is the only missing evidence.
+- `x-terminal_v1.1.0_linux_amd64.sha256` → `200` in 27.0 s after 1 redirect (attempt 1)
+- `x-terminal_v1.1.0_linux_amd64` → `200` in 20.7 s, **14,352,544 bytes** after 1 redirect (attempt
+  1) — the size the v1.1.0 API publishes for it
+- `sha256sum -c x-terminal_v1.1.0_linux_amd64.sha256` → `x-terminal_v1.1.0_linux_amd64: OK`
+- `install -m 0755 … ~/.local/bin/x-terminal` → `x-terminal v1.1.0 (a1c2e1be5d41) go1.27.2
+  linux/amd64`, digest `ac4057ceb27f8dac69d1bd779f6b01425735e6354829fc77cdd5c106b4b06faf`. What it
+  replaced: the working-tree build, `x-terminal (working tree build) go1.27.2 linux/amd64`, digest
+  `c879808449a7093c999d38806e8c86bd2aa5810866c0d7fe78fd145ccdd03aef`
 
-The dispatcher's note: resuming needs **either** the operator's approval to push `v1.2.0` **or** a
-decision to accept `v1.1.0` as the target for the currently unstamped `~/.local/bin/x-terminal`
-(which would prove the "not a release" → `--force` arm live instead of the old → new arm).
+**Measured fact that changes the plan's step 2:** the published `v1.1.0` asset does not carry the verb
+at all — it is the build of `a1c2e1b`, which predates it:
+
+```
+$ x-terminal update
+unknown command: update
+usage: x-terminal [command] [args...]
+exit 2
+```
+
+So an upgrade cannot start from that binary, and the plan's "before" state is observable only as a
+`v1.1.0`-stamped build **of a tree that has the verb**. That is the plan's own Task 1 rig, and it is
+what this proof's "before" state is:
+
+```
+$ CGO_ENABLED=0 go build -trimpath -ldflags "-X github.com/LZD121/x-terminal/internal/cli.version=v1.1.0 \
+    -X github.com/LZD121/x-terminal/internal/cli.commit=6a184c6393f0" -o /tmp/ks5-live/before-v1.1.0-stamped ./cmd/x-terminal
+$ install -m 0755 /tmp/ks5-live/before-v1.1.0-stamped ~/.local/bin/x-terminal
+$ x-terminal --version
+x-terminal v1.1.0 (6a184c6393f0) go1.27.2 linux/amd64
+$ sha256sum ~/.local/bin/x-terminal
+f3e478ee2b8d271fa3f2e20cb238816104d6fcee27a1e12da2efa52ca84e63e2  /home/lzd/.local/bin/x-terminal
+```
+
+### 2.2 `x-terminal update` — the upgrade, verbatim
+
+Succeeded on **attempt 16** of 16 spaced attempts (the fifteen before it are in 2.4):
+
+```
+$ env -u GH_TOKEN -u GITHUB_TOKEN x-terminal update
+x-terminal v1.2.0 is available (this build is v1.1.0)
+replacing /home/lzd/.local/bin/x-terminal (this build v1.1.0) with v1.2.0
+verified against x-terminal_v1.2.0_linux_amd64.sha256
+replaced /home/lzd/.local/bin/x-terminal with v1.2.0
+the process that ran this is still the old image: the next launch reports v1.2.0
+v1.1.0 -> v1.2.0
+exit 0
+```
+
+Both digests — the expected value fetched from the Release by hand, and the installed file read
+afterwards — are the same 64 hex digits. This is the only thing that proves the bytes installed are
+the bytes published:
+
+```
+published  (x-terminal_v1.2.0_linux_amd64.sha256, fetched anonymously):
+c451ac5d7c418135d06484c7153212f683d4868df1d7435c3523acc94ecd4488  x-terminal_v1.2.0_linux_amd64
+observed   (sha256sum ~/.local/bin/x-terminal):
+c451ac5d7c418135d06484c7153212f683d4868df1d7435c3523acc94ecd4488  /home/lzd/.local/bin/x-terminal
+```
+
+### 2.3 The next launch, and the second run
+
+```
+$ x-terminal --version                 # a new process, not the one that ran the update
+x-terminal v1.2.0 (6a184c6393f0) go1.27.2 linux/amd64
+```
+
+`6a184c6393f0` is the tag's own commit (the release workflow stamps `git rev-parse --short=12 HEAD`),
+and `-rwxr-xr-x 14397600` is the size the v1.2.0 API publishes for `x-terminal_v1.2.0_linux_amd64`
+(14,397,600): the installed file is the published asset, byte for byte.
+
+```
+$ env -u GH_TOKEN -u GITHUB_TOKEN x-terminal update    # second run, answered on attempt 4 of 4
+this build (v1.2.0) is the latest release
+exit 0
+$ sha256sum ~/.local/bin/x-terminal                    # unchanged
+c451ac5d7c418135d06484c7153212f683d4868df1d7435c3523acc94ecd4488  /home/lzd/.local/bin/x-terminal
+```
+
+Acceptance 1 live: the already-latest line, exit 0, no `replacing` line (so no download), and the
+installed bytes identical before and after.
+
+### 2.4 What the fifteen failed attempts measured
+
+They are the proxy flakiness the plan and RUNBOOK.md's first section are written around, and they are
+also the evidence that a failed update is inert: through all fifteen, `~/.local/bin/x-terminal` stayed
+`f3e478ee2b8d271fa3f2e20cb238816104d6fcee27a1e12da2efa52ca84e63e2` and
+`ls -a ~/.local/bin | grep '^\.x-terminal-update-'` counted **0** entries — no partial binary and no
+temporary file left behind, exactly as `install.go` promises.
+
+| Attempts | Stage that timed out | Printed state |
+|---|---|---|
+| 1, 4, 8, 9, 12, 13, 14 | `api.github.com` handshake | `the release is not reachable` |
+| 2, 3, 5, 11, 15 | `github.com` digest handshake (3 was `unexpected EOF`) | `the download did not verify` |
+| 7, 10 | `release-assets.githubusercontent.com` handshake (the 302's target) | `the download did not verify` |
+| second run's 1, 2, 3 | `api.github.com` handshake | `the release is not reachable` |
+
+Every failure is `net/http: TLS handshake timeout`, and the cause is measurable: through this proxy a
+TLS handshake costs **5.8–37.7 s** (`curl -w '%{time_appconnect}'`, spaced samples: 5.8, 10.5, 11.0,
+11.2, 13.8, 15.2, 16.0, 17.1, 17.2, 21.9, 23.1, 29.7, 37.7 s), while `xweb.NewTransport` sets
+`TLSHandshakeTimeout = 10 * time.Second` — a value measured for the x.com path on 2026-10-14 and
+shared by every request in this program, not something the update verb introduced. One run needs
+three of those handshakes (api.github.com, github.com, and the CDN host the 302 names) to land under
+the budget in a row, which is what attempt 16 was. `socks5://127.0.0.1:7897` was measured as the
+alternative path and is no better (13.8 s against 17.2 s for the same URL). Nothing in the product was
+changed to make this pass: the attempts are the measurement.
 
 ## 3. Deviations from the plan
 
@@ -255,4 +353,4 @@ decision to accept `v1.1.0` as the target for the currently unstamped `~/.local/
 ---
 *Phase: 261016-ks5 (quick task)*
 *Executed: 2026-10-16*
-*Live upgrade proof: pending (operator decision on a second Release)*
+*Live upgrade proof: complete — v1.1.0 → v1.2.0 on 2026-10-16 (16 attempts), installed digest equal to the published digest, and the second run up to date.*
