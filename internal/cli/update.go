@@ -16,7 +16,14 @@ import (
 // updateTimeout bounds one whole verb run, downloads included. A verb that never
 // returns is one of the ways this tool could stop telling the truth about what it
 // is doing.
-const updateTimeout = 2 * time.Minute
+//
+// Five minutes, because this run makes up to three requests in sequence — the Release, the
+// digest, the asset — and each may spend up to internal/release's own handshake budget before
+// it transfers anything. Measured 2026-10-16 through this proxy, GitHub handshakes run several
+// to tens of seconds; a two-minute cap over three of them is a cap that decides the verb failed
+// while a working network is still answering. The wire's own budgets are the real limits; this
+// is the outer bound that keeps a wedged run from hanging forever.
+const updateTimeout = 5 * time.Minute
 
 // digestLimit bounds the per-asset digest file this verb reads. A sha256sum line is
 // about eighty bytes, so this is already generous, and it is bounded because the body

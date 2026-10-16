@@ -12,6 +12,7 @@ import (
 
 	"github.com/LZD121/x-terminal/internal/config"
 	"github.com/LZD121/x-terminal/internal/session"
+	"github.com/LZD121/x-terminal/internal/xweb"
 )
 
 // newFake is the fake GitHub API every test in this file drives: an httptest server on loopback,
@@ -34,6 +35,38 @@ func newTestClient(srv *httptest.Server, token session.Secret) *Client {
 		apiBase:      srv.URL,
 		downloadBase: srv.URL,
 		repo:         repository,
+	}
+}
+
+// The invariant that made the first live upgrade a sixteen-attempt affair, pinned so it cannot come
+// back: the client's own timeout is what cuts a request off, so it has to leave room for the
+// handshake the transport is allowed — otherwise the handshake budget is decoration, and the
+// request dies at the client's bound first. Both budgets also have to be larger than xweb's, which
+// were measured against x.com through this same proxy and are the reason this package asks for
+// another pair at all.
+func TestTheReleaseWireOutlivesItsOwnHandshakeBudget(t *testing.T) {
+	client, err := New(config.Config{}, session.Secret(""))
+	if err != nil {
+		t.Fatalf("New with no proxy at all: %v", err)
+	}
+	if client.http == nil || client.http.Transport == nil {
+		t.Fatal("the client has no transport: nothing about its budgets can be read")
+	}
+	transport, ok := client.http.Transport.(*http.Transport)
+	if !ok {
+		t.Fatalf("the transport is %T, want *http.Transport", client.http.Transport)
+	}
+	if transport.TLSHandshakeTimeout != githubHandshakeTimeout {
+		t.Errorf("the transport's handshake budget is %s, want this package's %s: it is carrying xweb's default for the wrong host",
+			transport.TLSHandshakeTimeout, githubHandshakeTimeout)
+	}
+	if client.http.Timeout <= githubHandshakeTimeout {
+		t.Errorf("the client's timeout is %s and the handshake budget is %s: the client cuts the request off before the handshake may finish, so the budget decides nothing",
+			client.http.Timeout, githubHandshakeTimeout)
+	}
+	if githubHandshakeTimeout <= xweb.TLSHandshakeTimeout || githubDialTimeout <= xweb.DialTimeout {
+		t.Errorf("this package's budgets (%s dial, %s handshake) are not larger than xweb's (%s, %s): the second pair exists for a slower network than the first, and this test is what says so",
+			githubDialTimeout, githubHandshakeTimeout, xweb.DialTimeout, xweb.TLSHandshakeTimeout)
 	}
 }
 

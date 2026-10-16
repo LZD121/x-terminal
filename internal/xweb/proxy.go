@@ -2,6 +2,7 @@ package xweb
 
 import (
 	"errors"
+	"fmt"
 	"net"
 	"net/http"
 	"net/netip"
@@ -23,6 +24,30 @@ const (
 	idleConnTimeout = 90 * time.Second
 )
 
+// TransportBudget is the pair of client-side budgets a transport is built with: how long a
+// connect may take, and how long the handshake after it may.
+//
+// It exists because this program's two request classes are answered by networks with very
+// different latencies, and one budget cannot be right for both. The constants above were set
+// against x.com through the operator's proxy, where a handshake measured well under a second
+// (doctor's own "upstream reachable 681ms" line, 2026-10-15) and where a connect that has not
+// answered in ten seconds really is the network refusing — which is why they stay the default.
+// GitHub through the same proxy is a different animal, and internal/release says so with the
+// numbers it measured.
+type TransportBudget struct {
+	// Dial bounds one TCP connect.
+	Dial time.Duration
+	// Handshake bounds the TLS handshake that follows the connect.
+	Handshake time.Duration
+}
+
+// DefaultTransportBudget is the budget every request in this program gets unless its caller
+// deliberately asks for another: the package constants above, which is what every staged
+// connectivity check, every read in the pane and the update verb's own prefetch share.
+func DefaultTransportBudget() TransportBudget {
+	return TransportBudget{Dial: DialTimeout, Handshake: TLSHandshakeTimeout}
+}
+
 // NewTransport builds the one http.Transport every request in this program goes
 // through. It is built from the resolved configuration rather than from the
 // environment, because on a host where x.com is only reachable through a local proxy
@@ -34,14 +59,30 @@ const (
 // resolving the name at the SOCKS5 end for the h form, so the setting is parsed,
 // validated and handed over rather than turned into a dialer of this package's own.
 func NewTransport(cfg config.Config) (*http.Transport, error) {
+	return NewTransportWithBudget(cfg, DefaultTransportBudget())
+}
+
+// NewTransportWithBudget is NewTransport with the budgets chosen by the caller, and it is the
+// same transport otherwise — the same resolved proxy, the same idle policy, the same
+// ForceAttemptHTTP2. A caller that passes another budget is stating a fact about the network it
+// talks to, not a preference: x.com and a GitHub Release are reached through the same proxy and
+// answer handshakes seconds apart, so the one number cannot serve both.
+//
+// The zero value of either field is refused rather than silently meaning "no limit": a budget
+// nobody set is not a bigger budget, and a transport built with no handshake bound is one that
+// can hang, which is the state this package exists to make nameable.
+func NewTransportWithBudget(cfg config.Config, budget TransportBudget) (*http.Transport, error) {
+	if budget.Dial <= 0 || budget.Handshake <= 0 {
+		return nil, fmt.Errorf("xweb: a transport budget needs a positive dial and handshake bound, got dial=%s handshake=%s", budget.Dial, budget.Handshake)
+	}
 	proxy, err := proxyFunc(cfg)
 	if err != nil {
 		return nil, err
 	}
 	return &http.Transport{
 		Proxy:               proxy,
-		DialContext:         (&net.Dialer{Timeout: DialTimeout, KeepAlive: 30 * time.Second}).DialContext,
-		TLSHandshakeTimeout: TLSHandshakeTimeout,
+		DialContext:         (&net.Dialer{Timeout: budget.Dial, KeepAlive: 30 * time.Second}).DialContext,
+		TLSHandshakeTimeout: budget.Handshake,
 		IdleConnTimeout:     idleConnTimeout,
 		// ForceAttemptHTTP2 keeps the measured request shape: a custom Proxy or
 		// DialContext otherwise turns HTTP/2 off, and every 200 in the probe was

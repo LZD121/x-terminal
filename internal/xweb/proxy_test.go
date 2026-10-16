@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/LZD121/x-terminal/internal/config"
 )
@@ -81,6 +82,51 @@ func TestNewTransportCarriesTheTimeouts(t *testing.T) {
 	}
 	if transport.IdleConnTimeout <= 0 {
 		t.Errorf("IdleConnTimeout = %s: a zero here keeps spare connections forever", transport.IdleConnTimeout)
+	}
+}
+
+// The budget a caller passes is the budget the transport carries, and the defaults are untouched
+// for every caller that passes none — which is the whole point of the seam: internal/release
+// states a fact about GitHub's latency through this proxy, and a read in the pane keeps the budget
+// that was measured against x.com.
+func TestNewTransportWithBudgetCarriesTheGivenBudget(t *testing.T) {
+	budget := TransportBudget{Dial: 61 * time.Second, Handshake: 62 * time.Second}
+	transport, err := NewTransportWithBudget(config.Config{}, budget)
+	if err != nil {
+		t.Fatalf("NewTransportWithBudget: %v", err)
+	}
+	if transport.TLSHandshakeTimeout != budget.Handshake {
+		t.Errorf("TLSHandshakeTimeout = %s, want the budget's %s", transport.TLSHandshakeTimeout, budget.Handshake)
+	}
+	if transport.DialContext == nil {
+		t.Error("DialContext is nil: the dial budget cannot be applied to anything")
+	}
+	if transport.TLSHandshakeTimeout == TLSHandshakeTimeout {
+		t.Errorf("the transport is carrying the package default %s: the budget seam did nothing", TLSHandshakeTimeout)
+	}
+	// Everything that is a fact about this machine rather than about the host being reached is
+	// still shared with every other transport this program builds.
+	if transport.IdleConnTimeout != idleConnTimeout || !transport.ForceAttemptHTTP2 {
+		t.Errorf("a budgeted transport differs beyond its budgets: IdleConnTimeout=%s ForceAttemptHTTP2=%v",
+			transport.IdleConnTimeout, transport.ForceAttemptHTTP2)
+	}
+}
+
+// An unset bound is refused rather than read as "no limit": a transport with no handshake bound is
+// one that can hang, and a caller that forgot to set one has a bug, not a preference.
+func TestNewTransportWithBudgetRefusesAnUnsetBound(t *testing.T) {
+	for _, tc := range []struct {
+		name   string
+		budget TransportBudget
+	}{
+		{"no dial bound", TransportBudget{Handshake: time.Minute}},
+		{"no handshake bound", TransportBudget{Dial: time.Minute}},
+		{"a negative bound", TransportBudget{Dial: -time.Second, Handshake: time.Minute}},
+		{"the zero value", TransportBudget{}},
+	} {
+		if _, err := NewTransportWithBudget(config.Config{}, tc.budget); err == nil {
+			t.Errorf("%s: NewTransportWithBudget accepted %+v, want a refusal", tc.name, tc.budget)
+		}
 	}
 }
 

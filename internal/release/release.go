@@ -7,9 +7,10 @@
 // and its NoRedirect rule is a statement about x.com — a redirect there means
 // the request was refused. A GitHub Release is none of those, and a request that
 // carries no x.com credential has no business in the package that owns the
-// credential. What is borrowed is the one *http.Transport every request in this
-// program goes through, xweb.NewTransport(cfg), so that the operator's resolved
-// proxy and NO_PROXY rules apply here exactly as they do to a read.
+// credential. What is borrowed is the one http.Transport build path every request in this
+// program goes through — xweb.NewTransportWithBudget — so that the operator's resolved proxy
+// and NO_PROXY rules apply here exactly as they do to a read. The *budgets* are this package's
+// own, because the host being reached is a different one; see githubHandshakeTimeout.
 //
 // The redirect policy is net/http's own default, and that is deliberate: an
 // asset URL answers 302 to a signed object URL (measured against the v1.1.0
@@ -57,7 +58,32 @@ const (
 
 	// requestTimeout bounds one whole request, body included. A wire with no
 	// timeout is one that can hang a verb that has nothing else to do.
-	requestTimeout = 30 * time.Second
+	//
+	// It is two minutes rather than the thirty seconds this started with, because it has to
+	// leave room for the handshake budget below: the client's own timeout is what actually
+	// cuts a request off, so a handshake allowed sixty seconds under a thirty-second client
+	// would never get there.
+	requestTimeout = 2 * time.Minute
+
+	// The budgets this wire's transport is built with, and the reason it does not use
+	// xweb's defaults.
+	//
+	// Measured on 2026-10-16 through the operator's proxy, spaced `curl -w '%{time_appconnect}'`
+	// samples: api.github.com answered handshakes in 4.82s / 13.94s / 16.33s, github.com in
+	// 25.30s / 9.33s / 8.21s, and the CDN an asset redirect names was slower still — all against
+	// xweb's 10s TLSHandshakeTimeout. x.com measured 4.34s / 6.67s / 5.34s in the same window,
+	// which is why that default is left exactly where it is: a read in the pane and a Release
+	// fetch in this verb are answered by two networks seconds apart, and this verb is the one
+	// that needs three handshakes in a row — the API, the redirect's host, then the object
+	// store — so a per-handshake failure rate compounds into a verb that mostly fails.
+	//
+	// The failure mode this replaces was measured rather than guessed: before these budgets,
+	// one successful v1.1.0 -> v1.2.0 upgrade took sixteen attempts, and all fifteen failures
+	// were `net/http: TLS handshake timeout` at the ten-second bound. Sixty seconds against a
+	// 37.7s worst observed handshake is headroom, not license: the request still fails, names
+	// the same state and prints the same RUNBOOK anchor when the network is actually down.
+	githubDialTimeout      = 60 * time.Second
+	githubHandshakeTimeout = 60 * time.Second
 )
 
 // Release is the minimum of a GitHub release object this verb uses: the tag it
@@ -144,7 +170,14 @@ func (c Client) describe() string {
 // the repository's two origins. It returns an error only when the transport cannot
 // be built.
 func New(cfg config.Config, token session.Secret) (*Client, error) {
-	transport, err := xweb.NewTransport(cfg)
+	// The x.com budgets are deliberately not used here: see githubHandshakeTimeout's comment.
+	// What is shared with every other request in this program is everything else about the
+	// transport — the operator's resolved proxy, NO_PROXY, the idle policy, HTTP/2 — because
+	// those are facts about this machine rather than about the host being reached.
+	transport, err := xweb.NewTransportWithBudget(cfg, xweb.TransportBudget{
+		Dial:      githubDialTimeout,
+		Handshake: githubHandshakeTimeout,
+	})
 	if err != nil {
 		return nil, err
 	}
