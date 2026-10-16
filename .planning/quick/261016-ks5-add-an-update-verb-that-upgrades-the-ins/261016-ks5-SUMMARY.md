@@ -179,6 +179,11 @@ GITHUB_TOKEN`), through the same proxy as section 1. `v1.2.0` is the operator's 
 this executor pushed nothing. Every attempt below is a hand-made, spaced attempt — none of them is a
 loop — and every one that failed is recorded with what it printed.
 
+One convention in the transcripts below: the verb prints the path it replaces as the absolute path it
+resolved, so its own output carries the operator's home directory. Those lines are shown with
+`$HOME` in place of it, for the same reason three planning documents were redacted before this
+repository was made public; nothing else in a quoted line is altered.
+
 ### 2.1 The "before" state, installed by hand (the README's documented path)
 
 The published `v1.1.0` asset was fetched anonymously and verified before it was installed:
@@ -213,7 +218,7 @@ $ install -m 0755 /tmp/ks5-live/before-v1.1.0-stamped ~/.local/bin/x-terminal
 $ x-terminal --version
 x-terminal v1.1.0 (6a184c6393f0) go1.27.2 linux/amd64
 $ sha256sum ~/.local/bin/x-terminal
-f3e478ee2b8d271fa3f2e20cb238816104d6fcee27a1e12da2efa52ca84e63e2  /home/lzd/.local/bin/x-terminal
+f3e478ee2b8d271fa3f2e20cb238816104d6fcee27a1e12da2efa52ca84e63e2  $HOME/.local/bin/x-terminal
 ```
 
 ### 2.2 `x-terminal update` — the upgrade, verbatim
@@ -223,9 +228,9 @@ Succeeded on **attempt 16** of 16 spaced attempts (the fifteen before it are in 
 ```
 $ env -u GH_TOKEN -u GITHUB_TOKEN x-terminal update
 x-terminal v1.2.0 is available (this build is v1.1.0)
-replacing /home/lzd/.local/bin/x-terminal (this build v1.1.0) with v1.2.0
+replacing $HOME/.local/bin/x-terminal (this build v1.1.0) with v1.2.0
 verified against x-terminal_v1.2.0_linux_amd64.sha256
-replaced /home/lzd/.local/bin/x-terminal with v1.2.0
+replaced $HOME/.local/bin/x-terminal with v1.2.0
 the process that ran this is still the old image: the next launch reports v1.2.0
 v1.1.0 -> v1.2.0
 exit 0
@@ -239,7 +244,7 @@ the bytes published:
 published  (x-terminal_v1.2.0_linux_amd64.sha256, fetched anonymously):
 c451ac5d7c418135d06484c7153212f683d4868df1d7435c3523acc94ecd4488  x-terminal_v1.2.0_linux_amd64
 observed   (sha256sum ~/.local/bin/x-terminal):
-c451ac5d7c418135d06484c7153212f683d4868df1d7435c3523acc94ecd4488  /home/lzd/.local/bin/x-terminal
+c451ac5d7c418135d06484c7153212f683d4868df1d7435c3523acc94ecd4488  $HOME/.local/bin/x-terminal
 ```
 
 ### 2.3 The next launch, and the second run
@@ -258,7 +263,7 @@ $ env -u GH_TOKEN -u GITHUB_TOKEN x-terminal update    # second run, answered on
 this build (v1.2.0) is the latest release
 exit 0
 $ sha256sum ~/.local/bin/x-terminal                    # unchanged
-c451ac5d7c418135d06484c7153212f683d4868df1d7435c3523acc94ecd4488  /home/lzd/.local/bin/x-terminal
+c451ac5d7c418135d06484c7153212f683d4868df1d7435c3523acc94ecd4488  $HOME/.local/bin/x-terminal
 ```
 
 Acceptance 1 live: the already-latest line, exit 0, no `replacing` line (so no download), and the
