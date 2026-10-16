@@ -1,0 +1,53 @@
+{
+  "contract": "1.0.0",
+  "flavor": "core",
+  "milestone": null,
+  "phases": [
+    {
+      "number": "1",
+      "name": "Reachable Transport and One Live Read",
+      "status": "complete"
+    },
+    {
+      "number": "2",
+      "name": "Following Timeline in the Pane",
+      "status": "complete"
+    },
+    {
+      "number": "3",
+      "name": "Three-State Disguise on the Working Renderer",
+      "status": "complete"
+    },
+    {
+      "number": "4",
+      "name": "Post Detail, Threads and Quotes",
+      "status": "complete"
+    },
+    {
+      "number": "5",
+      "name": "Search and Profiles",
+      "status": "complete"
+    },
+    {
+      "number": "6",
+      "name": "Bookmarks, Likes and the Mirror-Only Store",
+      "status": "complete"
+    },
+    {
+      "number": "7",
+      "name": "Media, Links and Clipboard",
+      "status": "complete"
+    },
+    {
+      "number": "8",
+      "name": "Operations, Repair Path and Audit",
+      "status": "complete"
+    }
+  ],
+  "next": {
+    "command": "/gsd:progress",
+    "label": "Show progress",
+    "reason": "Unsure of state — showing progress"
+  },
+  "updated_at": "2026-10-15T08:19:37.995Z"
+}

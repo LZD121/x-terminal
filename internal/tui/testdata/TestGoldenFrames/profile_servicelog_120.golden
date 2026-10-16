@@ -1,0 +1,24 @@
+ batch-restore-09 Nils Okafor                                                                                           
+   reads timelines in a terminal                                                                                        
+   watchers=1204  watching=312  records=8901  since=2011-03                                                             
+>2026-10-14T09:12:00Z INFO  svc=guard-retry-20 seq=6079141                                                              
+>  a fifteen-cell handle, the widest the column holds                                                                   
+ 2026-10-14T09:11:00Z INFO  svc=worker-filter-80 seq=6450930                                                            
+   日本語のタイムラインを端末で読む。カーソルが戻ってきたら、そこが終わり。                                             
+ 2026-10-14T09:10:00Z INFO  svc=worker-filter-80 seq=6822719                                                            
+   🚀                                                                                                                   
+ 2026-10-14T09:09:00Z INFO  svc=worker-filter-80 seq=7194508                                                            
+   👨‍👩‍👧                                                                                                                   
+ 2026-10-14T09:08:00Z INFO  svc=worker-filter-80 seq=7566297                                                            
+   the link that runs past the measure: https://example.invalid/2026/10/14/a-path-that-cannot-fit-o                     
+   n-one-line/a-fragment#and-a-query?after=that                                                                         
+ 2026-10-14T09:07:00Z INFO  svc=worker-filter-80 seq=7938086                                                            
+   exactly the measure at 120 columns -------------------------------------------------------------                     
+   one cell shorter than that --------------------------------------------------------------------                      
+   exactly the measure at 80 columns ------------------------------------------- one cell shorter                       
+   than that -------------------------------------------------                                                          
+ 2026-10-14T09:06:00Z INFO  svc=worker-filter-80 seq=8309875                                                            
+   a body long enough that the quote below it is the second thing a reader sees, which is where the                     
+   quote prefix has to hold its column.                                                                                 
+ 2026-10-14T08:12:00Z INFO  svc=worker-filter-80 seq=4614498 parent=8309875                                             
+account: batch-restore-09  1/9+  4 requests, 0 rate-limited                                                             

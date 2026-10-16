@@ -1,0 +1,24 @@
+                                                                                
+ lzd              Oct 14 09:07                                                  
+   exactly the measure at 120 columns                                           
+   ------------------------------------------------------------- one cell       
+   shorter than that                                                            
+   -------------------------------------------------------------------- exactly 
+   the measure at 80 columns ------------------------------------------- one    
+   cell shorter than that -------------------------------------------------     
+                                                                                
+ lzd              Oct 14 09:06                                                  
+   a body long enough that the quote below it is the second thing a reader sees,
+   which is where the quote prefix has to hold its column.                      
+ > lzd              Oct 14 08:12                                                
+ >   the quoted body, one level down                                            
+                                                                                
+ lzd              Oct 14 09:05                                                  
+   a body with a quote under it                                                 
+ > lzd              Oct 14 08:12                                                
+ >   the quoted body, one level down                                            
+ > > lzd              Oct 14 07:12                                              
+ > >   and the post that post quotes, two levels down                           
+                                                                                
+>lzd              Oct 14 09:04                                                  
+search: latest "page cache"  9/14+  4 requests, 0 rate-limited                  

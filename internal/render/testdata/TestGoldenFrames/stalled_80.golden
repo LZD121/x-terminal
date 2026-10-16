@@ -1,0 +1,24 @@
+                                                                                
+>lzd              Oct 14 09:06                                                  
+>  a body long enough that the quote below it is the second thing a reader sees,
+>  which is where the quote prefix has to hold its column.                      
+>> lzd              Oct 14 08:12                                                
+>>   the quoted body, one level down                                            
+                                                                                
+ lzd              Oct 14 09:05                                                  
+   a body with a quote under it                                                 
+ > lzd              Oct 14 08:12                                                
+ >   the quoted body, one level down                                            
+ > > lzd              Oct 14 07:12                                              
+ > >   and the post that post quotes, two levels down                           
+                                                                                
+ lzd              Oct 14 09:04                                                  
+   the first half of a longer thought                                           
+ lzd              Oct 14 09:03  continued                                       
+   and the second half of it                                                    
+                                                                                
+ someone else     Oct 14 09:02  reposted by lzd                                 
+   a post that was reposted                                                     
+                                                                                
+ lzd              Oct 14 09:01  limited                                         
+no older posts (cursor stalled)  following  7/14  6 requests, 1 rate-limited    

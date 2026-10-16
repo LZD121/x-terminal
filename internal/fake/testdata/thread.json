@@ -1,0 +1,1340 @@
+[
+  {
+    "Focal": {
+      "ID": "2106019976381689871",
+      "Author": {
+        "ID": "783214",
+        "ScreenName": "X",
+        "Name": "X",
+        "AvatarURL": "https://pbs.twimg.com/profile_images/1955359038532653056/OSHY3ewP_normal.jpg",
+        "BannerURL": "https://pbs.twimg.com/profile_banners/783214/1690175171",
+        "HasGraduatedAccess": true
+      },
+      "Text": "X is for everyone",
+      "CreatedAt": "2026-10-02T13:54:24Z",
+      "RepostedBy": null,
+      "Lang": "en",
+      "ConversationID": "2106019976381689871",
+      "ReplyTo": "",
+      "Quote": null,
+      "Media": null,
+      "Visibility": 0,
+      "Counts": {
+        "Replies": 8121,
+        "Reposts": 6306,
+        "Likes": 58083,
+        "Quotes": 3487,
+        "Bookmarks": 1612,
+        "Views": 0
+      }
+    },
+    "Ancestors": null,
+    "Groups": [
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106089817037750628",
+            "Author": {
+              "ID": "1293310208018509824",
+              "ScreenName": "indexred",
+              "Name": "Index Red",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/1912151049994940416/cj59hYvh_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1293310208018509824/1744833126",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X why can't Nick Fuentes get a checkmark then?",
+            "CreatedAt": "2026-10-02T18:31:56Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 14,
+              "Reposts": 22,
+              "Likes": 2550,
+              "Quotes": 0,
+              "Bookmarks": 14,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106033667500110020",
+            "Author": {
+              "ID": "1788971768415191040",
+              "ScreenName": "WEtHePe0pl",
+              "Name": "🇺🇸 𝔚𝔢 𝔗𝔥𝔢 𝔓𝔢𝔬𝔭𝔩𝔢 🇺🇸",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2087435571769864193/MZtIPdBJ_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1788971768415191040/1787626760",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Everyone ⁉️ https://t.co/qiVcssBXSJ",
+            "CreatedAt": "2026-10-02T14:48:49Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": [
+              {
+                "Kind": 0,
+                "URL": "https://pbs.twimg.com/media/HToidTGbwAIuV8R.jpg",
+                "AltText": "",
+                "Playable": ""
+              }
+            ],
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 22,
+              "Reposts": 46,
+              "Likes": 2204,
+              "Quotes": 1,
+              "Bookmarks": 21,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106116961436565600",
+            "Author": {
+              "ID": "1724208796216733696",
+              "ScreenName": "Groyperyoshi7",
+              "Name": "🇻🇦✝️ Groyper Yoshi",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2098989666414612480/O2pLAXZf_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1724208796216733696/1789286765",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X But not for Nick Fuentes? You prevent him from getting a Blue Checkmark but allow it for anybody else?",
+            "CreatedAt": "2026-10-02T20:19:48Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 3,
+              "Reposts": 11,
+              "Likes": 1522,
+              "Quotes": 0,
+              "Bookmarks": 4,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106113351466246146",
+            "Author": {
+              "ID": "1702775126150750208",
+              "ScreenName": "groyperexplorer",
+              "Name": "Explorer Groyper",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2107676429349466112/PfXaADk2_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1702775126150750208/1757465341",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X You refuse Nick Fuentes a checkmark. You are not for everyone. This is false",
+            "CreatedAt": "2026-10-02T20:05:27Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 4,
+              "Reposts": 10,
+              "Likes": 1389,
+              "Quotes": 0,
+              "Bookmarks": 2,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106157711901737070",
+            "Author": {
+              "ID": "805502502028398593",
+              "ScreenName": "ChiefTrumpster",
+              "Name": "Chief Trumpster",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2045372294755926016/202G9gXM_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/805502502028398593/1699888686",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Ok, how about a checkmark for @NickJFuentes?",
+            "CreatedAt": "2026-10-02T23:01:43Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 6,
+              "Reposts": 22,
+              "Likes": 1118,
+              "Quotes": 0,
+              "Bookmarks": 6,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106086692566319194",
+            "Author": {
+              "ID": "18138107",
+              "ScreenName": "gokhanyucel",
+              "Name": "Gökhan Yücel",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/1928029277171134464/a3mFgfZm_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/18138107/1765310095",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X just last month, access was blocked to 1,270 accounts in Turkey.",
+            "CreatedAt": "2026-10-02T18:19:31Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 5,
+              "Reposts": 40,
+              "Likes": 602,
+              "Quotes": 1,
+              "Bookmarks": 3,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106020249988682210",
+            "Author": {
+              "ID": "2095672813944492032",
+              "ScreenName": "naipowapepe",
+              "Name": "奶破蛙",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2095673192862109696/4Hq3_INc_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/2095672813944492032/1788482464",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X and me? https://t.co/OzfUCnrH2d",
+            "CreatedAt": "2026-10-02T13:55:30Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": [
+              {
+                "Kind": 0,
+                "URL": "https://pbs.twimg.com/media/HToWQQBakAA7vKB.jpg",
+                "AltText": "",
+                "Playable": ""
+              }
+            ],
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 44,
+              "Reposts": 6,
+              "Likes": 729,
+              "Quotes": 1,
+              "Bookmarks": 7,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106072688473112719",
+            "Author": {
+              "ID": "1892701134042890241",
+              "ScreenName": "ChonkiestChonks",
+              "Name": "Chonkiest Chonk",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/1892702021620322304/c6r-qB5d_normal.jpg",
+              "BannerURL": "",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X https://t.co/WwDf0I6I70",
+            "CreatedAt": "2026-10-02T17:23:52Z",
+            "RepostedBy": null,
+            "Lang": "qme",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": [
+              {
+                "Kind": 0,
+                "URL": "https://pbs.twimg.com/media/HTpF8phWMAACbLL.jpg",
+                "AltText": "",
+                "Playable": ""
+              }
+            ],
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 2,
+              "Reposts": 1,
+              "Likes": 680,
+              "Quotes": 0,
+              "Bookmarks": 3,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106129959827947637",
+            "Author": {
+              "ID": "1966175461509115905",
+              "ScreenName": "StrikerWeaver",
+              "Name": "StrikerWeaver 🇻🇦",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/1966176111349383174/UsmEix1n_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1966175461509115905/1758983779",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X X is for everyone*\n\nAccept Nick Fuentes, even though he has over a million followers, he is still unable to buy a checkmark.",
+            "CreatedAt": "2026-10-02T21:11:27Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 6,
+              "Reposts": 6,
+              "Likes": 706,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106025466952098011",
+            "Author": {
+              "ID": "1655936149733654530",
+              "ScreenName": "IterIntellectus",
+              "Name": "vittorio",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2009602429478633472/8lMkYuep_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1655936149733654530/1721688332",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X even for me? https://t.co/VrfSQ8Ay5O",
+            "CreatedAt": "2026-10-02T14:16:14Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": [
+              {
+                "Kind": 0,
+                "URL": "https://pbs.twimg.com/media/HToa_iyXkAABrlb.jpg",
+                "AltText": "",
+                "Playable": ""
+              }
+            ],
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 6,
+              "Reposts": 0,
+              "Likes": 367,
+              "Quotes": 0,
+              "Bookmarks": 2,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106111717029937264",
+            "Author": {
+              "ID": "1829792609893576705",
+              "ScreenName": "thatsallfrens",
+              "Name": "retarded online 🇻🇦",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/1868832055045369856/CW5Vf-Ql_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1829792609893576705/1781490007",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X even for @NickJFuentes ?",
+            "CreatedAt": "2026-10-02T19:58:57Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 1,
+              "Reposts": 4,
+              "Likes": 455,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106185566614343726",
+            "Author": {
+              "ID": "2000159929005744128",
+              "ScreenName": "oceanicgroyper",
+              "Name": "Kiwi Groyper 🥝",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2089868429998387200/EK7FV9DH_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/2000159929005744128/1785838823",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Give @NickJFuentes a checkmark then",
+            "CreatedAt": "2026-10-03T00:52:24Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 1,
+              "Reposts": 11,
+              "Likes": 419,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106020416368373856",
+            "Author": {
+              "ID": "1689001326091399168",
+              "ScreenName": "PlanetOfMemes",
+              "Name": "Planet Of Memes",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2006593396672958464/iroRMM_2_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1689001326091399168/1778085308",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X F'ing Legend. https://t.co/igfDwt2Ozo",
+            "CreatedAt": "2026-10-02T13:56:09Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": [
+              {
+                "Kind": 0,
+                "URL": "https://pbs.twimg.com/media/HToWZm6XIAEm1wD.jpg",
+                "AltText": "",
+                "Playable": ""
+              }
+            ],
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 5,
+              "Reposts": 9,
+              "Likes": 194,
+              "Quotes": 0,
+              "Bookmarks": 8,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106147919309213913",
+            "Author": {
+              "ID": "2059684359326638084",
+              "ScreenName": "bot_slop_",
+              "Name": "Bot Slop",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2059686896297455617/_gjX6cWU_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/2059684359326638084/1779902660",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X You’ll give literal terrorists a checkmark before Nick",
+            "CreatedAt": "2026-10-02T22:22:48Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 1,
+              "Reposts": 5,
+              "Likes": 411,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106025542944190952",
+            "Author": {
+              "ID": "4894231615",
+              "ScreenName": "ProtonVPN",
+              "Name": "Proton VPN",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2077732752133156864/BUqXyE7U_normal.png",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/4894231615/1758462043",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X hey @grok how many letter \"X\" are there in \"everyone\"?",
+            "CreatedAt": "2026-10-02T14:16:32Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 8,
+              "Reposts": 2,
+              "Likes": 171,
+              "Quotes": 0,
+              "Bookmarks": 4,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106094893064208483",
+            "Author": {
+              "ID": "12588012",
+              "ScreenName": "Shobhit",
+              "Name": "Shobhit Kumar Prabhakar",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2093590044242219009/IYnm3SIV_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/12588012/1639475323",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X That is XXX. https://t.co/5f2TMzo8l0",
+            "CreatedAt": "2026-10-02T18:52:06Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": [
+              {
+                "Kind": 0,
+                "URL": "https://pbs.twimg.com/media/HTpaGRzagAA7lFS.png",
+                "AltText": "",
+                "Playable": ""
+              }
+            ],
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 14,
+              "Reposts": 1,
+              "Likes": 353,
+              "Quotes": 0,
+              "Bookmarks": 2,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106047894927388746",
+            "Author": {
+              "ID": "71064895",
+              "ScreenName": "Montreal",
+              "Name": "Montréal",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/1440664497308385281/TOZJQmv7_normal.png",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/71064895/1790083760",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X poutine is for everyone",
+            "CreatedAt": "2026-10-02T15:45:21Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 13,
+              "Reposts": 16,
+              "Likes": 118,
+              "Quotes": 3,
+              "Bookmarks": 4,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106028322325242366",
+            "Author": {
+              "ID": "57593398",
+              "ScreenName": "ysrdnl",
+              "Name": "Yaşar Adanalı",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/987682025149788160/XbF_szDh_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/57593398/1426177002",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Why, then, are you banning thousands of accounts in Turkish?",
+            "CreatedAt": "2026-10-02T14:27:34Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 11,
+              "Likes": 145,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106435285282406785",
+            "Author": {
+              "ID": "1312019639657009154",
+              "ScreenName": "BrammerAyse",
+              "Name": "Ayşe Baltacıoğlu-Brammer",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2104017972255752192/ax0zHwLc_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1312019639657009154/1684579555",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Nearly 2,000 accounts were banned in Turkey in September alone. You are a liar!",
+            "CreatedAt": "2026-10-03T17:24:42Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 2,
+              "Reposts": 8,
+              "Likes": 118,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106158446018248952",
+            "Author": {
+              "ID": "1795185840907309056",
+              "ScreenName": "GroyperBob1",
+              "Name": "Groyper Bob",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2032919421547606016/yJ81aYmp_normal.png",
+              "BannerURL": "",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Then why can't Nick Fuentes get X premium?",
+            "CreatedAt": "2026-10-02T23:04:38Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 2,
+              "Reposts": 2,
+              "Likes": 350,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106169872170287147",
+            "Author": {
+              "ID": "1600547545218007045",
+              "ScreenName": "EdRaposoOficial",
+              "Name": "Ed Raposo TV",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2107091152067264513/gYJC8nqZ_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1600547545218007045/1791204899",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Unless the Brazilian Supreme Court says otherwise",
+            "CreatedAt": "2026-10-02T23:50:02Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 3,
+              "Likes": 101,
+              "Quotes": 0,
+              "Bookmarks": 1,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106145540773675155",
+            "Author": {
+              "ID": "1567618804611534848",
+              "ScreenName": "wifeguygroyp",
+              "Name": "Wife guy Groyper",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2084327207837589504/Mf6s8-V-_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1567618804611534848/1785463363",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X this person 👇has a blue checkmark, but @NickJFuentes doesn't because he thinks we should have secure borders? \n\ni think i see where yall stand. https://t.co/nszWVgh08o",
+            "CreatedAt": "2026-10-02T22:13:21Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": [
+              {
+                "Kind": 1,
+                "URL": "https://pbs.twimg.com/amplify_video_thumb/2086329532982648832/img/RNpI6kvOTCIA_MgE.jpg",
+                "AltText": "",
+                "Playable": "https://video.twimg.com/amplify_video/2086329532982648832/vid/avc1/1280x720/QN9ljD6GbM-vbqm1.mp4?tag=29"
+              }
+            ],
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 6,
+              "Reposts": 9,
+              "Likes": 300,
+              "Quotes": 1,
+              "Bookmarks": 8,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106020135668441501",
+            "Author": {
+              "ID": "534023",
+              "ScreenName": "alx",
+              "Name": "ALX (x/acc) 🎃🇺🇸",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2105508393213415424/ykMDJwKu_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/534023/1722926026",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X 𝕏/acc",
+            "CreatedAt": "2026-10-02T13:55:02Z",
+            "RepostedBy": null,
+            "Lang": "es",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 11,
+              "Reposts": 8,
+              "Likes": 64,
+              "Quotes": 1,
+              "Bookmarks": 2,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106029047809773881",
+            "Author": {
+              "ID": "1372981063492976642",
+              "ScreenName": "dmoutouss",
+              "Name": "Daniel",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2077516610626019328/v1JYUzCU_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1372981063492976642/1740131242",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X users with suspended accounts reading this https://t.co/QGB8Q3yMcP",
+            "CreatedAt": "2026-10-02T14:30:27Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": [
+              {
+                "Kind": 0,
+                "URL": "https://pbs.twimg.com/media/HToeOWcWsAAtUah.png",
+                "AltText": "",
+                "Playable": ""
+              }
+            ],
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 1,
+              "Likes": 77,
+              "Quotes": 0,
+              "Bookmarks": 2,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106165854282924310",
+            "Author": {
+              "ID": "499626148",
+              "ScreenName": "SpinHere",
+              "Name": "Tossed in a mixer groyper",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2056097926594580480/JtvjBGab_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/499626148/1779046921",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Give @NickJFuentes a checkmark already",
+            "CreatedAt": "2026-10-02T23:34:04Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 3,
+              "Reposts": 6,
+              "Likes": 307,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106037207865905548",
+            "Author": {
+              "ID": "1836182365837590528",
+              "ScreenName": "auiwinso",
+              "Name": "Obunga",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2106595990463459328/lHWL0xiB_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1836182365837590528/1791086598",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X i guess but pls take down bots that spread child porn",
+            "CreatedAt": "2026-10-02T15:02:53Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 7,
+              "Reposts": 3,
+              "Likes": 307,
+              "Quotes": 0,
+              "Bookmarks": 3,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106163002361741603",
+            "Author": {
+              "ID": "2232029340",
+              "ScreenName": "FightofFaith",
+              "Name": "Calvin | Fight of Faith",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/1853919482999083008/aKn4JzS1_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/2232029340/1739385258",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Jesus is too.",
+            "CreatedAt": "2026-10-02T23:22:45Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 2,
+              "Reposts": 2,
+              "Likes": 44,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106035744993112412",
+            "Author": {
+              "ID": "36266589",
+              "ScreenName": "Shawn_Farash",
+              "Name": "Shawn Farash",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/1911188184727179264/4sxXyvGU_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/36266589/1786726308",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Not if you use android. This app is garbage. Forced to use web on my phone because things take forever to load",
+            "CreatedAt": "2026-10-02T14:57:04Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 43,
+              "Reposts": 4,
+              "Likes": 40,
+              "Quotes": 0,
+              "Bookmarks": 2,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106054400905216213",
+            "Author": {
+              "ID": "1486409484297773063",
+              "ScreenName": "abazwhyllzz",
+              "Name": "𝔸b𝕒𝕫𝕫",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/1560713084209172481/sKxKQl65_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1486409484297773063/1758521800",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X X is for me",
+            "CreatedAt": "2026-10-02T16:11:12Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 7,
+              "Reposts": 0,
+              "Likes": 44,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106062532666650859",
+            "Author": {
+              "ID": "1486777081954332679",
+              "ScreenName": "WayneWaldropW",
+              "Name": "Wayne Waldrop",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2073867225078120448/9oJXSTZi_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1486777081954332679/1781992714",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Hey @grok. Is X for everyone, or are there certain creators and content styles that are more likely to be banned or supressed?",
+            "CreatedAt": "2026-10-02T16:43:31Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 1,
+              "Reposts": 1,
+              "Likes": 35,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106182182025015348",
+            "Author": {
+              "ID": "760191569483931652",
+              "ScreenName": "MissKatefabe",
+              "Name": "On The Outside",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2092009046043746304/o8535P5C_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/760191569483931652/1787608758",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Remember when you were banning people for using trans and cis but reported death threats weren’t against your terms?",
+            "CreatedAt": "2026-10-03T00:38:57Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 1,
+              "Likes": 34,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106031792570417401",
+            "Author": {
+              "ID": "1667904233419440129",
+              "ScreenName": "DrClownPhD",
+              "Name": "Dr. Clown, PhD",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2008921839041486848/tt9Cdiru_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1667904233419440129/1762983529",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X X is mine! https://t.co/ktphVhvCoT",
+            "CreatedAt": "2026-10-02T14:41:22Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": [
+              {
+                "Kind": 2,
+                "URL": "https://pbs.twimg.com/tweet_video_thumb/HTogv80XIAAkL1G.jpg",
+                "AltText": "",
+                "Playable": "https://video.twimg.com/tweet_video/HTogv80XIAAkL1G.mp4"
+              }
+            ],
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 1,
+              "Reposts": 0,
+              "Likes": 37,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106055064116949378",
+            "Author": {
+              "ID": "1298146545364111360",
+              "ScreenName": "disu148",
+              "Name": "Darshana ( disu )♥️",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/2081418039988486144/9aqLbEL0_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1298146545364111360/1786291560",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Elon musk is speek \nInstagram is for girl 👧 https://t.co/ytTQOVSiK0",
+            "CreatedAt": "2026-10-02T16:13:50Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": [
+              {
+                "Kind": 0,
+                "URL": "https://pbs.twimg.com/media/HTo16WDbYAAMlNF.jpg",
+                "AltText": "",
+                "Playable": ""
+              }
+            ],
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 3,
+              "Reposts": 2,
+              "Likes": 28,
+              "Quotes": 0,
+              "Bookmarks": 4,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106033799658389842",
+            "Author": {
+              "ID": "1679548924560810000",
+              "ScreenName": "truestormyjoe",
+              "Name": "True Stormy Joe",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/1867619014798647296/UUXpVBkJ_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1679548924560810000/1754255195",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X Can you let @stormypatriot21 back on then?",
+            "CreatedAt": "2026-10-02T14:49:20Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 3,
+              "Likes": 28,
+              "Quotes": 0,
+              "Bookmarks": 1,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106028064274817512",
+            "Author": {
+              "ID": "1759979669124677632",
+              "ScreenName": "BasedBrett",
+              "Name": "Brett",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/1857482258543677440/N6PuT5F5_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1759979669124677632/1709178627",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X But the girls are on Instagram, no?",
+            "CreatedAt": "2026-10-02T14:26:33Z",
+            "RepostedBy": null,
+            "Lang": "en",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 2,
+              "Reposts": 2,
+              "Likes": 31,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "2106039403877445857",
+            "Author": {
+              "ID": "1600628215659339776",
+              "ScreenName": "GodandCountryy",
+              "Name": "God \u0026 Country",
+              "AvatarURL": "https://pbs.twimg.com/profile_images/1917292404052238337/37XKGsHX_normal.jpg",
+              "BannerURL": "https://pbs.twimg.com/profile_banners/1600628215659339776/1670455064",
+              "HasGraduatedAccess": true
+            },
+            "Text": "@X @FFT1776 💯% https://t.co/QX5aeXVsIK",
+            "CreatedAt": "2026-10-02T15:11:36Z",
+            "RepostedBy": null,
+            "Lang": "und",
+            "ConversationID": "2106019976381689871",
+            "ReplyTo": "2106019976381689871",
+            "Quote": null,
+            "Media": [
+              {
+                "Kind": 0,
+                "URL": "https://pbs.twimg.com/media/HTonq_KWIAAawLF.jpg",
+                "AltText": "",
+                "Playable": ""
+              }
+            ],
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 2,
+              "Reposts": 1,
+              "Likes": 29,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      }
+    ],
+    "Next": "DAAKCgABHUlDsIl__mMLAAIAAAGoRW1QQzZ3QUFBZlEvZ0dKTjB2R3AvQUFBQUNVZE9pS1ZJWnJCVWgwNmJqZTkyZ0JnSFRwcGNxN2JnSEFkT29wZnJ0cVEyUjA2SkZvUWx2RmNIVHBTc0RpWHdGb2RPaFlDcGh0d0R4MDZxWWtYMjdBMEhUcVlGM3JYZ1NNZE9ub0tLbHBBZFIwNkZrSmFXdEhpSFRvYkFRV2JJTnNkT2k5bThSc3dTaDA2V2lXTVcwQmpIVG9ucmZjWE1PRWRPaVd1cXBwUmpCMDZSZk9qbDRDUEhUb2RtZGNib2Y0ZE9pREIwZGJBK1IwNkluWmNXM0RFSFRxSU5lTVdnSk1kT2pYc0pocHhnaDA2TlZHN21vRFZIVHFhcjM2WFFSWWRPbFdIc1pwQlpCMDZGbWtYVzNCZ0hUcXNuU0VhVUM0ZE9tcnZPdHBnQWgwNm5sYjdWd0FySFRxVFI3TGFRRzRkT2p5M0Rscnc2eDA2SFYzQ0dxSG9IVG9iRXJjV2NlZ2RPNCs3U1p0QmdSMDZGaWU4Vm1HZEhUb2VRc0ZiRVRrZE9wUHluNXRBK0E9PQgAAwAAAAILAAQAAAAGQm90dG9tAAA",
+    "Requested": 42,
+    "Skipped": 6,
+    "FetchedAt": "0001-01-01T00:00:00Z"
+  }
+]

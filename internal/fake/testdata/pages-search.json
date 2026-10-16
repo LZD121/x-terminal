@@ -1,0 +1,88 @@
+[
+  [
+    {
+      "ID": "search-a",
+      "Author": {
+        "ID": "author",
+        "ScreenName": "author",
+        "Name": "author",
+        "AvatarURL": "",
+        "BannerURL": "",
+        "HasGraduatedAccess": false
+      },
+      "Text": "a result about search-a",
+      "CreatedAt": "2026-10-14T09:12:00Z",
+      "RepostedBy": null,
+      "Lang": "",
+      "ConversationID": "search-a",
+      "ReplyTo": "",
+      "Quote": null,
+      "Media": null,
+      "Visibility": 0,
+      "Counts": {
+        "Replies": 0,
+        "Reposts": 0,
+        "Likes": 0,
+        "Quotes": 0,
+        "Bookmarks": 0,
+        "Views": 0
+      }
+    },
+    {
+      "ID": "search-b",
+      "Author": {
+        "ID": "author",
+        "ScreenName": "author",
+        "Name": "author",
+        "AvatarURL": "",
+        "BannerURL": "",
+        "HasGraduatedAccess": false
+      },
+      "Text": "a result about search-b",
+      "CreatedAt": "2026-10-14T09:12:00Z",
+      "RepostedBy": null,
+      "Lang": "",
+      "ConversationID": "search-b",
+      "ReplyTo": "",
+      "Quote": null,
+      "Media": null,
+      "Visibility": 0,
+      "Counts": {
+        "Replies": 0,
+        "Reposts": 0,
+        "Likes": 0,
+        "Quotes": 0,
+        "Bookmarks": 0,
+        "Views": 0
+      }
+    },
+    {
+      "ID": "search-c",
+      "Author": {
+        "ID": "author",
+        "ScreenName": "author",
+        "Name": "author",
+        "AvatarURL": "",
+        "BannerURL": "",
+        "HasGraduatedAccess": false
+      },
+      "Text": "a result about search-c",
+      "CreatedAt": "2026-10-14T09:12:00Z",
+      "RepostedBy": null,
+      "Lang": "",
+      "ConversationID": "search-c",
+      "ReplyTo": "",
+      "Quote": null,
+      "Media": null,
+      "Visibility": 0,
+      "Counts": {
+        "Replies": 0,
+        "Reposts": 0,
+        "Likes": 0,
+        "Quotes": 0,
+        "Bookmarks": 0,
+        "Views": 0
+      }
+    }
+  ]
+]

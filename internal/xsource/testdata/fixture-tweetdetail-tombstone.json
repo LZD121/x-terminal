@@ -1,0 +1,123 @@
+{
+  "data": {
+    "threaded_conversation_with_injections_v2": {
+      "instructions": [
+        {
+          "type": "TimelineClearCache"
+        },
+        {
+          "entries": [
+            {
+              "entryId": "tweet-9000000000000000300",
+              "content": {
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "__typename": "TimelineTweet",
+                  "tweetDisplayType": "Tweet",
+                  "tweet_results": {
+                    "result": {
+                      "__typename": "TweetTombstone",
+                      "tombstone": {
+                        "text": "This post is unavailable.",
+                        "tombstone_type": "Deleted"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-9000000000000000310",
+              "content": {
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-9000000000000000310-tweet-9000000000000000311",
+                    "item": {
+                      "itemContent": {
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "Tweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "9000000000000000311",
+                            "legacy": {
+                              "full_text": "a reply under a post that is gone",
+                              "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                              "conversation_id_str": "9000000000000000300",
+                              "reply_count": 0,
+                              "in_reply_to_status_id_str": "9000000000000000300"
+                            },
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "rest_id": "9000",
+                                  "core": {
+                                    "screen_name": "replyone",
+                                    "name": "Reply One"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "entryId": "conversationthread-9000000000000000320",
+              "content": {
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-9000000000000000320-tweet-9000000000000000321",
+                    "item": {
+                      "itemContent": {
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "Tweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "9000000000000000321",
+                            "legacy": {
+                              "full_text": "another reply under the same gone post",
+                              "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                              "conversation_id_str": "9000000000000000300",
+                              "reply_count": 0,
+                              "in_reply_to_status_id_str": "9000000000000000300"
+                            },
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "rest_id": "9000",
+                                  "core": {
+                                    "screen_name": "replytwo",
+                                    "name": "Reply Two"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "type": "TimelineAddEntries"
+        },
+        {
+          "direction": "Top",
+          "type": "TimelineTerminateTimeline"
+        }
+      ]
+    }
+  }
+}

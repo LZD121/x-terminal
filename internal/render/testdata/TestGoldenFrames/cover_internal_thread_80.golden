@@ -1,0 +1,24 @@
+ REQ-8644  open     linus.zhang           Oct 14 08:05                          
+   the pane never lies about what it is showing - that is the only rule i care  
+   about here, and it is the rule the rest of this program is written against.  
+>REQ-8155  open     nils.kuznetsov        Oct 14 09:12                          
+>  selected=true                                                                
+>  cursor in, cursor out: the render layer never does arithmetic on a cursor.   
+>> REQ-8916  open     linus.zhang           Oct 14 09:00                        
+>>   the page cache is keyed by the cursor, not by an index.                    
+ REQ-1202  open     nils.kuznetsov        Oct 14 09:13                          
+   follows REQ-8155                                                             
+   a late page never moves what you are reading.                                
+   REQ-9799  open     anya.olsen            Oct 14 09:20                        
+     does that hold when the walk re-runs? 日本語のテキストは2セル幅です。 🚀   
+   REQ-7010  open     yuki.vogel            Oct 14 09:24                        
+     responds to linus.zhang                                                    
+     then the page cache is doing more work than the pane admits.               
+   REQ-4221  open     marek.ivanov          Oct 14 09:31                        
+     that is the part i keep getting wrong, so:                                 
+   > REQ-8155  open     nils.kuznetsov        Oct 14 09:12                      
+   >   cursor in, cursor out: the render layer never does arithmetic on a       
+   >   cursor.                                                                  
+                                                                                
+                                                                                
+session expired  copy the cookie again  view=thread  12 requests, 0 rate-limited

@@ -1,0 +1,24 @@
+ id        state    owner                 updated                               
+ REQ-1930  open     oscar.fontaine        Oct 14 09:12                          
+   a fifteen-cell handle, the widest the column holds                           
+>REQ-8141  open     linus.zhang           Oct 14 09:11                          
+>  日本語のタイムラインを端末で読む。カーソルが戻ってきたら、そこが終わり。     
+ REQ-7508  open     linus.zhang           Oct 14 09:10                          
+   🚀                                                                           
+ REQ-4719  open     linus.zhang           Oct 14 09:09                          
+   👨‍👩‍👧                                                                       
+ REQ-4086  open     linus.zhang           Oct 14 09:08                          
+   the link that runs past the measure:                                         
+   example.invalid/2026/10/14/a-path-that-cannot-fit-on-one-line/a-fragment     
+ REQ-1297  open     linus.zhang           Oct 14 09:07                          
+   exactly the measure at 120 columns                                           
+   ------------------------------------------------------------- one cell       
+   shorter than that                                                            
+   -------------------------------------------------------------------- exactly 
+   the measure at 80 columns ------------------------------------------- one    
+   cell shorter than that -------------------------------------------------     
+ REQ-9664  open     linus.zhang           Oct 14 09:06                          
+   a body long enough that the quote below it is the second thing a reader sees,
+   which is where the quote prefix has to hold its column.                      
+ > REQ-1469  open     linus.zhang           Oct 14 08:12                        
+session expired  copy the cookie again  view=mine  200 requests, 12 rate-limited

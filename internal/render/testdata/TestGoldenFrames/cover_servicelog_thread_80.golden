@@ -1,0 +1,24 @@
+ 2026-10-14T08:05:00Z INFO  svc=worker-filter-80 seq=2491397                    
+   the pane never lies about what it is showing - that is the only rule i care  
+   about here, and it is the rule the rest of this program is written against.  
+>2026-10-14T09:12:00Z INFO  svc=pump-pricing-36 seq=7195258  focus=1            
+>  cursor in, cursor out: the render layer never does arithmetic on a cursor.   
+>2026-10-14T09:00:00Z INFO  svc=worker-filter-80 seq=8719125 parent=7195258     
+>  the page cache is keyed by the cursor, not by an index.                      
+ 2026-10-14T09:13:00Z INFO  svc=pump-pricing-36 seq=7577203 follows=7195258     
+   a late page never moves what you are reading.                                
+   2026-10-14T09:20:00Z INFO  svc=broker-storage-45 seq=3005606                 
+     does that hold when the walk re-runs? 日本語のテキストは2セル幅です。 🚀   
+   2026-10-14T09:24:00Z INFO svc=sentry-throttle-11 seq=3377395                 
+   reply_to=worker-filter-80                                                    
+     then the page cache is doing more work than the pane admits.               
+   2026-10-14T09:31:00Z INFO  svc=index-policy-51 seq=3749184                   
+     that is the part i keep getting wrong, so:                                 
+   2026-10-14T09:12:00Z INFO  svc=pump-pricing-36 seq=7195258 parent=3749184    
+     cursor in, cursor out: the render layer never does arithmetic on a cursor. 
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+session expired  copy the cookie again  12 requests, 0 rate-limited             

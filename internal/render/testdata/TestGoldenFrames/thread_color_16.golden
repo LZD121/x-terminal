@@ -1,0 +1,24 @@
+ lzd              [90mOct 14 08:05[39m                                                  
+   the pane never lies about what it is showing - that is the only rule i care  
+   about here, and it is the rule the rest of this program is written against.  
+                                                                                
+[7m>aergon           [90mOct 14 09:12  focal[39m                                           [27m
+[7m>  cursor in, cursor out: the render layer never does arithmetic on a cursor.   [27m
+[7m>[90m> [39mlzd              [90mOct 14 09:00[39m                                                [27m
+[7m>[90m> [39m  the page cache is keyed by the cursor, not by an index.                    [27m
+ aergon           [90mOct 14 09:13  continued[39m                                       
+   a late page never moves what you are reading.                                
+                                                                                
+   mira             [90mOct 14 09:20[39m                                                
+     does that hold when the walk re-runs? 日本語のテキストは2セル幅です。 🚀   
+                                                                                
+   kestrel          [90mOct 14 09:24  reply to lzd[39m                                  
+     then the page cache is doing more work than the pane admits.               
+                                                                                
+   longhandle_name  [90mOct 14 09:31[39m                                                
+     that is the part i keep getting wrong, so:                                 
+   [90m> [39maergon           [90mOct 14 09:12[39m                                              
+   [90m> [39m  cursor in, cursor out: the render layer never does arithmetic on a       
+   [90m> [39m  cursor.                                                                  
+                                                                                
+[90mthread[39m  [90m2/6+[39m  [90m12 requests, 0 rate-limited[39m                                       

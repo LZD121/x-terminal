@@ -1,0 +1,254 @@
+{
+  "files": [
+    {
+      "file": "fixture-tweetdetail.json",
+      "operation": "TweetDetail",
+      "queryId": "3BlMtudy4N-d78ch7zTLZQ",
+      "focalId": "2106019976381689871",
+      "capturedAt": "2026-10-14",
+      "bytes": 202469,
+      "sha256": "b24cd5dd642b7d8328e53518b4d96b5ff950a4c887efdb8ef07b60bc115f4f10",
+      "source": "recorded",
+      "sourceFile": "",
+      "redaction": "none applied: the recorded body carries no viewer identity and no cookie; the cookie never enters a fixture (SEC-01); one third-party email address in a quoted profile bio rewritten to example-contact@example.com (a public tweet body, but no stranger's address is carried here)",
+      "notes": [
+        "the recorded TweetDetail answer for the focal post 2106019976381689871: 3 instructions, 43 entries in its TimelineAddEntries instruction - 41 conversationthread modules, one tweet entry for the focal post and one cursor-bottom entry - carrying 42 tweet items, of which 5 are promoted items from five conversations this thread is not about",
+        "captured 2026-10-14 through the operator's own session with one authenticated TweetDetail call, measured at 1.63 s and 202,462 bytes (.planning/research/UPSTREAM-PROBE.md, 'TweetDetail: the thread shape')",
+        "byte-identical to the evidence file it names, copied rather than re-serialized: the decoder is driven by the bytes the live site returned, and a re-encoded body is a different document",
+        "the related-tweets rail, a composer entry and the shapes of a withheld post are not in it: the recorded capture does not carry them, which is why fixture-tweetdetail-shapes.json exists"
+      ]
+    },
+    {
+      "file": "fixture-usertweets.json",
+      "operation": "UserTweets",
+      "queryId": "7_KBXBpG0zBPRN6UCIV0-w",
+      "focalId": "",
+      "capturedAt": "2026-10-14",
+      "bytes": 130245,
+      "sha256": "2f268f5ec2d7d89d4e37f170dd75f150e96f01cef8a14a2f2853a8b9eab2b759",
+      "source": "recorded",
+      "sourceFile": "",
+      "redaction": "none applied: the recorded body carries no viewer identity and no cookie; the cookie never enters a fixture (SEC-01); no second copy is kept in the repository",
+      "notes": [
+        "Phase 1's recording: one UserTweets answer for the account the thread fixture's focal post replies to, read with count=20 through the operator's own session",
+        "a timeline has no focal post, so focalId is empty: the field names the post a detail answer is about, and this body is about an account's timeline"
+      ]
+    },
+    {
+      "file": "fixture-tweetdetail-shapes.json",
+      "operation": "TweetDetail",
+      "queryId": "3BlMtudy4N-d78ch7zTLZQ",
+      "focalId": "9000000000000000100",
+      "capturedAt": "2026-10-14",
+      "bytes": 24239,
+      "sha256": "b0ced329e8f5c31dd82135bed9b1fed24774d9059a4ccfb7985857d41960fd6a",
+      "source": "synthetic",
+      "sourceFile": "",
+      "redaction": "none applied: this body is synthetic, so no live answer carried a viewer identity into it; the cookie never enters a fixture (SEC-01)",
+      "notes": [
+        "synthetic: it is shaped after the recorded answer's envelope and entry ids, and it carries the shapes the recorded capture does not",
+        "three ancestor tweet entries above the focal post (root first), then the focal tweet entry: the chain above, which the recording does not have",
+        "a conversationthread module whose items say tweetDisplayType SelfThread and which carries two posts (the focal post answering itself)",
+        "a reply whose quoted_status_result carries a post that itself quotes another: a quote two levels deep",
+        "a module carrying its own TimelineTimelineCursor item (ShowMoreThreads), which is the page's own next cursor when no bottom cursor came",
+        "a TimelineTimelineItem whose result is a TweetTombstone, with its identity only in the entry id (tweet-9000000000000000500), because a tombstone has no rest_id",
+        "a reply wrapped in TweetWithVisibilityResults (limited) and a reply whose legacy carries a non-empty withheld_in_countries (withheld - no recording carries one, so the shape and the rule that reads it are inferences)",
+        "a tweetdetailrelatedtweets entry carrying a tweet, a messageprompt entry and an entry whose id carries tweetcomposer: three decorations the walker drops and counts",
+        "a conversationthread module whose item entry id carries -promoted-tweet-: an advertisement from another conversation, dropped and counted",
+        "an entry with an id no phase has named (who-to-follow-) carrying an item class this build has never seen, which is the unknown-entry arm"
+      ]
+    },
+    {
+      "file": "fixture-tweetdetail-empty.json",
+      "operation": "TweetDetail",
+      "queryId": "3BlMtudy4N-d78ch7zTLZQ",
+      "focalId": "9000000000000000200",
+      "capturedAt": "2026-10-14",
+      "bytes": 1765,
+      "sha256": "a99a3fabf61097f592ae5f1c3963f0229edc2d3f1549dc33f0832bfdbd4afb5e",
+      "source": "synthetic",
+      "sourceFile": "",
+      "redaction": "none applied: this body is synthetic, so no live answer carried a viewer identity into it; the cookie never enters a fixture (SEC-01)",
+      "notes": [
+        "synthetic: an answer a cold thread read can honestly be given - the focal entry alone, no module and no cursor",
+        "the focal post's legacy.reply_count is above zero while the page carries no reply, which is the evidence behind the third partial-thread condition (replies were not reachable)",
+        "the focal post answers an id the body does not carry at all, which is the evidence behind the chain-cut condition (the post above is not reachable)"
+      ]
+    },
+    {
+      "file": "fixture-tweetdetail-tombstone.json",
+      "operation": "TweetDetail",
+      "queryId": "3BlMtudy4N-d78ch7zTLZQ",
+      "focalId": "9000000000000000300",
+      "capturedAt": "2026-10-14",
+      "bytes": 4666,
+      "sha256": "7c2531bc31547827f714c7a3852f1cd3d889ec807c097c940413eda0f93b9597",
+      "source": "synthetic",
+      "sourceFile": "",
+      "redaction": "none applied: this body is synthetic, so no live answer carried a viewer identity into it; the cookie never enters a fixture (SEC-01)",
+      "notes": [
+        "synthetic: the focal post itself is a TweetTombstone, which the recorded capture does not carry - a deleted post can still have replies worth reading",
+        "the tombstone's only identity is its entry id (tweet-9000000000000000300), so the frame's focal post is unavailable and still named",
+        "two ordinary reply modules follow it, so the adversarial frame's focal block and its replies are both exercised"
+      ]
+    },
+    {
+      "file": "fixture-profile-header.json",
+      "operation": "UserByScreenName",
+      "queryId": "AMIBMjtxEEATh4z8V9GtRg",
+      "focalId": "",
+      "capturedAt": "2026-10-14",
+      "bytes": 2951,
+      "sha256": "0d1d1b4627d150dab2aa74c70639eed3138a25bd3baca97f465d679f360b2411",
+      "source": "synthetic",
+      "sourceFile": "",
+      "redaction": "none applied: this body is synthetic, so no live answer carried a viewer identity into it; the cookie never enters a fixture (SEC-01)",
+      "notes": [
+        "synthetic: lifted from the recorded UserTweets body's user node (fixture-usertweets.json / rest_id 783214, screen_name X) into a UserByScreenName envelope so the two-request order is proven from the same account",
+        "matched profile header for the account whose UserTweets page is fixture-profile-posts.json / fixture-usertweets.json",
+        "variables at capture time would be screen_name=X; the numeric id 783214 is public (the X account) and is not redacted"
+      ],
+      "variables": {
+        "screen_name": "X"
+      }
+    },
+    {
+      "file": "fixture-profile-posts.json",
+      "operation": "UserTweets",
+      "queryId": "7_KBXBpG0zBPRN6UCIV0-w",
+      "focalId": "",
+      "capturedAt": "2026-10-14",
+      "bytes": 130245,
+      "sha256": "2f268f5ec2d7d89d4e37f170dd75f150e96f01cef8a14a2f2853a8b9eab2b759",
+      "source": "recorded",
+      "sourceFile": "internal/xsource/testdata/fixture-usertweets.json",
+      "redaction": "none applied: byte-identical to Phase 1 UserTweets recording; no viewer identity; cookie never enters a fixture (SEC-01)",
+      "notes": [
+        "matched posts page for the header in fixture-profile-header.json: same account (userId 783214), count=20",
+        "byte-identical to fixture-usertweets.json so ParseTimeline of both agrees",
+        "variables: userId=783214, count=20, cursor=\"\""
+      ],
+      "variables": {
+        "count": 20,
+        "cursor": "",
+        "userId": "783214"
+      }
+    },
+    {
+      "file": "fixture-search-people.json",
+      "operation": "SearchTimeline",
+      "queryId": "irezafrnzav4Ulf1vDkEBg",
+      "focalId": "",
+      "capturedAt": "2026-10-14",
+      "bytes": 1028,
+      "sha256": "014a3359422da8d05f1d29b5b504a6f58b81a9db0e63147dded9365af3bea960",
+      "source": "synthetic",
+      "sourceFile": "",
+      "redaction": "none applied: this body is synthetic, so no live answer carried a viewer identity into it; the cookie never enters a fixture (SEC-01)",
+      "notes": [
+        "synthetic: SearchTimeline People envelope shaped like the measured search container (data.search_by_raw_query.search_timeline.timeline.instructions), fail-closed because live capture is gated",
+        "four TimelineUser entries (including a long display name and an empty display name) plus a bottom cursor so ParseSearchPeople and the fake parity path have a body",
+        "variables at capture time would be rawQuery=people, count=20, product=People, cursor=\"\""
+      ],
+      "variables": {
+        "count": 20,
+        "cursor": "",
+        "product": "People",
+        "rawQuery": "people"
+      }
+    },
+    {
+      "file": "fixture-search.json",
+      "operation": "SearchTimeline",
+      "queryId": "irezafrnzav4Ulf1vDkEBg",
+      "focalId": "",
+      "capturedAt": "2026-10-14",
+      "bytes": 1759,
+      "sha256": "2e7748288aa3ff5d3e403e348ca4ebb17b449f8a4e4d102ed6ede0966b199354",
+      "source": "synthetic",
+      "sourceFile": "",
+      "redaction": "none applied: this body is synthetic, so no live answer carried a viewer identity into it; the cookie never enters a fixture (SEC-01)",
+      "notes": [
+        "synthetic: SearchTimeline Latest envelope shaped like the measured search container (data.search_by_raw_query.search_timeline.timeline.instructions), fail-closed because live capture is gated",
+        "three TimelineTweet entries plus a bottom cursor so ParseSearch and the fake parity path have a body",
+        "variables at capture time would be rawQuery=timeline, count=20, product=Latest, cursor=\"\""
+      ],
+      "variables": {
+        "count": 20,
+        "cursor": "",
+        "product": "Latest",
+        "rawQuery": "timeline"
+      }
+    },
+    {
+      "file": "fixture-bookmarks.json",
+      "operation": "Bookmarks",
+      "queryId": "-dgKZ58Dr9YSJYrcgEb5KA",
+      "focalId": "",
+      "capturedAt": "2026-10-14",
+      "bytes": 146490,
+      "sha256": "e930a2e5d24f14740c4d26e73415febaf9762459fffffda3eee775e9024af4af",
+      "source": "recorded",
+      "sourceFile": "",
+      "redaction": "nothing rewritten: the answer carried neither the viewer's own account id nor their handle; the cookie never enters a fixture (SEC-01); 25 post bodies replaced with synthetic text of the same lengths",
+      "notes": [
+        "measured outcome: the server answered Bookmarks with a list",
+        "entry kinds: TimelineTweet posts=20 requested=20",
+        "bottom cursor present: true",
+        "variables: count=20, cursor="
+      ],
+      "variables": {
+        "count": 20,
+        "cursor": ""
+      }
+    },
+    {
+      "file": "fixture-likes.json",
+      "operation": "Likes",
+      "queryId": "mu4us66Q6RRNOywVQhGtRg",
+      "focalId": "",
+      "capturedAt": "2026-10-14",
+      "bytes": 107828,
+      "sha256": "4af8bea4593f135e38b542cdf274df90059f94a49bb19793e52cf2c78528d7ad",
+      "source": "recorded",
+      "sourceFile": "",
+      "redaction": "the viewer's account id was rewritten to 0 (8 occurrences) and their handle to redacted (4 occurrences); the cookie never enters a fixture (SEC-01); 25 post bodies replaced with synthetic text of the same lengths; this pass additionally rewrote the viewer's own handle to example-viewer in the media expansion URLs its posts carried (6 occurrences)",
+      "notes": [
+        "measured outcome: the server answered Likes with a list",
+        "entry kinds: TimelineTweet posts=19 requested=20",
+        "bottom cursor present: true",
+        "variables: count=20, cursor=, includePromotedContent=false, userId=\u003cviewer\u003e"
+      ],
+      "variables": {
+        "count": 20,
+        "cursor": "",
+        "includePromotedContent": false,
+        "userId": "0"
+      }
+    },
+    {
+      "file": "fixture-home.json",
+      "operation": "HomeLatestTimeline",
+      "queryId": "OQPHTgwczzp9RMAPt6BH9A",
+      "focalId": "",
+      "capturedAt": "2026-10-15",
+      "bytes": 983042,
+      "sha256": "f88f644aacae82c067f6aa61f71af970b2a074882491acadeba0568981cdf101",
+      "source": "recorded",
+      "sourceFile": "",
+      "redaction": "nothing rewritten: the answer carried neither the viewer's own account id nor their handle; the cookie never enters a fixture (SEC-01); 190 post bodies replaced with synthetic text of the same lengths",
+      "notes": [
+        "measured outcome: the server answered HomeLatestTimeline with a list",
+        "entry kinds: TimelineTweet posts=112 requested=112",
+        "bottom cursor present: true",
+        "variables: count=20, cursor=, includePromotedContent=false, seenTweetIds=[]"
+      ],
+      "variables": {
+        "count": 20,
+        "cursor": "",
+        "includePromotedContent": false,
+        "seenTweetIds": []
+      }
+    }
+  ]
+}

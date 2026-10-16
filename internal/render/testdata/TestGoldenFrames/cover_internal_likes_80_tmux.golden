@@ -1,0 +1,24 @@
+ id        state    owner                 updated                               
+ REQ-1474  open     yuki.vogel            Oct 13 21:04                          
+   saved for later: the cache holds the two saved lists and nothing else.       
+>REQ-4263  open     anya.olsen            Oct 12 18:20                          
+>  [1] image                                                                    
+>  a record is a record, so the row is the row - only the status line knows when
+>  the cache was last filled. CJK: 日本語と絵文字👨‍👩‍👧‍👦                       
+ REQ-7052  open     nils.kuznetsov        Oct 12 07:45                          
+   the stars list needs an operation id the bundle scrape never saw.            
+ REQ-9841  closed   yuki.vogel            Oct 11 09:00                          
+   record withdrawn                                                             
+ REQ-3630  open     marek.ivanov          Oct 10 09:00                          
+   fifteen-cell handle row                                                      
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+session expired  copy the cookie again  12 requests, 0 rate-limited             

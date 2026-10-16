@@ -1,0 +1,24 @@
+ lzd              Oct 14 08:05                                                  
+   the pane never lies about what it is showing - that is the only rule i care  
+   about here, and it is the rule the rest of this program is written against.  
+                                                                                
+[7m>aergon           Oct 14 09:12  focal                                           [27m
+[7m>  cursor in, cursor out: the render layer never does arithmetic on a cursor.   [27m
+[7m>> lzd              Oct 14 09:00                                                [27m
+[7m>>   the page cache is keyed by the cursor, not by an index.                    [27m
+ aergon           Oct 14 09:13  continued                                       
+   a late page never moves what you are reading.                                
+                                                                                
+   mira             Oct 14 09:20                                                
+     does that hold when the walk re-runs? 日本語のテキストは2セル幅です。 🚀   
+                                                                                
+   kestrel          Oct 14 09:24  reply to lzd                                  
+     then the page cache is doing more work than the pane admits.               
+                                                                                
+   longhandle_name  Oct 14 09:31                                                
+     that is the part i keep getting wrong, so:                                 
+   > aergon           Oct 14 09:12                                              
+   >   cursor in, cursor out: the render layer never does arithmetic on a       
+   >   cursor.                                                                  
+                                                                                
+thread  2/6+  12 requests, 0 rate-limited                                       

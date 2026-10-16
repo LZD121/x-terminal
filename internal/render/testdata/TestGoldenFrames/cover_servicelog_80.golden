@@ -1,0 +1,24 @@
+ 2026-10-14T09:12:00Z INFO  svc=guard-retry-20 seq=6079141                      
+   a fifteen-cell handle, the widest the column holds                           
+>2026-10-14T09:11:00Z INFO  svc=worker-filter-80 seq=6450930                    
+>  日本語のタイムラインを端末で読む。カーソルが戻ってきたら、そこが終わり。     
+ 2026-10-14T09:10:00Z INFO  svc=worker-filter-80 seq=6822719                    
+   🚀                                                                           
+ 2026-10-14T09:09:00Z INFO  svc=worker-filter-80 seq=7194508                    
+   👨‍👩‍👧                                                                           
+ 2026-10-14T09:08:00Z INFO  svc=worker-filter-80 seq=7566297                    
+   the link that runs past the measure:                                         
+   example.invalid/2026/10/14/a-path-that-cannot-fit-on-one-line/a-fragment     
+ 2026-10-14T09:07:00Z INFO  svc=worker-filter-80 seq=7938086                    
+   exactly the measure at 120 columns                                           
+   ------------------------------------------------------------- one cell       
+   shorter than that                                                            
+   -------------------------------------------------------------------- exactly 
+   the measure at 80 columns ------------------------------------------- one    
+   cell shorter than that -------------------------------------------------     
+ 2026-10-14T09:06:00Z INFO  svc=worker-filter-80 seq=8309875                    
+   a body long enough that the quote below it is the second thing a reader sees,
+   which is where the quote prefix has to hold its column.                      
+ 2026-10-14T08:12:00Z INFO  svc=worker-filter-80 seq=4614498 parent=8309875     
+   the quoted body, one level down                                              
+session expired  copy the cookie again  stream=in  200 requests, 12 rate-limited

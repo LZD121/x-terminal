@@ -1,0 +1,16 @@
+# The alias pin table: the identities the cover function makes of the UI-SPEC's own worked examples,
+# one account per line and one field per column, tab separated.
+#
+# This file is hand-written and the program never writes it. It exists because the phase's promise
+# is that one account keeps one alias across screens, sessions and restarts, and a promise about
+# something staying the same is only a check if the same value is written down somewhere the code
+# cannot move: the word lists, the hash, the key rule and the two digit discriminators are all
+# pinned here, so a change to any of them shows up as a diff of this file in the commit that made
+# it. The stored frames pin the rendering; this pins the mapping.
+#
+# Columns: the account's id, the account's own handle (for the record, and never an output of the
+# function), then the four projections in the order the alias's own struct declares them.
+#
+# id	handle	Handle	Name	Login	Email
+44196397	aergon	agent-rollback-70	Anya Karlsson	anya.karlsson	anya.karlsson70@corp.internal
+14706153	lzd	guard-migrate-48	Clara Sorensen	clara.sorensen	clara.sorensen48@corp.internal

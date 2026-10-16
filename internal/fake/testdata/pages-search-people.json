@@ -1,0 +1,36 @@
+[
+  [
+    {
+      "ID": "1001",
+      "ScreenName": "ada",
+      "Name": "Ada Lovelace",
+      "AvatarURL": "",
+      "BannerURL": "",
+      "HasGraduatedAccess": false
+    },
+    {
+      "ID": "1002",
+      "ScreenName": "grace",
+      "Name": "Grace Hopper",
+      "AvatarURL": "",
+      "BannerURL": "",
+      "HasGraduatedAccess": false
+    },
+    {
+      "ID": "1003",
+      "ScreenName": "longhandlefifteen",
+      "Name": "A display name that must be cut somewhere in the goldens because it is long",
+      "AvatarURL": "",
+      "BannerURL": "",
+      "HasGraduatedAccess": false
+    },
+    {
+      "ID": "1004",
+      "ScreenName": "noname",
+      "Name": "",
+      "AvatarURL": "",
+      "BannerURL": "",
+      "HasGraduatedAccess": false
+    }
+  ]
+]

@@ -1,0 +1,24 @@
+ commit af3857764d3b                                                                                                    
+ Author: Yuki Vogel <yuki.vogel11@corp.internal>                                                                        
+ Date:   Tue Oct 13 21:04:00 2026 +0000                                                                                 
+                                                                                                                        
+     saved for later: the cache holds the two saved lists and nothing else.                                             
+                                                                                                                        
+>commit af385a764d3b                                                                                                    
+>Author: Anya Olsen <anya.olsen45@corp.internal>                                                                        
+>Date:   Mon Oct 12 18:20:00 2026 +0000                                                                                 
+                                                                                                                        
+>[1] image                                                                                                              
+>    a record is a record, so the row is the row - only the status line knows when the cache was last                   
+>    filled. CJK: 日本語と絵文字👨‍👩‍👧‍👦                                                                                      
+                                                                                                                        
+ commit af3859764d3b                                                                                                    
+ Author: Nils Kuznetsov <nils.kuznetsov36@corp.internal>                                                                
+ Date:   Mon Oct 12 07:45:00 2026 +0000                                                                                 
+                                                                                                                        
+     the stars list needs an operation id the bundle scrape never saw.                                                  
+                                                                                                                        
+ commit af385c764d3b                                                                                                    
+ Author: Yuki Vogel <yuki.vogel11@corp.internal>                                                                        
+ Date:   Sun Oct 11 09:00:00 2026 +0000                                                                                 
+session expired  copy the cookie again  ref=starred  cached Jan 02  2/5+  12 requests, 0 rate-limited                   

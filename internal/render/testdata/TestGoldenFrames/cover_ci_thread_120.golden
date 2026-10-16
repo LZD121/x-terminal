@@ -1,0 +1,24 @@
+ [08:05:00] build=8644 job=worker-filter-80                                                                             
+ | the pane never lies about what it is showing - that is the only rule i care about here, and it                       
+ | is the rule the rest of this program is written against.                                                             
+>[09:12:00] build=8155 job=pump-pricing-36 focus=1                                                                      
+>| cursor in, cursor out: the render layer never does arithmetic on a cursor.                                           
+>| > [09:00:00] build=8916 job=worker-filter-80                                                                         
+>| >   the page cache is keyed by the cursor, not by an index.                                                          
+ [09:13:00] build=1202 job=pump-pricing-36 follows=8155                                                                 
+ | a late page never moves what you are reading.                                                                        
+   [09:20:00] build=9799 job=broker-storage-45                                                                          
+   | does that hold when the walk re-runs? 日本語のテキストは2セル幅です。 🚀                                           
+   [09:24:00] build=7010 job=sentry-throttle-11 responds_to=worker-filter-80                                            
+   | then the page cache is doing more work than the pane admits.                                                       
+   [09:31:00] build=4221 job=index-policy-51                                                                            
+   | that is the part i keep getting wrong, so:                                                                         
+   | > [09:12:00] build=8155 job=pump-pricing-36                                                                        
+   | >   cursor in, cursor out: the render layer never does arithmetic on a cursor.                                     
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+session expired  copy the cookie again  job=thread  2/6+  12 requests, 0 rate-limited                                   

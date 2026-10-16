@@ -1,0 +1,81 @@
+name: ci
+
+# CI runs the four things this project's own audit promises about the tree: it builds, the tests
+# pass, the tree is formatted and vet-clean, and `x-terminal audit` still finds nothing. The last one
+# is the point of the job — the promise checks are the project's own gate, and a CI that ran only
+# `go test` would let a broken promise land as long as no test named it.
+#
+# Nothing here talks to x.com. The suite is hermetic by construction: every test that would need a
+# session or a network is gated behind X_TERMINAL_CAPTURE or skips naming what it needs, so this job
+# spends no account requests and needs no secrets.
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+  workflow_dispatch:
+
+# A second push to the same branch cancels the first: this job is cheap, and a stale run's answer is
+# worth less than a fast one.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          check-latest: true
+
+      - name: go build
+        run: CGO_ENABLED=0 go build ./...
+
+      - name: go vet
+        run: go vet ./...
+
+      - name: gofmt
+        # `gofmt -l` prints the files it would change and exits 0, so the check is on its output.
+        run: |
+          unformatted="$(gofmt -l internal cmd)"
+          if [ -n "$unformatted" ]; then
+            echo "these files are not gofmt-clean:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+      - name: go test
+        # CGO_ENABLED=0 is the shipping configuration: the static-binary property is a promise the
+        # audit makes, so the tests run the way the release is built.
+        run: CGO_ENABLED=0 go test ./... -count=1
+
+      - name: x-terminal audit
+        # The project's own promise checks, run as the release would run them. HOME and the XDG dirs
+        # point at a scratch directory so nothing this step does can touch a real session file or a
+        # real mirror: the audit only reads the tree, but a check that ever wrote would fail here
+        # rather than on the controller's machine.
+        env:
+          HOME: ${{ runner.temp }}
+          XDG_CONFIG_HOME: ${{ runner.temp }}/config
+          XDG_DATA_HOME: ${{ runner.temp }}/data
+        run: |
+          mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME"
+          go run ./cmd/x-terminal audit
+
+      - name: version stamp is inert
+        # A build with no -ldflags must still name itself honestly, and a stamped one must carry the
+        # tag. Both are one line, and both are cheap enough to assert here rather than discover in a
+        # release.
+        run: |
+          go build -o "${{ runner.temp }}/x-terminal-plain" ./cmd/x-terminal
+          "${{ runner.temp }}/x-terminal-plain" --version | grep -q "working tree build"
+          go build -ldflags "-X github.com/${{ github.repository }}/internal/cli.version=v0.0.0-test" \
+            -o "${{ runner.temp }}/x-terminal-stamped" ./cmd/x-terminal
+          "${{ runner.temp }}/x-terminal-stamped" --version | grep -q "v0.0.0-test"

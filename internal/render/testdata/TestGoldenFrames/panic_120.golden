@@ -1,0 +1,24 @@
+ok      corp/billing/internal/ledger    0.412s                                                                          
+ok      corp/billing/internal/rates     0.031s                                                                          
+ok      corp/billing/internal/invoice   0.208s                                                                          
+ok      corp/billing/internal/pricing   0.019s                                                                          
+ok      corp/billing/internal/pdf       0.512s                                                                          
+ok      corp/billing/internal/tax       0.077s                                                                          
+ok      corp/billing/internal/dunning   0.003s                                                                          
+ok      corp/billing/internal/import    0.033s                                                                          
+ok      corp/ledger                     0.655s                                                                          
+ok      corp/ledger/internal/reconcile  0.121s                                                                          
+ok      corp/ledger/internal/reports    0.088s                                                                          
+ok      corp/api/internal/auth          0.044s                                                                          
+ok      corp/api/internal/handlers      0.210s                                                                          
+ok      corp/api/internal/ratelimit     0.009s                                                                          
+ok      corp/jobs/internal/runner       0.121s                                                                          
+ok      corp/jobs/internal/schedule     0.015s                                                                          
+ok      corp/notify/internal/mail       0.062s                                                                          
+ok      corp/notify/internal/webhook    0.028s                                                                          
+ok      corp/config                     0.007s                                                                          
+ok      corp/logging                    0.005s                                                                          
+ok      corp/retry                      0.002s                                                                          
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        

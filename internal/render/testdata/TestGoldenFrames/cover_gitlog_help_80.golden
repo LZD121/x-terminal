@@ -1,0 +1,36 @@
+ j, down         next record                                                    
+ k, up           previous record                                                
+ ctrl+d          half a pane down                                               
+ ctrl+u          half a pane up                                                 
+ pgdown          one pane down                                                  
+ pgup            one pane up                                                    
+ g, home         first loaded record                                            
+ G, end          last loaded record                                             
+ enter           open the selected record                                       
+ a               open the selected record's author                              
+ r               poll for new records, keep the place                           
+ t               switch streams                                                 
+ /               search records                                                 
+ u               find people                                                    
+ s               switch the search order                                        
+ ?               show or hide this list                                         
+ q, esc          back, or quit at the start                                     
+ ctrl+c          quit now                                                       
+ m               switch display mode                                            
+ c               next display style                                             
+ 1               display style 1                                                
+ 2               display style 2                                                
+ 3               display style 3                                                
+ 4               display style 4                                                
+ ctrl+p          switch to the idle screen                                      
+ b               open the saved stream                                          
+ l               open the starred stream                                        
+ i               open selected record files                                     
+ y               copy the record reference                                      
+ o               open the record externally                                     
+ T               show the selected record in the configured language            
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+session expired  copy the cookie again  200 requests, 12 rate-limited           

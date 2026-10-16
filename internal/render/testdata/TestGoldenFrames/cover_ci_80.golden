@@ -1,0 +1,24 @@
+ [09:12:00] build=1930 job=guard-retry-20                                       
+ | a fifteen-cell handle, the widest the column holds                           
+>[09:11:00] build=8141 job=worker-filter-80                                     
+>| 日本語のタイムラインを端末で読む。カーソルが戻ってきたら、そこが終わり。     
+ [09:10:00] build=7508 job=worker-filter-80                                     
+ | 🚀                                                                           
+ [09:09:00] build=4719 job=worker-filter-80                                     
+ | 👨‍👩‍👧                                                                           
+ [09:08:00] build=4086 job=worker-filter-80                                     
+ | the link that runs past the measure:                                         
+ | example.invalid/2026/10/14/a-path-that-cannot-fit-on-one-line/a-fragment     
+ [09:07:00] build=1297 job=worker-filter-80                                     
+ | exactly the measure at 120 columns                                           
+ | ------------------------------------------------------------- one cell       
+ | shorter than that                                                            
+ | -------------------------------------------------------------------- exactly 
+ | the measure at 80 columns ------------------------------------------- one    
+ | cell shorter than that -------------------------------------------------     
+ [09:06:00] build=9664 job=worker-filter-80                                     
+ | a body long enough that the quote below it is the second thing a reader sees,
+ | which is where the quote prefix has to hold its column.                      
+ | > [08:12:00] build=1469 job=worker-filter-80                                 
+ | >   the quoted body, one level down                                          
+session expired  copy the cookie again  queue=ci  200 requests, 12 rate-limited 

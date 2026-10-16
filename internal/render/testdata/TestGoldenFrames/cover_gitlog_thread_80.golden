@@ -1,0 +1,24 @@
+ commit af67eb764d63                                                            
+ Author: Linus Zhang <linus.zhang80@corp.internal>                              
+ Date:   Wed Oct 14 08:05:00 2026 +0000                                         
+                                                                                
+     the pane never lies about what it is showing - that is the only rule i care
+     about here, and it is the rule the rest of this program is written against.
+                                                                                
+>commit af78eb764d72                                                            
+>Author: Nils Kuznetsov <nils.kuznetsov36@corp.internal>                        
+>Date:   Wed Oct 14 09:12:00 2026 +0000                                         
+                                                                                
+>Focal: yes                                                                     
+>    cursor in, cursor out: the render layer never does arithmetic on a cursor. 
+>    > Linus Zhang  Wed Oct 14 09:00:00 2026 +0000                              
+>    >   the page cache is keyed by the cursor, not by an index.                
+ commit af6ed7764d69                                                            
+ Author: Nils Kuznetsov <nils.kuznetsov36@corp.internal>                        
+ Date:   Wed Oct 14 09:13:00 2026 +0000                                         
+                                                                                
+ Continued-from: af78eb764d72                                                   
+     a late page never moves what you are reading.                              
+                                                                                
+   commit af34f3764d38                                                          
+session expired  copy the cookie again  12 requests, 0 rate-limited             

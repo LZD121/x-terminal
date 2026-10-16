@@ -1,0 +1,410 @@
+[
+  {
+    "Focal": {
+      "ID": "9000000000000000100",
+      "Author": {
+        "ID": "9000",
+        "ScreenName": "focalauthor",
+        "Name": "Focal Author",
+        "AvatarURL": "",
+        "BannerURL": "",
+        "HasGraduatedAccess": false
+      },
+      "Text": "the post the frame was opened on",
+      "CreatedAt": "2026-10-03T09:00:00Z",
+      "RepostedBy": null,
+      "Lang": "",
+      "ConversationID": "9000000000000000001",
+      "ReplyTo": "9000000000000000003",
+      "Quote": null,
+      "Media": null,
+      "Visibility": 0,
+      "Counts": {
+        "Replies": 7,
+        "Reposts": 0,
+        "Likes": 0,
+        "Quotes": 0,
+        "Bookmarks": 0,
+        "Views": 0
+      }
+    },
+    "Ancestors": [
+      {
+        "ID": "9000000000000000001",
+        "Author": {
+          "ID": "9000",
+          "ScreenName": "chainroot",
+          "Name": "Chain Root",
+          "AvatarURL": "",
+          "BannerURL": "",
+          "HasGraduatedAccess": false
+        },
+        "Text": "the post three links above the focal one",
+        "CreatedAt": "2026-10-03T09:00:00Z",
+        "RepostedBy": null,
+        "Lang": "",
+        "ConversationID": "9000000000000000001",
+        "ReplyTo": "",
+        "Quote": null,
+        "Media": null,
+        "Visibility": 0,
+        "Counts": {
+          "Replies": 3,
+          "Reposts": 0,
+          "Likes": 0,
+          "Quotes": 0,
+          "Bookmarks": 0,
+          "Views": 0
+        }
+      },
+      {
+        "ID": "9000000000000000002",
+        "Author": {
+          "ID": "9000",
+          "ScreenName": "chainmiddle",
+          "Name": "Chain Middle",
+          "AvatarURL": "",
+          "BannerURL": "",
+          "HasGraduatedAccess": false
+        },
+        "Text": "the post two links above the focal one",
+        "CreatedAt": "2026-10-03T09:00:00Z",
+        "RepostedBy": null,
+        "Lang": "",
+        "ConversationID": "9000000000000000001",
+        "ReplyTo": "9000000000000000001",
+        "Quote": null,
+        "Media": null,
+        "Visibility": 0,
+        "Counts": {
+          "Replies": 2,
+          "Reposts": 0,
+          "Likes": 0,
+          "Quotes": 0,
+          "Bookmarks": 0,
+          "Views": 0
+        }
+      },
+      {
+        "ID": "9000000000000000003",
+        "Author": {
+          "ID": "9000",
+          "ScreenName": "chainparent",
+          "Name": "Chain Parent",
+          "AvatarURL": "",
+          "BannerURL": "",
+          "HasGraduatedAccess": false
+        },
+        "Text": "the post directly above the focal one",
+        "CreatedAt": "2026-10-03T09:00:00Z",
+        "RepostedBy": null,
+        "Lang": "",
+        "ConversationID": "9000000000000000001",
+        "ReplyTo": "9000000000000000002",
+        "Quote": null,
+        "Media": null,
+        "Visibility": 0,
+        "Counts": {
+          "Replies": 2,
+          "Reposts": 0,
+          "Likes": 0,
+          "Quotes": 0,
+          "Bookmarks": 0,
+          "Views": 0
+        }
+      }
+    ],
+    "Groups": [
+      {
+        "Kind": 0,
+        "Posts": [
+          {
+            "ID": "9000000000000000201",
+            "Author": {
+              "ID": "9000",
+              "ScreenName": "focalauthor",
+              "Name": "Focal Author",
+              "AvatarURL": "",
+              "BannerURL": "",
+              "HasGraduatedAccess": false
+            },
+            "Text": "the focal post answering itself",
+            "CreatedAt": "2026-10-03T09:00:00Z",
+            "RepostedBy": null,
+            "Lang": "",
+            "ConversationID": "9000000000000000001",
+            "ReplyTo": "9000000000000000100",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 1,
+              "Reposts": 0,
+              "Likes": 0,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          },
+          {
+            "ID": "9000000000000000202",
+            "Author": {
+              "ID": "9000",
+              "ScreenName": "focalauthor",
+              "Name": "Focal Author",
+              "AvatarURL": "",
+              "BannerURL": "",
+              "HasGraduatedAccess": false
+            },
+            "Text": "and answering its own answer",
+            "CreatedAt": "2026-10-03T09:00:00Z",
+            "RepostedBy": null,
+            "Lang": "",
+            "ConversationID": "9000000000000000001",
+            "ReplyTo": "9000000000000000201",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 0,
+              "Likes": 0,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "9000000000000000301",
+            "Author": {
+              "ID": "9000",
+              "ScreenName": "quoter",
+              "Name": "Quoter",
+              "AvatarURL": "",
+              "BannerURL": "",
+              "HasGraduatedAccess": false
+            },
+            "Text": "a reply quoting a post that quotes another",
+            "CreatedAt": "2026-10-03T09:00:00Z",
+            "RepostedBy": null,
+            "Lang": "",
+            "ConversationID": "9000000000000000001",
+            "ReplyTo": "9000000000000000100",
+            "Quote": {
+              "ID": "9000000000000000302",
+              "Author": {
+                "ID": "9000",
+                "ScreenName": "quotedmiddle",
+                "Name": "Quoted Middle",
+                "AvatarURL": "",
+                "BannerURL": "",
+                "HasGraduatedAccess": false
+              },
+              "Text": "the middle of a two-level quote",
+              "CreatedAt": "2026-10-03T09:00:00Z",
+              "RepostedBy": null,
+              "Lang": "",
+              "ConversationID": "9000000000000000302",
+              "ReplyTo": "",
+              "Quote": {
+                "ID": "9000000000000000303",
+                "Author": {
+                  "ID": "9000",
+                  "ScreenName": "quotedinner",
+                  "Name": "Quoted Inner",
+                  "AvatarURL": "",
+                  "BannerURL": "",
+                  "HasGraduatedAccess": false
+                },
+                "Text": "the innermost quoted post",
+                "CreatedAt": "2026-10-03T09:00:00Z",
+                "RepostedBy": null,
+                "Lang": "",
+                "ConversationID": "9000000000000000303",
+                "ReplyTo": "",
+                "Quote": null,
+                "Media": null,
+                "Visibility": 0,
+                "Counts": {
+                  "Replies": 0,
+                  "Reposts": 0,
+                  "Likes": 0,
+                  "Quotes": 0,
+                  "Bookmarks": 0,
+                  "Views": 0
+                }
+              },
+              "Media": null,
+              "Visibility": 0,
+              "Counts": {
+                "Replies": 1,
+                "Reposts": 0,
+                "Likes": 0,
+                "Quotes": 0,
+                "Bookmarks": 0,
+                "Views": 0
+              }
+            },
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 0,
+              "Likes": 0,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "9000000000000000401",
+            "Author": {
+              "ID": "9000",
+              "ScreenName": "replier",
+              "Name": "Replier",
+              "AvatarURL": "",
+              "BannerURL": "",
+              "HasGraduatedAccess": false
+            },
+            "Text": "a reply whose module still has more of the conversation",
+            "CreatedAt": "2026-10-03T09:00:00Z",
+            "RepostedBy": null,
+            "Lang": "",
+            "ConversationID": "9000000000000000001",
+            "ReplyTo": "9000000000000000100",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 0,
+              "Likes": 0,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": "SYNTHETIC-SHOW-MORE-THREADS"
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "9000000000000000500",
+            "Author": {
+              "ID": "",
+              "ScreenName": "",
+              "Name": "",
+              "AvatarURL": "",
+              "BannerURL": "",
+              "HasGraduatedAccess": false
+            },
+            "Text": "",
+            "CreatedAt": "0001-01-01T00:00:00Z",
+            "RepostedBy": null,
+            "Lang": "",
+            "ConversationID": "",
+            "ReplyTo": "",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 2,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 0,
+              "Likes": 0,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "9000000000000000600",
+            "Author": {
+              "ID": "9000",
+              "ScreenName": "limitedreply",
+              "Name": "Limited Reply",
+              "AvatarURL": "",
+              "BannerURL": "",
+              "HasGraduatedAccess": false
+            },
+            "Text": "a reply the upstream shows only to some readers",
+            "CreatedAt": "2026-10-03T09:00:00Z",
+            "RepostedBy": null,
+            "Lang": "",
+            "ConversationID": "9000000000000000001",
+            "ReplyTo": "9000000000000000100",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 1,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 0,
+              "Likes": 0,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "9000000000000000701",
+            "Author": {
+              "ID": "9000",
+              "ScreenName": "withheldreply",
+              "Name": "Withheld Reply",
+              "AvatarURL": "",
+              "BannerURL": "",
+              "HasGraduatedAccess": false
+            },
+            "Text": "a reply the upstream withholds in some countries",
+            "CreatedAt": "2026-10-03T09:00:00Z",
+            "RepostedBy": null,
+            "Lang": "",
+            "ConversationID": "9000000000000000001",
+            "ReplyTo": "9000000000000000100",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 3,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 0,
+              "Likes": 0,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      }
+    ],
+    "Next": "SYNTHETIC-SHOW-MORE-THREADS",
+    "Requested": 12,
+    "Skipped": 5,
+    "FetchedAt": "0001-01-01T00:00:00Z"
+  }
+]

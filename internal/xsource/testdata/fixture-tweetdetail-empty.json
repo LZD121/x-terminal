@@ -1,0 +1,55 @@
+{
+  "data": {
+    "threaded_conversation_with_injections_v2": {
+      "instructions": [
+        {
+          "type": "TimelineClearCache"
+        },
+        {
+          "entries": [
+            {
+              "entryId": "tweet-9000000000000000200",
+              "content": {
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "__typename": "TimelineTweet",
+                  "tweetDisplayType": "Tweet",
+                  "tweet_results": {
+                    "result": {
+                      "__typename": "Tweet",
+                      "rest_id": "9000000000000000200",
+                      "legacy": {
+                        "full_text": "a post whose answers this page was not given",
+                        "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                        "conversation_id_str": "9000000000000000200",
+                        "reply_count": 4,
+                        "in_reply_to_status_id_str": "9000000000000000299"
+                      },
+                      "core": {
+                        "user_results": {
+                          "result": {
+                            "__typename": "User",
+                            "rest_id": "9000",
+                            "core": {
+                              "screen_name": "coldfocal",
+                              "name": "Cold Focal"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "type": "TimelineAddEntries"
+        },
+        {
+          "direction": "Top",
+          "type": "TimelineTerminateTimeline"
+        }
+      ]
+    }
+  }
+}

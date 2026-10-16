@@ -1,0 +1,582 @@
+{
+  "data": {
+    "threaded_conversation_with_injections_v2": {
+      "instructions": [
+        {
+          "type": "TimelineClearCache"
+        },
+        {
+          "entries": [
+            {
+              "entryId": "tweet-9000000000000000001",
+              "content": {
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "__typename": "TimelineTweet",
+                  "tweetDisplayType": "Tweet",
+                  "tweet_results": {
+                    "result": {
+                      "__typename": "Tweet",
+                      "rest_id": "9000000000000000001",
+                      "legacy": {
+                        "full_text": "the post three links above the focal one",
+                        "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                        "conversation_id_str": "9000000000000000001",
+                        "reply_count": 3
+                      },
+                      "core": {
+                        "user_results": {
+                          "result": {
+                            "__typename": "User",
+                            "rest_id": "9000",
+                            "core": {
+                              "screen_name": "chainroot",
+                              "name": "Chain Root"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "tweet-9000000000000000002",
+              "content": {
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "__typename": "TimelineTweet",
+                  "tweetDisplayType": "Tweet",
+                  "tweet_results": {
+                    "result": {
+                      "__typename": "Tweet",
+                      "rest_id": "9000000000000000002",
+                      "legacy": {
+                        "full_text": "the post two links above the focal one",
+                        "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                        "conversation_id_str": "9000000000000000001",
+                        "reply_count": 2,
+                        "in_reply_to_status_id_str": "9000000000000000001"
+                      },
+                      "core": {
+                        "user_results": {
+                          "result": {
+                            "__typename": "User",
+                            "rest_id": "9000",
+                            "core": {
+                              "screen_name": "chainmiddle",
+                              "name": "Chain Middle"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "tweet-9000000000000000003",
+              "content": {
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "__typename": "TimelineTweet",
+                  "tweetDisplayType": "Tweet",
+                  "tweet_results": {
+                    "result": {
+                      "__typename": "Tweet",
+                      "rest_id": "9000000000000000003",
+                      "legacy": {
+                        "full_text": "the post directly above the focal one",
+                        "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                        "conversation_id_str": "9000000000000000001",
+                        "reply_count": 2,
+                        "in_reply_to_status_id_str": "9000000000000000002"
+                      },
+                      "core": {
+                        "user_results": {
+                          "result": {
+                            "__typename": "User",
+                            "rest_id": "9000",
+                            "core": {
+                              "screen_name": "chainparent",
+                              "name": "Chain Parent"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "tweet-9000000000000000100",
+              "content": {
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "__typename": "TimelineTweet",
+                  "tweetDisplayType": "Tweet",
+                  "tweet_results": {
+                    "result": {
+                      "__typename": "Tweet",
+                      "rest_id": "9000000000000000100",
+                      "legacy": {
+                        "full_text": "the post the frame was opened on",
+                        "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                        "conversation_id_str": "9000000000000000001",
+                        "reply_count": 7,
+                        "in_reply_to_status_id_str": "9000000000000000003"
+                      },
+                      "core": {
+                        "user_results": {
+                          "result": {
+                            "__typename": "User",
+                            "rest_id": "9000",
+                            "core": {
+                              "screen_name": "focalauthor",
+                              "name": "Focal Author"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-9000000000000000200",
+              "content": {
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-9000000000000000200-tweet-9000000000000000201",
+                    "item": {
+                      "itemContent": {
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "SelfThread",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "9000000000000000201",
+                            "legacy": {
+                              "full_text": "the focal post answering itself",
+                              "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                              "conversation_id_str": "9000000000000000001",
+                              "reply_count": 1,
+                              "in_reply_to_status_id_str": "9000000000000000100"
+                            },
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "rest_id": "9000",
+                                  "core": {
+                                    "screen_name": "focalauthor",
+                                    "name": "Focal Author"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "entryId": "conversationthread-9000000000000000200-tweet-9000000000000000202",
+                    "item": {
+                      "itemContent": {
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "SelfThread",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "9000000000000000202",
+                            "legacy": {
+                              "full_text": "and answering its own answer",
+                              "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                              "conversation_id_str": "9000000000000000001",
+                              "reply_count": 0,
+                              "in_reply_to_status_id_str": "9000000000000000201"
+                            },
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "rest_id": "9000",
+                                  "core": {
+                                    "screen_name": "focalauthor",
+                                    "name": "Focal Author"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "entryId": "conversationthread-9000000000000000300",
+              "content": {
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-9000000000000000300-tweet-9000000000000000301",
+                    "item": {
+                      "itemContent": {
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "Tweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "9000000000000000301",
+                            "legacy": {
+                              "full_text": "a reply quoting a post that quotes another",
+                              "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                              "conversation_id_str": "9000000000000000001",
+                              "reply_count": 0,
+                              "in_reply_to_status_id_str": "9000000000000000100"
+                            },
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "rest_id": "9000",
+                                  "core": {
+                                    "screen_name": "quoter",
+                                    "name": "Quoter"
+                                  }
+                                }
+                              }
+                            },
+                            "quoted_status_result": {
+                              "result": {
+                                "__typename": "Tweet",
+                                "rest_id": "9000000000000000302",
+                                "legacy": {
+                                  "full_text": "the middle of a two-level quote",
+                                  "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                                  "conversation_id_str": "9000000000000000302",
+                                  "reply_count": 1
+                                },
+                                "core": {
+                                  "user_results": {
+                                    "result": {
+                                      "__typename": "User",
+                                      "rest_id": "9000",
+                                      "core": {
+                                        "screen_name": "quotedmiddle",
+                                        "name": "Quoted Middle"
+                                      }
+                                    }
+                                  }
+                                },
+                                "quoted_status_result": {
+                                  "result": {
+                                    "__typename": "Tweet",
+                                    "rest_id": "9000000000000000303",
+                                    "legacy": {
+                                      "full_text": "the innermost quoted post",
+                                      "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                                      "conversation_id_str": "9000000000000000303",
+                                      "reply_count": 0
+                                    },
+                                    "core": {
+                                      "user_results": {
+                                        "result": {
+                                          "__typename": "User",
+                                          "rest_id": "9000",
+                                          "core": {
+                                            "screen_name": "quotedinner",
+                                            "name": "Quoted Inner"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "entryId": "conversationthread-9000000000000000400",
+              "content": {
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-9000000000000000400-tweet-9000000000000000401",
+                    "item": {
+                      "itemContent": {
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "Tweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "9000000000000000401",
+                            "legacy": {
+                              "full_text": "a reply whose module still has more of the conversation",
+                              "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                              "conversation_id_str": "9000000000000000001",
+                              "reply_count": 0,
+                              "in_reply_to_status_id_str": "9000000000000000100"
+                            },
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "rest_id": "9000",
+                                  "core": {
+                                    "screen_name": "replier",
+                                    "name": "Replier"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "entryId": "conversationthread-9000000000000000400-showmore-9000000000000000400",
+                    "item": {
+                      "itemContent": {
+                        "__typename": "TimelineTimelineCursor",
+                        "cursorType": "ShowMoreThreads",
+                        "value": "SYNTHETIC-SHOW-MORE-THREADS"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "entryId": "tweet-9000000000000000500",
+              "content": {
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "__typename": "TimelineTweet",
+                  "tweetDisplayType": "Tweet",
+                  "tweet_results": {
+                    "result": {
+                      "__typename": "TweetTombstone",
+                      "tombstone": {
+                        "text": "This post is unavailable.",
+                        "tombstone_type": "Deleted"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "tweet-9000000000000000600",
+              "content": {
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "__typename": "TimelineTweet",
+                  "tweetDisplayType": "Tweet",
+                  "tweet_results": {
+                    "result": {
+                      "__typename": "TweetWithVisibilityResults",
+                      "tweet": {
+                        "__typename": "Tweet",
+                        "rest_id": "9000000000000000600",
+                        "legacy": {
+                          "full_text": "a reply the upstream shows only to some readers",
+                          "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                          "conversation_id_str": "9000000000000000001",
+                          "reply_count": 0,
+                          "in_reply_to_status_id_str": "9000000000000000100"
+                        },
+                        "core": {
+                          "user_results": {
+                            "result": {
+                              "__typename": "User",
+                              "rest_id": "9000",
+                              "core": {
+                                "screen_name": "limitedreply",
+                                "name": "Limited Reply"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-9000000000000000700",
+              "content": {
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-9000000000000000700-tweet-9000000000000000701",
+                    "item": {
+                      "itemContent": {
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "Tweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "9000000000000000701",
+                            "legacy": {
+                              "full_text": "a reply the upstream withholds in some countries",
+                              "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                              "conversation_id_str": "9000000000000000001",
+                              "reply_count": 0,
+                              "in_reply_to_status_id_str": "9000000000000000100",
+                              "withheld_in_countries": [
+                                "DE",
+                                "FR"
+                              ]
+                            },
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "rest_id": "9000",
+                                  "core": {
+                                    "screen_name": "withheldreply",
+                                    "name": "Withheld Reply"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "entryId": "tweetdetailrelatedtweets-9000000000000000900",
+              "content": {
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "__typename": "TimelineTweet",
+                  "tweetDisplayType": "Tweet",
+                  "tweet_results": {
+                    "result": {
+                      "__typename": "Tweet",
+                      "rest_id": "9000000000000000900",
+                      "legacy": {
+                        "full_text": "a post from the recommendation rail",
+                        "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                        "conversation_id_str": "9000000000000000900",
+                        "reply_count": 12
+                      },
+                      "core": {
+                        "user_results": {
+                          "result": {
+                            "__typename": "User",
+                            "rest_id": "9000",
+                            "core": {
+                              "screen_name": "railpost",
+                              "name": "Rail Post"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "entryId": "messageprompt-9000000000000000910",
+              "content": {
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "__typename": "TimelineMessagePrompt"
+                }
+              }
+            },
+            {
+              "entryId": "tweetcomposer-9000000000000000920",
+              "content": {
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "__typename": "TimelineTweetComposer"
+                }
+              }
+            },
+            {
+              "entryId": "conversationthread-9000000000000000800",
+              "content": {
+                "__typename": "TimelineTimelineModule",
+                "items": [
+                  {
+                    "entryId": "conversationthread-9000000000000000800-promoted-tweet-9000000000000000800-1ccdec1b7b18cae3",
+                    "item": {
+                      "itemContent": {
+                        "__typename": "TimelineTweet",
+                        "tweetDisplayType": "Tweet",
+                        "tweet_results": {
+                          "result": {
+                            "__typename": "Tweet",
+                            "rest_id": "9000000000000000800",
+                            "legacy": {
+                              "full_text": "an advertisement from a conversation this page is not about",
+                              "created_at": "Sat Oct 03 09:00:00 +0000 2026",
+                              "conversation_id_str": "9000000000000000800",
+                              "reply_count": 0
+                            },
+                            "core": {
+                              "user_results": {
+                                "result": {
+                                  "__typename": "User",
+                                  "rest_id": "9000",
+                                  "core": {
+                                    "screen_name": "advertiser",
+                                    "name": "Advertiser"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "entryId": "who-to-follow-9000000000000000930",
+              "content": {
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "__typename": "TimelineUser"
+                }
+              }
+            }
+          ],
+          "type": "TimelineAddEntries"
+        },
+        {
+          "direction": "Top",
+          "type": "TimelineTerminateTimeline"
+        }
+      ]
+    }
+  }
+}

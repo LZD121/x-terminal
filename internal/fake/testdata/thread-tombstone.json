@@ -1,0 +1,107 @@
+[
+  {
+    "Focal": {
+      "ID": "9000000000000000300",
+      "Author": {
+        "ID": "",
+        "ScreenName": "",
+        "Name": "",
+        "AvatarURL": "",
+        "BannerURL": "",
+        "HasGraduatedAccess": false
+      },
+      "Text": "",
+      "CreatedAt": "0001-01-01T00:00:00Z",
+      "RepostedBy": null,
+      "Lang": "",
+      "ConversationID": "",
+      "ReplyTo": "",
+      "Quote": null,
+      "Media": null,
+      "Visibility": 2,
+      "Counts": {
+        "Replies": 0,
+        "Reposts": 0,
+        "Likes": 0,
+        "Quotes": 0,
+        "Bookmarks": 0,
+        "Views": 0
+      }
+    },
+    "Ancestors": null,
+    "Groups": [
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "9000000000000000311",
+            "Author": {
+              "ID": "9000",
+              "ScreenName": "replyone",
+              "Name": "Reply One",
+              "AvatarURL": "",
+              "BannerURL": "",
+              "HasGraduatedAccess": false
+            },
+            "Text": "a reply under a post that is gone",
+            "CreatedAt": "2026-10-03T09:00:00Z",
+            "RepostedBy": null,
+            "Lang": "",
+            "ConversationID": "9000000000000000300",
+            "ReplyTo": "9000000000000000300",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 0,
+              "Likes": 0,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      },
+      {
+        "Kind": 1,
+        "Posts": [
+          {
+            "ID": "9000000000000000321",
+            "Author": {
+              "ID": "9000",
+              "ScreenName": "replytwo",
+              "Name": "Reply Two",
+              "AvatarURL": "",
+              "BannerURL": "",
+              "HasGraduatedAccess": false
+            },
+            "Text": "another reply under the same gone post",
+            "CreatedAt": "2026-10-03T09:00:00Z",
+            "RepostedBy": null,
+            "Lang": "",
+            "ConversationID": "9000000000000000300",
+            "ReplyTo": "9000000000000000300",
+            "Quote": null,
+            "Media": null,
+            "Visibility": 0,
+            "Counts": {
+              "Replies": 0,
+              "Reposts": 0,
+              "Likes": 0,
+              "Quotes": 0,
+              "Bookmarks": 0,
+              "Views": 0
+            }
+          }
+        ],
+        "More": ""
+      }
+    ],
+    "Next": "",
+    "Requested": 3,
+    "Skipped": 0,
+    "FetchedAt": "0001-01-01T00:00:00Z"
+  }
+]
