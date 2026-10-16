@@ -2,10 +2,10 @@
 gsd_state_version: "1.0"
 status: Awaiting next milestone
 stopped_at: Phase 8 complete — all phases complete
-last_updated: "2026-10-15T18:18:18.000Z"
+last_updated: "2026-10-16T08:00:13.523Z"
 last_activity: 2026-10-16
-last_activity_desc: Completed quick task 261016-0mu — the translate key
-state_head: 42175be584623898cafe4be975a4bd545b892b7b
+last_activity_desc: Completed quick task 261016-ks5 — the update verb (live upgrade proof pending the v1.2.0 tag)
+state_head: 17f7a08abb556c13a9a89cbe4da49ba9e2a1ce7e
 progress:
   total_phases: 8
   completed_phases: 8
@@ -30,7 +30,7 @@ See: .planning/PROJECT.md (updated 2026-10-14)
 Phase: Milestone v1.0 complete
 Plan: —
 Status: Awaiting next milestone
-Last activity: 2026-10-16 - Completed quick task 261016-0mu: one key translates the selected post through x.com's own translation service, in the language `translate.language` resolves; the translated view is a property of the selection, the per-post answer is memory-only, and the endpoint is the one REST GET that changes no existing request shape.
+Last activity: 2026-10-16 - Completed quick task 261016-ks5: added `x-terminal update`, which reads the GitHub release wire, installs the asset this platform's Release carries after verifying the published digest, and replaces the running binary atomically with a same-directory rename; the transport check gained its fourth builder root and the persistence check its seventh named destination. The live old-to-new upgrade proof is pending the `v1.2.0` tag.
 
 ## Performance Metrics
 
@@ -92,6 +92,7 @@ None yet.
 |---|-------------|------|--------|-----------|
 | 261015-r3a | Repair the x.com GraphQL upstream drift in the read path: per-operation wire method (SearchTimeline over POST), the measured required variables at the read call sites, the home timelines' response envelope, a probe that names the missing variable, and the amended audit arm and runbook section. | 2026-10-15 | b143138 | [261015-r3a-fix-the-x-com-graphql-upstream-drift-in-](./quick/261015-r3a-fix-the-x-com-graphql-upstream-drift-in-/) |
 | 261016-0mu | Translate the selected post through x.com's translation service: the measured REST endpoint and its parser, the `T` key and the selection-scoped translated view with a memory-only one-press-per-post cache, two notices with a covered pair per style, the `translate.language` setting, the doctor's presence fact for it, and the amended `#request-shape-drift` repair. | 2026-10-16 | 42175be | [261016-0mu-translate-the-selected-post-through-x-co](./quick/261016-0mu-translate-the-selected-post-through-x-co/) |
+| 261016-ks5 | Add `x-terminal update`: read the GitHub release wire, install the asset this platform's Release carries after verifying the digest it publishes, replace the running binary atomically, and name every failure state in RUNBOOK.md. The live old-to-new upgrade proof is pending the v1.2.0 tag. | 2026-10-16 | 17f7a08 | [261016-ks5-add-an-update-verb-that-upgrades-the-ins](./quick/261016-ks5-add-an-update-verb-that-upgrades-the-ins/) |
 
 ## Deferred Items
 
