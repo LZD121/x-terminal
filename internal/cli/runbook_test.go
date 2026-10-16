@@ -45,6 +45,16 @@ var stateToAnchor = []struct {
 	{"mirror newer", "the-mirror"},
 	{"mirror unreadable", "the-mirror"},
 	{"likes unavailable", "the-likes-endpoint"},
+
+	// The update verb's own five states, mapped to the section that repairs them. They
+	// are read from the declaration the verb prints from (updateStates), not typed here,
+	// so a state renamed in update.go without this section being renamed fails the build
+	// — and a section whose states have no rows trips the "no orphan sections" arm.
+	{stateNotReachable, "the-update-path"},
+	{stateNoAsset, "the-update-path"},
+	{stateNotVerified, "the-update-path"},
+	{stateNotWritable, "the-update-path"},
+	{stateNotARelease, "the-update-path"},
 }
 
 // orphanExempt is the one section a classifier state does not have to reach.
@@ -58,6 +68,7 @@ var builtCommands = []string{
 	"x-terminal audit",
 	"x-terminal sync",
 	"go test",
+	"x-terminal update",
 }
 
 var ownedFiles = []string{
@@ -368,6 +379,11 @@ func classifierWords() []string {
 		"code 88",
 		"this build",
 	)
+	// The update verb's vocabulary, read out of the declaration the verb prints from
+	// rather than typed a second time here: the section that repairs it has to quote one
+	// of these words verbatim, and renaming a state in update.go is what makes the text
+	// and the code drift apart.
+	out = append(out, updateStates...)
 	return out
 }
 
