@@ -251,6 +251,26 @@ func f() { _, _ = http.NewRequestWithContext(nil, http.MethodGet, "http://x", ni
 	}
 }
 
+// TestTransportPassesTheReleaseRoot: internal/release is the fourth root allowed to build a
+// request, and it is allowed exactly the same way the other three are — a GET, read through the
+// method arm, with the POST exemption file present so the pass is about the builder and not about
+// a missing exemption. Removing internal/release from requestBuilderOK fails this test, and
+// TestTransportFailsBuilderOutside above still fails a builder in internal/cli: the pair is what
+// says the allowlist grew by exactly one name.
+func TestTransportPassesTheReleaseRoot(t *testing.T) {
+	src := `package release
+import "net/http"
+func f() { _, _ = http.NewRequestWithContext(nil, http.MethodGet, "http://x", nil) }
+`
+	r := checkTransport(treeOf(
+		File{Path: "internal/release/release.go", Src: []byte(src)},
+		File{Path: methodExemptionFile, Src: []byte("package xweb\n")},
+	))
+	if len(r.Findings) != 0 {
+		t.Fatalf("a GET built in internal/release failed: %+v", r.Findings)
+	}
+}
+
 func hasDetail(r Report, sub string) bool { return findingsSay(r.Findings, sub) }
 
 // findingsSay is the same test over a bare finding slice, for Sweep, which

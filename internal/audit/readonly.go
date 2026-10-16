@@ -345,11 +345,15 @@ func checkTransport(t Tree) Report {
 
 // requestBuilderOK reports whether path may call http.NewRequest*. The plan
 // names internal/xweb; the real tree also builds GET-only requests in
-// internal/netcheck (doctor's path probe) and internal/opsgen (bundle refresh).
-// Both stay GET-only via the method arm of this check.
+// internal/netcheck (doctor's path probe), internal/opsgen (bundle refresh) and
+// internal/release (the update verb's release wire — two GETs to a host that is
+// not x.com, carrying no x.com session and spending no account budget). All four
+// stay GET-only via the method arm of this check: nothing is exempted here, no
+// method arm is widened, and no method constant other than the one GET spelling
+// is added anywhere.
 func requestBuilderOK(p string) bool {
 	p = path.Clean(filepathToSlash(p))
-	for _, root := range []string{"internal/xweb", "internal/netcheck", "internal/opsgen"} {
+	for _, root := range []string{"internal/xweb", "internal/netcheck", "internal/opsgen", "internal/release"} {
 		if p == root || strings.HasPrefix(p, root+"/") {
 			return true
 		}

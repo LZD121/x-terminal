@@ -5,8 +5,9 @@
 // verb — `doctor` and the registry flags in internal/cli/doctor.go, `logout` in
 // internal/cli/session.go, `whoami` in internal/cli/whoami.go, the first-run
 // statement in internal/cli/notice.go, `keys` in internal/cli/keys.go, the
-// timeline in internal/cli/feed.go, `sync` in internal/cli/sync.go and `audit`
-// in internal/cli/audit.go — and the table below is the whole surface. Every
+// timeline in internal/cli/feed.go, `sync` in internal/cli/sync.go, `audit` in
+// internal/cli/audit.go and `update` in internal/cli/update.go — and the table
+// below is the whole surface. Every
 // entry has a body: a verb with none would have to be visible as a stub, and
 // there is no longer a stub to be.
 //
@@ -69,6 +70,7 @@ func commands() []Command {
 		{Name: "keys", Usage: "keys     list the keymap: keystrokes, action and help, tab-separated", Run: Keys},
 		{Name: "sync", Usage: "sync     fill the saved mirror from x.com (--full re-lists, --kind picks one list)", Run: Sync},
 		{Name: "audit", Usage: "audit    check the tree against the promises this build makes", Run: Audit},
+		{Name: "update", Usage: "update   back this binary from the latest GitHub Release (--check asks without installing)", Run: Update},
 	}
 }
 

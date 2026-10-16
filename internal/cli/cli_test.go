@@ -97,6 +97,7 @@ var verbBodies = []struct {
 	{name: "keys", body: Keys},
 	{name: "sync", body: Sync},
 	{name: "audit", body: Audit},
+	{name: "update", body: Update},
 }
 
 // TestEveryVerbBodyIsReachableThroughCommands is the guard for the defect AUTH-03 was: `whoami` was
