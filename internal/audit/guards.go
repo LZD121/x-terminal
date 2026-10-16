@@ -33,23 +33,32 @@ var writeCallNames = map[string]bool{
 }
 
 // distributionNameRes and distributionPathRes name the artifacts this project promises not to ship.
-// That list changed once, deliberately, when the repository gained a CI/release workflow.
+// That list changed twice, each time deliberately, when the repository's distribution changed.
 //
 // The promise as first written was "no distribution artifact and no hosted mode" and it banned a
 // release workflow outright. That was true of a tree nobody else could build, and false the moment
 // the project was pushed to a private repository with a release job: the check would have gone on
 // printing a promise the repository no longer kept, which is the failure this package exists to
-// catch. It is narrowed rather than deleted, for the reason the project always had: internal-endpoint
+// catch. It was narrowed rather than deleted, for the reason the project always had: internal-endpoint
 // usage is against X's terms, so what must not exist is a *distributable* form of this program — a
 // container image, a hosted instance, an installer, a package recipe, some artifact a stranger can
-// pick up and run. A release of source plus a Go binary, out of a private repository, for the
-// operator's own machines, is not that: it is the build this project already was, with a place to
+// pick up and run. A release of source plus a Go binary, out of a *private* repository, for the
+// operator's own machines, was not that: it was the build this project already was, with a place to
 // put it.
+//
+// On 2026-10-16 the repository was made **public**, and that reasoning's premise is gone: the
+// Release's source and its three platform binaries are now downloadable by anyone, with no
+// credential, so a stranger can in fact pick this program up and run it. The fact is recorded here,
+// in the artifact that would otherwise go on printing the private-repository version of the promise,
+// and `PROJECT.md`'s Out of Scope entry and `README.md`'s "What this is not" say the same thing in
+// the same words. What this check *enforces* is deliberately unchanged — the author accepted the
+// release and the exposure it carries; what is not accepted is a second, easier distribution path
+// appearing without that acceptance being repeated.
 //
 // So the name arm keeps the images, the package recipes, the installers and the release scripts, and
 // the path arm keeps the installer/release script directories. The hosted-mode arm below (listeners,
 // servers, bind addresses) is untouched and is still the strongest guarantee in the set. A workflow
-// named `release.yml` no longer trips this check, and that is the promise told the truth rather than
+// named `release.yml` does not trip this check, and that is the promise told the truth rather than
 // the check weakened: what it would have caught — a published image, a package, an installer — is
 // what it still catches, and the plant tests below prove it can still fail.
 var distributionNameRes = []*regexp.Regexp{

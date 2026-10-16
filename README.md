@@ -8,12 +8,18 @@ tool — built for one person who already lives in a terminal and wants the feed
 
 ## What this is not
 
-**This is not a distributable product.** It talks to x.com's internal web GraphQL endpoints with the
-browser's own session cookie — the only zero-cost path that preserves full read fidelity. Using those
-endpoints is against X's terms of service, so no container image, no hosted instance, no installer
-and no package recipe exist or will be added, and `internal/audit`'s `distribution` check fails the
-build if one appears. It is published here as source for the author's own machines and accounts; it
-is not offered for others to run, and there is no support, no roadmap and no release cadence.
+**This is not a product.** It talks to x.com's internal web GraphQL endpoints with the browser's own
+session cookie — the only zero-cost path that preserves full read fidelity. Using those endpoints is
+against X's terms of service, so no container image, no hosted instance, no installer and no package
+recipe exist or will be added, and `internal/audit`'s `distribution` check fails the build if one
+appears.
+
+Be clear about what is on this page, though: the repository and its Release are **public**, so anyone
+can clone the source and download a ready-to-run binary for Linux or macOS, and there is no support,
+no roadmap and no release cadence behind any of it. That is the author's own machine and account this
+is written for — the public release is a convenience for the case where the author is on another
+one, and its exposure was accepted deliberately. If X's terms matter to you, they matter here: this
+is not offered as something for you to run.
 
 It is also strictly **read-only**: no post, reply, like, repost, follow or bookmark write call exists
 anywhere in the build, and a repo-wide audit proves it.

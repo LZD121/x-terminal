@@ -43,7 +43,7 @@ and hidden entirely with one key.
 - Multi-account support — single user, single session
 - Persisting the timeline to disk — deliberate: no browsing traces left in the office environment
 - Export / pipeline integration (pipe posts to `grep`, dump threads to markdown) — not selected for v1; revisit if it turns out to be the real motivation
-- Distribution as a *distributable* artifact — no container image, no hosted instance, no installer, no package recipe. Internal-endpoint usage is against X's terms, so nothing a stranger can pick up and run may exist. **Narrowed 2026-10-15**, when the project was pushed to a private repository with a CI/release job: a GitHub Release carrying source and a Go binary, built out of a private repository for the operator's own machines, is the build this project already was and not a distributable form of it. `internal/audit`'s `distribution` check enforces the narrowed promise (image / package / installer / hosted mode) and its promise line says so; `RUNBOOK.md`'s "Accidental distribution" section is the repair when something does escape.
+- Distribution as a *distributable* artifact — no container image, no hosted instance, no installer, no package recipe. Internal-endpoint usage is against X's terms, so nothing a stranger can pick up and run may exist. **Narrowed 2026-10-15**, when the project was pushed to a private repository with a CI/release job: a GitHub Release carrying source and a Go binary, built out of a private repository for the operator's own machines, is the build this project already was and not a distributable form of it. **Re-opened and accepted 2026-10-16**, when the repository was made *public*: that narrowing's premise — a private repository — is gone, and the Release's source and three platform binaries are now downloadable by anyone with no credential, so a stranger can in fact pick this program up and run it. The author accepted that exposure deliberately, having been shown what a fork makes irreversible. `internal/audit`'s `distribution` check still enforces the same set (image / package / installer / hosted mode) and its comment records this second change rather than going on printing the private-repository reasoning; `RUNBOOK.md`'s "Accidental distribution" section is the repair when something does escape.
 
 ## Context
 
@@ -90,7 +90,9 @@ and hidden entirely with one key.
   layer must be swappable without touching UI code
 - **Cost**: zero recurring API spend; the only budget is the machine's own resources
 - **Legal**: use of internal endpoints violates X's terms — this stays a
-  single-user personal tool, not a distributed product
+  single-user personal tool with no support and no product behind it. Published
+  publicly (source and release binaries) since 2026-10-16; that exposure was
+  accepted deliberately, and it changes nothing about who maintains it: nobody does
 - **Privacy/environment**: no timeline data on disk; the office setting drives both
   the no-persistence choice and the unbranded visual style
 - **Compatibility**: must run in Ghostty on Linux; terminal image capability is
@@ -125,7 +127,7 @@ and hidden entirely with one key.
 | Media opens externally behind an abstracted renderer interface | Guarantees v1 works everywhere; in-terminal rendering (Ghostty/Kitty protocol) can be enabled once empirically verified | — Pending |
 | Stack chosen on this project's merits, treating rss-tm as evidence rather than a constraint | The user asked for the best fit for the function, not continuity with an older repo; prior art still de-risks the TUI/render/test layers | — Pending |
 | Session cookie kept out of the general config surface (own 0600 file, env override) | The account cookie is a bearer credential for the user's whole x.com session; it must not be readable or round-tripped by ordinary config editing | — Pending |
-| Not distributed | Internal-endpoint usage is against X's terms; personal use only | — Pending |
+| Published publicly, but not a product | The repository and its Release (source + three static binaries) went public on 2026-10-16, so a stranger can pick the program up and run it — the exposure the earlier "not distributed" stance refused, accepted deliberately once its premise (a private repository) was pointed out. Internal-endpoint usage is still against X's terms and this stays a single-user personal tool with no support, no roadmap and no cadence | — Accepted 2026-10-16 |
 | The Following timeline is read with `HomeLatestTimeline`, whose operation id comes from an external pinned source | The authenticated web bundle deliberately omits it, and the `GenericTimelineById` + `timelineId` path the bundle implies answers `200` with `Internal server error` from a raw client | — Pending |
 | The operation registry is data: 107 operations with provenance, add-only on refresh, pins separate | Ids rotate on someone else's schedule; keeping them in one JSON file makes a repair a one-file change and lets a bundle refresh never delete an externally sourced entry | — Pending |
 | The `features` bag is optional and is sent only when the registry declares it | Measured: `HomeLatestTimeline` returned 155 posts with no `features` parameter at all, so the feared `(336)` drift is far smaller than modelled | — Pending |
@@ -165,4 +167,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-10-15 after Phase 8*
+*Last updated: 2026-10-16 — repository made public; fixtures sanitised and the distribution promise amended to match*
