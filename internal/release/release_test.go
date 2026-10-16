@@ -385,3 +385,87 @@ func TestTheTokenNeverReachesAString(t *testing.T) {
 		}
 	}
 }
+
+// TestFetchReadsOneURLWithTheSameWire: an asset and its digest are read through the
+// same one place the release metadata is, with the same headers, one request per URL,
+// and no decode — a payload is bytes.
+func TestFetchReadsOneURLWithTheSameWire(t *testing.T) {
+	const path = "/LZD121/x-terminal/releases/download/v1.1.0/x-terminal_v1.1.0_linux_amd64"
+	var (
+		method string
+		header http.Header
+	)
+	srv := newFake(t, func(w http.ResponseWriter, r *http.Request) {
+		method, header = r.Method, r.Header.Clone()
+		_, _ = w.Write([]byte("the asset's bytes"))
+	})
+	client := newTestClient(srv, "")
+
+	body, err := client.Fetch(context.Background(), srv.URL+path, 1<<20)
+	if err != nil {
+		t.Fatalf("Fetch: %v", err)
+	}
+	if string(body) != "the asset's bytes" {
+		t.Errorf("Fetch returned %q", body)
+	}
+	if method != http.MethodGet {
+		t.Errorf("Fetch built a %s request, want GET", method)
+	}
+	if got := header.Get("Accept"); got != "application/vnd.github+json" {
+		t.Errorf("Fetch sent Accept %q", got)
+	}
+	if got := header.Get("User-Agent"); got != UserAgent() {
+		t.Errorf("Fetch sent User-Agent %q, want %q", got, UserAgent())
+	}
+}
+
+// TestFetchRefusesAURLOutsideTheReleaseOrigin: the URL arrives in the Release's own
+// asset list, but it is still a string a remote document supplied, and this is the one
+// place that decides what this process will download. The origin is the only thing that
+// makes the digest beside it worth anything.
+func TestFetchRefusesAURLOutsideTheReleaseOrigin(t *testing.T) {
+	client := &Client{
+		http:         &http.Client{},
+		downloadBase: "https://github.com",
+		repo:         repository,
+	}
+	if _, err := client.Fetch(context.Background(), "https://example.com/x-terminal", 1<<20); err == nil {
+		t.Fatal("Fetch would have downloaded from a host the release does not name")
+	} else if !strings.Contains(err.Error(), "https://github.com") {
+		t.Errorf("the refusal does not name the origin it required: %v", err)
+	}
+}
+
+// TestFetchReportsTheStatusesAndTheBound: a non-2xx is an *HTTPError carrying the URL,
+// and a body over the bound is a refusal rather than a truncated asset — a partial
+// payload that passed the digest is not a thing, but a payload silently cut before the
+// digest is a misleading failure to diagnose.
+func TestFetchReportsTheStatusesAndTheBound(t *testing.T) {
+	t.Run("404", func(t *testing.T) {
+		srv := newFake(t, func(w http.ResponseWriter, _ *http.Request) {
+			w.WriteHeader(http.StatusNotFound)
+			fmt.Fprint(w, "Not Found")
+		})
+		_, err := newTestClient(srv, "").Fetch(context.Background(), srv.URL+"/missing", 1<<10)
+		var httpErr *HTTPError
+		if !errors.As(err, &httpErr) || httpErr.Status != http.StatusNotFound {
+			t.Fatalf("Fetch reported %v, want an *HTTPError with status 404", err)
+		}
+		if !strings.Contains(httpErr.URL, "/missing") {
+			t.Errorf("HTTPError.URL is %q", httpErr.URL)
+		}
+	})
+
+	t.Run("over the bound", func(t *testing.T) {
+		srv := newFake(t, func(w http.ResponseWriter, _ *http.Request) {
+			_, _ = w.Write(bytes.Repeat([]byte("x"), 1025))
+		})
+		_, err := newTestClient(srv, "").Fetch(context.Background(), srv.URL+"/asset", 1024)
+		if err == nil {
+			t.Fatal("an over-long asset body was read instead of refused")
+		}
+		if !strings.Contains(err.Error(), "more than the 1024 bytes") {
+			t.Errorf("the bound's refusal says %v", err)
+		}
+	})
+}

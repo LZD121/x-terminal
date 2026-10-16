@@ -184,15 +184,18 @@ type destHit struct {
 // configWriterFile is the one file the running tool writes its own settings
 // through; registryWriterFile is the file whose write call sites are the
 // checked-in operation-id snapshot; spikeRecorderFile/spikeRecorderFunc name the
-// one function in the development spike that records a fetched body. Each is
-// named in writeDestinations below: this check refuses a skip that is not
-// printed, and it anchors these three to the file (and, for the spike, to the
-// function) that writes them, so a new write beside them does not inherit them.
+// one function in the development spike that records a fetched body; and
+// updaterWriterFile is the file that installs the running tool's own binary.
+// Each is named in writeDestinations below: this check refuses a skip that is
+// not printed, and it anchors these four to the file (and, for the spike, to
+// the function) that writes them, so a new write beside them — another file of
+// the same package included — does not inherit them.
 const (
 	configWriterFile   = "internal/config/config.go"
 	registryWriterFile = "internal/xweb/volatile/registry.go"
 	spikeRecorderFile  = "cmd/spike/main.go"
 	spikeRecorderFunc  = "recorder"
+	updaterWriterFile  = "internal/release/install.go"
 )
 
 // Destination kinds: the running tool's own state, and the repository's
@@ -218,6 +221,7 @@ var writeDestinations = []writeDestination{
 	{"pins", runningTool, "pins.json"},
 	{"notice", runningTool, "the first-run marker"},
 	{"saved", runningTool, "saved.db and its wal/shm"},
+	{"update", runningTool, "the installed binary the update verb replaces: a temporary file in the target's own directory, renamed over it, removed on every failure path"},
 	{"registry", developmentTool, "cmd/x-opsgen writes the checked-in operation-id snapshot through internal/xweb/volatile"},
 	{"spike-recording", developmentTool, "cmd/spike --record writes fetched response bodies into the operator's own directory"},
 }
@@ -392,6 +396,10 @@ func classifyWrite(filePath string, file *ast.File, pos token.Pos, hints map[str
 		return "registry"
 	case filePath == spikeRecorderFile && inFunc(file, pos, spikeRecorderFunc):
 		return "spike-recording"
+	case filePath == updaterWriterFile:
+		// The updater's temporary file in the target's own directory, renamed over
+		// the target it replaces.
+		return "update"
 	case strings.Contains(filePath, "internal/cli/notice.go"):
 		return "notice"
 	case strings.Contains(filePath, "internal/xweb/volatile/pins.go"):

@@ -141,13 +141,13 @@ func TestPersistenceFailsZeroWriteTree(t *testing.T) {
 }
 
 // persistenceDestinationNames is the declared write set, written out by hand in the
-// order the promise prints it: the running tool's four, then the checkout's two.
+// order the promise prints it: the running tool's five, then the checkout's two.
 // The promise line and the JSON twin are read as this set, so a destination
 // renamed, folded into another or added changes this list or fails the build — and
 // "session" is deliberately not in it: the credential file is read and never
 // written, and a promise that named it would claim a write that does not exist
 // while leaving the config file's write unnamed.
-var persistenceDestinationNames = []string{"config", "pins", "notice", "saved", "registry", "spike-recording"}
+var persistenceDestinationNames = []string{"config", "pins", "notice", "saved", "update", "registry", "spike-recording"}
 
 // TestPersistenceDestinationSetIsPinned: the printed promise names the set the check
 // enforces, by name — not by a count both sides read out of the same table.
@@ -159,7 +159,7 @@ func TestPersistenceDestinationSetIsPinned(t *testing.T) {
 	if strings.Join(got, ",") != strings.Join(persistenceDestinationNames, ",") {
 		t.Fatalf("declared destinations are %v, want %v", got, persistenceDestinationNames)
 	}
-	want := fmt.Sprintf("every write resolves to one of the %d named destinations: config, pins, notice, saved (the running tool); registry, spike-recording (a development tool)", len(persistenceDestinationNames))
+	want := fmt.Sprintf("every write resolves to one of the %d named destinations: config, pins, notice, saved, update (the running tool); registry, spike-recording (a development tool)", len(persistenceDestinationNames))
 	if promise := persistencePromise(); promise != want {
 		t.Fatalf("the printed promise does not name exactly the enforced set:\n got: %s\nwant: %s", promise, want)
 	}
@@ -193,6 +193,32 @@ const sessionFileName = "session"
 	}
 }
 
+// TestPersistenceFailsAWriteBesideTheInstaller: the update verb's destination is
+// anchored to the file that writes it (internal/release/install.go), not to the
+// package it lives in: a second file beside it is a new destination carrying its own
+// file:line. That pair — this and TestPersistenceFailsAWriteInANewConfigFile above —
+// is what makes the anchor the file rather than the directory.
+func TestPersistenceFailsAWriteBesideTheInstaller(t *testing.T) {
+	const planted = `package release
+import "os"
+func other(path string, b []byte) error { return os.WriteFile(path, b, 0o755) }
+`
+	base := append(persistenceBaseTree(), File{Path: "internal/release/other.go", Src: []byte(planted)})
+	r := checkPersistence(base)
+	if !hasDetail(r, "no declared destination") {
+		t.Fatalf("a write beside the installer resolved to a declared destination: %+v", r.Findings)
+	}
+	var named bool
+	for _, f := range r.Findings {
+		if f.Path == "internal/release/other.go" && f.Line == 3 {
+			named = true
+		}
+	}
+	if !named {
+		t.Fatalf("the finding for the write beside the installer does not carry its file:line: %+v", r.Findings)
+	}
+}
+
 // persistenceBaseTree is the committed shape of every declared destination: one
 // write call site per destination, reached the way the real tree reaches it.
 func persistenceBaseTree() Tree {
@@ -203,6 +229,7 @@ func persistenceBaseTree() Tree {
 		File{Path: "internal/store/schema.go", Src: []byte("package store\nimport \"database/sql\"\nfunc Open() { _, _ = sql.Open(\"sqlite\", \"saved.db\") }\n")},
 		File{Path: registryWriterFile, Src: []byte("package volatile\nimport (\n\"os\"\n\"path/filepath\"\n)\nfunc (r *Registry) Write(path string) error { return writeAtomically(path, nil, 0o644) }\nfunc writeAtomically(path string, data []byte, mode os.FileMode) error { _, err := os.CreateTemp(filepath.Dir(path), \"tmp\"); return err }\n")},
 		File{Path: spikeRecorderFile, Src: []byte("package main\nimport (\n\"os\"\n\"path/filepath\"\n)\nfunc recorder(dir string) func(string, []byte) {\nreturn func(n string, b []byte) { _ = os.WriteFile(filepath.Join(dir, n), b, 0o600) }\n}\n")},
+		File{Path: updaterWriterFile, Src: []byte("package release\nimport (\n\"os\"\n\"path/filepath\"\n)\nfunc Replace(target string, payload []byte) error {\ntmp, err := os.CreateTemp(filepath.Dir(target), \".x-terminal-update-*\")\nif err != nil {\nreturn err\n}\nreturn os.Rename(tmp, target)\n}\n")},
 	)
 }
 

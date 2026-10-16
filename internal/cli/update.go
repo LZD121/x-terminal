@@ -18,6 +18,12 @@ import (
 // is doing.
 const updateTimeout = 2 * time.Minute
 
+// digestLimit bounds the per-asset digest file this verb reads. A sha256sum line is
+// about eighty bytes, so this is already generous, and it is bounded because the body
+// arrives from the network: the file is a line, and reading it as anything larger
+// would be reading something that is not one.
+const digestLimit = 4 << 10
+
 // updateRunbookAnchor is the RUNBOOK.md section every state this verb can print
 // points at. The anchor and the states are declared here, once, because three
 // things read them: the verb prints them, the runbook join maps through them
@@ -54,6 +60,13 @@ func stateLine(state, detail string) string {
 // the moment it is read.
 var updateEnv = os.Getenv
 
+// updateExecutable is the file this process was started from — the only path this
+// verb may touch. It is os.Executable rather than anything the operator believes is
+// installed (the two can differ, and the difference is exactly what a bug report gets
+// wrong), and it is a seam because a test has to point it at a file in a temporary
+// directory rather than replace the running test binary.
+var updateExecutable = os.Executable
+
 // releaseWire is the release wire the verb speaks through: resolve the latest
 // Release, and fetch one URL's bytes.
 //
@@ -65,6 +78,7 @@ var updateEnv = os.Getenv
 // asserted inside internal/release, where the client is built.
 type releaseWire interface {
 	Latest(ctx context.Context) (release.Release, error)
+	Fetch(ctx context.Context, url string, limit int64) ([]byte, error)
 }
 
 // updateClient is the seam this verb's tests replace. Production builds the real
@@ -107,16 +121,6 @@ func Update(ctx *Context, args []string) int {
 		}
 	}
 
-	if !check {
-		// The install is the other half of this verb and it is not in this change:
-		// it lands beside the same-directory rename it makes, with the audit's
-		// seventh persistence destination. Until it is here the verb refuses to
-		// look like it did something it did not do, and it names the invocation
-		// that answers the question.
-		fmt.Fprintln(ctx.Stderr, "update: this build answers the question and cannot install yet: run `x-terminal update --check`")
-		return ExitError
-	}
-
 	cfg, err := config.Load()
 	if err != nil {
 		fmt.Fprintf(ctx.Stderr, "update: %v\n", err)
@@ -149,34 +153,141 @@ func Update(ctx *Context, args []string) int {
 	// does not build for with a 404 on a download URL instead of a state the verb
 	// can print. It is resolved before either verdict because it is the fact the
 	// answer rests on, and only presence facts are printed.
-	asset, assetErr := release.AssetFor(rel.Assets, rel.Tag, runtime.GOOS, runtime.GOARCH)
-	if assetErr != nil {
-		fmt.Fprintln(ctx.Stderr, stateLine(stateNoAsset, assetErr.Error()))
+	asset, err := release.AssetFor(rel.Assets, rel.Tag, runtime.GOOS, runtime.GOARCH)
+	if err != nil {
+		fmt.Fprintln(ctx.Stderr, stateLine(stateNoAsset, err.Error()))
 		return ExitError
 	}
-	fmt.Fprintf(ctx.Stdout, "release %s, %s/%s asset %s\n", rel.Tag, runtime.GOOS, runtime.GOARCH, asset.Name)
+	if check {
+		// --check does not touch the machine, so its one fact is printed before either
+		// verdict: which asset this platform's Release carries, which is what the
+		// answer rests on. Presence facts only — a tag, a platform, a name.
+		fmt.Fprintf(ctx.Stdout, "release %s, %s/%s asset %s\n", rel.Tag, runtime.GOOS, runtime.GOARCH, asset.Name)
+	}
 
 	running := Version()
-	// A build with no version stamp has no ordering against the release, and
-	// inventing one would be the verb guessing which release the operator is on.
-	// --force is the operator saying they do not care about the ordering; it never
-	// reaches past a check that verifies bytes.
-	if running == "" {
-		if !force {
-			fmt.Fprintln(ctx.Stderr, stateLine(stateNotARelease,
-				"install a published asset, or build with the release workflow's -ldflags stamps"))
+	order := 0
+	if running != "" {
+		order, err = release.CompareTags(running, rel.Tag)
+		if err != nil {
+			fmt.Fprintf(ctx.Stderr, "update: %v\n", err)
 			return ExitError
 		}
-		return ExitOK
-	}
-
-	order, err := release.CompareTags(running, rel.Tag)
-	if err != nil {
-		fmt.Fprintf(ctx.Stderr, "update: %v\n", err)
+		updateVerdict(ctx, running, rel.Tag, order)
+	} else if !force {
+		// A build with no version stamp has no ordering against the release, and
+		// inventing one would be the verb guessing which release the operator is on.
+		// --force is the operator saying they do not care about the ordering; it never
+		// reaches past a check that verifies bytes.
+		fmt.Fprintln(ctx.Stderr, stateLine(stateNotARelease,
+			"install a published asset, or build with the release workflow's -ldflags stamps"))
 		return ExitError
 	}
-	updateVerdict(ctx, running, rel.Tag, order)
+
+	if check {
+		return ExitOK
+	}
+	if !force && running != "" && order >= 0 {
+		// The comparison answered the question: "this build is the latest release" and a
+		// downgrade refusal are answers rather than failures to answer, so both leave
+		// nothing to install — and the machine is left exactly as it was.
+		return ExitOK
+	}
+	return updateInstall(ctx, client, rel, asset, running, runCtx)
+}
+
+// updateInstall is the install path, written in the order it runs. Each step is
+// there because it is cheaper than the one after it: the release was resolved and
+// compared above (the free question — is there anything to install at all), the
+// install directory is asked whether it accepts a temporary file next (the free
+// local question, so a machine that cannot take the update is never made to fetch
+// bytes), and only then are the digest and the payload downloaded.
+//
+// The download URL is never assembled by hand from the tag: it comes from the
+// asset's own browser_download_url, and the digest beside it is resolved from the
+// Release's asset list rather than by appending a suffix to a URL.
+//
+// Every arm that fails prints its state through stateLine and returns ExitError; a
+// payload that cannot be verified is never installed, and the target file is left
+// byte-identical on every one of them.
+func updateInstall(ctx *Context, client releaseWire, rel release.Release, asset release.Asset, running string, runCtx context.Context) int {
+	exe, err := updateExecutable()
+	if err != nil {
+		fmt.Fprintln(ctx.Stderr, stateLine(stateNotWritable, err.Error()))
+		return ExitError
+	}
+	target, err := release.ResolveExecutable(exe)
+	if err != nil {
+		fmt.Fprintln(ctx.Stderr, stateLine(stateNotWritable, err.Error()))
+		return ExitError
+	}
+	// Before a byte is downloaded: the rename needs write permission on the target's
+	// directory, and a machine that cannot take the update should not be made to
+	// fetch it.
+	if err := release.CheckReplaceable(target); err != nil {
+		fmt.Fprintln(ctx.Stderr, stateLine(stateNotWritable, err.Error()))
+		return ExitError
+	}
+
+	fmt.Fprintf(ctx.Stdout, "replacing %s (this build %s) with %s\n", target, buildName(running), rel.Tag)
+
+	// The digest is the per-asset file the Release itself names, and a Release that
+	// publishes none for this platform has published nothing this verb can verify: an
+	// unverifiable payload is not a payload that is probably fine.
+	digestAsset, err := release.AssetNamed(rel.Assets, asset.Name+".sha256")
+	if err != nil {
+		fmt.Fprintln(ctx.Stderr, stateLine(stateNotVerified, err.Error()))
+		return ExitError
+	}
+	digestBody, err := client.Fetch(runCtx, digestAsset.URL, digestLimit)
+	if err != nil {
+		fmt.Fprintln(ctx.Stderr, stateLine(stateNotVerified, err.Error()))
+		return ExitError
+	}
+	want, err := release.ParseDigest(digestBody, asset.Name)
+	if err != nil {
+		fmt.Fprintln(ctx.Stderr, stateLine(stateNotVerified, err.Error()))
+		return ExitError
+	}
+
+	// The asset is fetched with the size the Release published as its bound, and the
+	// shape check below compares the same number: a body over the bound is refused
+	// before it is read into memory.
+	payload, err := client.Fetch(runCtx, asset.URL, asset.Size)
+	if err != nil {
+		fmt.Fprintln(ctx.Stderr, stateLine(stateNotVerified, err.Error()))
+		return ExitError
+	}
+	if err := release.Verify(payload, want); err != nil {
+		fmt.Fprintln(ctx.Stderr, stateLine(stateNotVerified, err.Error()))
+		return ExitError
+	}
+	if err := release.LooksLikeThisBuild(payload, rel.Tag, runtime.GOOS, asset.Size); err != nil {
+		fmt.Fprintln(ctx.Stderr, stateLine(stateNotVerified, err.Error()))
+		return ExitError
+	}
+	fmt.Fprintf(ctx.Stdout, "verified against %s\n", digestAsset.Name)
+
+	if err := release.Replace(target, payload); err != nil {
+		fmt.Fprintln(ctx.Stderr, stateLine(stateNotWritable, err.Error()))
+		return ExitError
+	}
+	fmt.Fprintf(ctx.Stdout, "replaced %s with %s\n", target, rel.Tag)
+	// The process that ran this keeps the image it was started with, so the operator
+	// is told when the change takes effect rather than being left to believe it is live.
+	fmt.Fprintf(ctx.Stdout, "the process that ran this is still the old image: the next launch reports %s\n", rel.Tag)
+	fmt.Fprintf(ctx.Stdout, "%s -> %s\n", buildName(running), rel.Tag)
 	return ExitOK
+}
+
+// buildName is what the output calls the running build: its version when it has one,
+// and "working tree" when it does not — the same fact the User-Agent carries, and
+// always the truth about the process that ran this.
+func buildName(running string) string {
+	if running == "" {
+		return "working tree"
+	}
+	return running
 }
 
 // updateVerdict prints what the comparison says: the release is newer, this build
