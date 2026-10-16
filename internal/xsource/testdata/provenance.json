@@ -6,11 +6,11 @@
       "queryId": "3BlMtudy4N-d78ch7zTLZQ",
       "focalId": "2106019976381689871",
       "capturedAt": "2026-10-14",
-      "bytes": 202469,
-      "sha256": "b24cd5dd642b7d8328e53518b4d96b5ff950a4c887efdb8ef07b60bc115f4f10",
+      "bytes": 202405,
+      "sha256": "110a3d1edfb3e33bf1b2380a8712049700f1506e014cb202925c2fdd92c59243",
       "source": "recorded",
       "sourceFile": "",
-      "redaction": "none applied: the recorded body carries no viewer identity and no cookie; the cookie never enters a fixture (SEC-01); one third-party email address in a quoted profile bio rewritten to example-contact@example.com (a public tweet body, but no stranger's address is carried here)",
+      "redaction": "42 post bodies replaced with synthetic text of the same lengths (the conversation's ordinary participants, whose words are not the operator's to republish); one third-party email address in a quoted profile bio rewritten to example-contact@example.com; no viewer identity was carried and the cookie never enters a fixture (SEC-01)",
       "notes": [
         "the recorded TweetDetail answer for the focal post 2106019976381689871: 3 instructions, 43 entries in its TimelineAddEntries instruction - 41 conversationthread modules, one tweet entry for the focal post and one cursor-bottom entry - carrying 42 tweet items, of which 5 are promoted items from five conversations this thread is not about",
         "captured 2026-10-14 through the operator's own session with one authenticated TweetDetail call, measured at 1.63 s and 202,462 bytes (.planning/research/UPSTREAM-PROBE.md, 'TweetDetail: the thread shape')",
@@ -24,11 +24,11 @@
       "queryId": "7_KBXBpG0zBPRN6UCIV0-w",
       "focalId": "",
       "capturedAt": "2026-10-14",
-      "bytes": 130245,
-      "sha256": "2f268f5ec2d7d89d4e37f170dd75f150e96f01cef8a14a2f2853a8b9eab2b759",
+      "bytes": 130210,
+      "sha256": "5be8c571cd38357bdfa7407155608ddb408d5c89f1d23cdfa706c8712dff00e0",
       "source": "recorded",
       "sourceFile": "",
-      "redaction": "none applied: the recorded body carries no viewer identity and no cookie; the cookie never enters a fixture (SEC-01); no second copy is kept in the repository",
+      "redaction": "26 post bodies replaced with synthetic text of the same lengths; byte-identical to fixture-profile-posts.json, which is kept because both are read by this package's tests; no viewer identity was carried and the cookie never enters a fixture (SEC-01)",
       "notes": [
         "Phase 1's recording: one UserTweets answer for the account the thread fixture's focal post replies to, read with count=20 through the operator's own session",
         "a timeline has no focal post, so focalId is empty: the field names the post a detail answer is about, and this body is about an account's timeline"
@@ -118,11 +118,11 @@
       "queryId": "7_KBXBpG0zBPRN6UCIV0-w",
       "focalId": "",
       "capturedAt": "2026-10-14",
-      "bytes": 130245,
-      "sha256": "2f268f5ec2d7d89d4e37f170dd75f150e96f01cef8a14a2f2853a8b9eab2b759",
+      "bytes": 130210,
+      "sha256": "5be8c571cd38357bdfa7407155608ddb408d5c89f1d23cdfa706c8712dff00e0",
       "source": "recorded",
       "sourceFile": "internal/xsource/testdata/fixture-usertweets.json",
-      "redaction": "none applied: byte-identical to Phase 1 UserTweets recording; no viewer identity; cookie never enters a fixture (SEC-01)",
+      "redaction": "26 post bodies replaced with synthetic text of the same lengths; byte-identical to fixture-usertweets.json; no viewer identity was carried and the cookie never enters a fixture (SEC-01)",
       "notes": [
         "matched posts page for the header in fixture-profile-header.json: same account (userId 783214), count=20",
         "byte-identical to fixture-usertweets.json so ParseTimeline of both agrees",
@@ -217,7 +217,7 @@
         "measured outcome: the server answered Likes with a list",
         "entry kinds: TimelineTweet posts=19 requested=20",
         "bottom cursor present: true",
-        "variables: count=20, cursor=, includePromotedContent=false, userId=\u003cviewer\u003e"
+        "variables: count=20, cursor=, includePromotedContent=false, userId=<viewer>"
       ],
       "variables": {
         "count": 20,

@@ -93,11 +93,17 @@ func TestParseTimelineReadsTheRecordedResponse(t *testing.T) {
 
 	// The first post, pinned. A zero-value parse cannot produce these four values, which is
 	// what makes this the file's anti-vacuity assertion.
+	//
+	// Its text is a run of `x`, and that is deliberate: every recorded body in these fixtures was
+	// replaced with same-length synthetic text before the tree was published, so the recording
+	// keeps the shape the parser is measured against and loses the posts it was captured from.
+	// The id, the handle and the timestamp are the recording's own and are untouched, and the
+	// assertion is exactly as strong — a parse that produced nothing still fails on all four.
 	first := page.Posts[0]
 	switch {
 	case first.ID != "2110132653248672225":
 		t.Errorf("the first post has id %q, want the id the recording carries", first.ID)
-	case first.Text != "big feelings, small text box":
+	case first.Text != "xxxxxxxxxxxxxxxxxxxxxxxxxxxx":
 		t.Errorf("the first post's text is %q, want the text the recording carries", first.Text)
 	case first.Author.ScreenName != "X":
 		t.Errorf("the first post is by %q, want the handle the recording carries", first.Author.ScreenName)
@@ -165,7 +171,10 @@ func TestParseTimelineReadsTheRecordedResponse(t *testing.T) {
 		pinned[post.ID] = post
 	}
 	quoting := pinned["2109787535509799385"]
-	const quotedBody = "We've unified plans across Grok, Cursor, and X Premium.\n\nIntroducing The X Subscription. https://t.co/SvkrVvBa0p"
+	// Synthetic for the same reason the first post's text is (see the note above it): the two
+	// paragraphs are the recording's line structure with its words replaced, so the assertion
+	// still measures that the nested body is read whole rather than as an id.
+	const quotedBody = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	if quoting.Quote == nil || quoting.Quote.ID != "2109783335296008414" || quoting.Quote.Text != quotedBody {
 		t.Errorf("the post that quotes 2109783335296008414 came out quoting %+v, want the nested post's whole body: the recording nests it under quoted_status_result.result, and a parser that kept only an id would leave the quote empty", quoting.Quote)
 	} else if quoting.Quote.Author.ScreenName != "SpaceXSI" {
