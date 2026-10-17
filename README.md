@@ -79,6 +79,7 @@ here could fill one.
 ```sh
 CGO_ENABLED=0 go build -o x-terminal ./cmd/x-terminal
 
+x-terminal login           # read the two session cookies once, check them, write the file at 0600
 x-terminal                 # the feed (runs the pane)
 x-terminal doctor          # is the network path, the session and the budget OK?
 x-terminal audit           # check the tree against every promise this build makes
@@ -97,6 +98,11 @@ it, and neither does `--help`, the `?` overlay or `x-terminal keys`.
 What it is not: it is still read-only, it still keeps nothing on disk, and it still walks out through
 the same proxy and the same request budget. The plain reader, the covers and the panic frame are
 unchanged, and their golden frames are unmoved.
+
+`login` is the guided path: it names the two cookies a logged-in browser already has, reads them with
+no echo, spends one request to check them against x.com, and writes the file only if they work. It
+never opens a browser and never reads one's cookie store; `--no-verify` writes without the check,
+`--replace` writes over a pair that is already there.
 
 The session cookie goes in `$XDG_CONFIG_HOME/x-terminal/session` — `auth_token=…` and `ct0=…`, mode
 `0600`, outside any editor round-trip. `X_TERMINAL_AUTH_TOKEN` / `X_TERMINAL_CT0` override it.

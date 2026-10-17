@@ -196,6 +196,9 @@ const (
 	spikeRecorderFile  = "cmd/spike/main.go"
 	spikeRecorderFunc  = "recorder"
 	updaterWriterFile  = "internal/release/install.go"
+	// sessionWriterFile is the one place a credential is written. It is anchored to the file for
+	// the same reason the others are: a write beside it must not inherit the destination.
+	sessionWriterFile = "internal/session/save.go"
 )
 
 // Destination kinds: the running tool's own state, and the repository's
@@ -222,6 +225,7 @@ var writeDestinations = []writeDestination{
 	{"notice", runningTool, "the first-run marker"},
 	{"saved", runningTool, "saved.db and its wal/shm"},
 	{"update", runningTool, "the installed binary the update verb replaces: a temporary file in the target's own directory, renamed over it, removed on every failure path"},
+	{"session", runningTool, "the credential file `login` writes: 0600 from creation, a temporary file in the same directory, fsynced, renamed over the target, removed on every failure path"},
 	{"registry", developmentTool, "cmd/x-opsgen writes the checked-in operation-id snapshot through internal/xweb/volatile"},
 	{"spike-recording", developmentTool, "cmd/spike --record writes fetched response bodies into the operator's own directory"},
 }
@@ -381,8 +385,9 @@ func destinationHints(file *ast.File) map[string]bool {
 // writes it (SetDisplay's two lines into the config file beside the session
 // file, pins.json, the first-run marker, saved.db), and the two development
 // destinations are anchored to theirs — and, for the spike, to the function.
-// The session file itself is not among them: the credential is read and never
-// written, so a write that names it is a new destination and is reported. The
+// The session file is among them only through the one function that writes it
+// (session.Save, reached by `login`): it is 0600 from creation and renamed into
+// place. A write that names it anywhere else is a new destination and is reported. The
 // hint fallback is confined to internal/: a write in cmd/ is a new destination
 // even when it names a file the running tool writes.
 func classifyWrite(filePath string, file *ast.File, pos token.Pos, hints map[string]bool) string {
@@ -400,6 +405,10 @@ func classifyWrite(filePath string, file *ast.File, pos token.Pos, hints map[str
 		// The updater's temporary file in the target's own directory, renamed over
 		// the target it replaces.
 		return "update"
+	case filePath == sessionWriterFile:
+		// The credential's temporary file, renamed over the session path: the one
+		// write of a cookie this tree performs.
+		return "session"
 	case strings.Contains(filePath, "internal/cli/notice.go"):
 		return "notice"
 	case strings.Contains(filePath, "internal/xweb/volatile/pins.go"):

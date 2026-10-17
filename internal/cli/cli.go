@@ -39,6 +39,10 @@ const (
 type Context struct {
 	Stdout io.Writer
 	Stderr io.Writer
+	// Stdin is the verb's input: the login verb reads the two cookie values from it, and every
+	// other verb ignores it. It is a field rather than os.Stdin so a test can hand a verb its own
+	// input without a pseudo-terminal.
+	Stdin io.Reader
 }
 
 // Handler is a verb's body. It returns the process exit code rather than an
@@ -64,6 +68,7 @@ type Command struct {
 func commands() []Command {
 	return []Command{
 		{Name: "doctor", Usage: "doctor   check the network path, the session and the request budget", Run: Doctor},
+		{Name: "login", Usage: "login    read the two session cookies and write them to the session file (--replace over an existing one, --no-verify skips the one check request)", Run: Login},
 		{Name: "logout", Usage: "logout   delete the local session copy (the browser session is untouched)", Run: Logout},
 		{Name: "whoami", Usage: "whoami   name the account the loaded session belongs to", Run: Whoami},
 		{Name: "feed", Usage: "feed     read the Following timeline in the pane", Run: Feed},
@@ -77,7 +82,7 @@ func commands() []Command {
 // Main dispatches args, already stripped of the program name, and returns the
 // process exit code.
 func Main(args []string) int {
-	ctx := &Context{Stdout: os.Stdout, Stderr: os.Stderr}
+	ctx := &Context{Stdout: os.Stdout, Stderr: os.Stderr, Stdin: os.Stdin}
 
 	if len(args) == 0 {
 		// No arguments is not a mistake: it is the program's own surface, and the surface is the

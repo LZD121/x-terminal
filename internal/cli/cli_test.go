@@ -91,6 +91,7 @@ var verbBodies = []struct {
 	body Handler
 }{
 	{name: "doctor", body: Doctor},
+	{name: "login", body: Login},
 	{name: "logout", body: Logout},
 	{name: "whoami", body: Whoami},
 	{name: "feed", body: Feed},

@@ -101,6 +101,14 @@ type userNode struct {
 	} `json:"tweet_counts"`
 }
 
+// ViewerAccount is the two fields a verb prints after a session check. It is a value rather than a
+// domain.User because the check needs nothing else, and a caller that carried the whole user would
+// be tempting other callers to read fields this read never promised.
+type ViewerAccount struct {
+	ScreenName string
+	Name       string
+}
+
 // ParseUser reads a user profile out of a response body, from whichever of the two known
 // containers the body has: data.user.result first, then data.viewer.user_results.result.
 //

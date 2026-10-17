@@ -173,43 +173,77 @@ var env = os.Getenv
 // because a 0644 session file is a session anyone on the machine can use. A
 // missing or empty file is not an error as long as the environment supplies the
 // pair: the overrides exist to keep a session out of a file altogether.
-func Load(path string) (Session, error) {
+// FileSession reads the session file and nothing else: no environment override is applied. It is
+// what `login` asks about an existing file — with the overrides merged in, a pair supplied through
+// X_TERMINAL_* would look like a session already on disk and refuse the very write it was meant to
+// provide.
+func FileSession(path string) (Session, error) {
+	token, cto, warnings, err := readFile(path)
+	if err != nil {
+		return Session{}, err
+	}
+	if token == "" && cto == "" {
+		return Session{}, ErrNoSession
+	}
+	source := ""
+	if token != "" || cto != "" {
+		source = path
+	}
+	return Session{AuthToken: token, CTO: cto, Source: source, Warnings: warnings}, nil
+}
+
+// readFile is the file half of Load: the checks that refuse a symlink or a loose mode, the read, and
+// the parse. A path with no file is not an error here — Load's overrides can still supply the pair —
+// and the returned warnings carry no cookie bytes.
+func readFile(path string) (token, cto Secret, warnings []string, err error) {
 	info, statErr := os.Lstat(path)
 	readable := statErr == nil
 
 	switch {
 	case readable && info.Mode()&fs.ModeSymlink != 0:
-		return Session{}, fmt.Errorf("session file is a symlink: %s", path)
+		return "", "", nil, fmt.Errorf("session file is a symlink: %s", path)
 	case readable && !info.Mode().IsRegular():
-		return Session{}, fmt.Errorf("session file is not a regular file: %s", path)
+		return "", "", nil, fmt.Errorf("session file is not a regular file: %s", path)
 	case readable:
 		if perm := info.Mode().Perm(); perm&0o077 != 0 {
-			return Session{}, fmt.Errorf("session file %s has mode %04o: users other than its owner can read the cookie; fix it with: chmod 600 %s",
+			return "", "", nil, fmt.Errorf("session file %s has mode %04o: users other than its owner can read the cookie; fix it with: chmod 600 %s",
 				path, perm, path)
 		}
 	case errors.Is(statErr, fs.ErrNotExist):
 		// No file: the overrides can still supply the whole pair.
 	default:
-		return Session{}, fmt.Errorf("session: %w", statErr)
+		return "", "", nil, fmt.Errorf("session: %w", statErr)
 	}
 
-	var (
-		token, cto             Secret
-		tokenSource, ctoSource string
-		warnings               []string
-	)
-	if readable {
-		data, err := os.ReadFile(path)
-		if err != nil {
-			return Session{}, fmt.Errorf("session: %w", err)
-		}
-		token, cto, warnings = parseFile(data)
-		if token != "" {
-			tokenSource = path
-		}
-		if cto != "" {
-			ctoSource = path
-		}
+	if !readable {
+		return "", "", nil, nil
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return "", "", nil, fmt.Errorf("session: %w", err)
+	}
+	token, cto, warnings = parseFile(data)
+	return token, cto, warnings, nil
+}
+
+func Load(path string) (Session, error) {
+	token, cto, warnings, err := readFile(path)
+	if err != nil {
+		return Session{}, err
+	}
+	readable := true
+	if _, statErr := os.Lstat(path); errors.Is(statErr, fs.ErrNotExist) {
+		readable = false
+	}
+	if !readable {
+		token, cto = "", ""
+	}
+	var tokenSource, ctoSource string
+	if token != "" {
+		tokenSource = path
+	}
+	if cto != "" {
+		ctoSource = path
 	}
 
 	// Provenance is per value rather than per attempt: an override replaces the

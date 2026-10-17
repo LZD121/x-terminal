@@ -147,7 +147,7 @@ func TestPersistenceFailsZeroWriteTree(t *testing.T) {
 // "session" is deliberately not in it: the credential file is read and never
 // written, and a promise that named it would claim a write that does not exist
 // while leaving the config file's write unnamed.
-var persistenceDestinationNames = []string{"config", "pins", "notice", "saved", "update", "registry", "spike-recording"}
+var persistenceDestinationNames = []string{"config", "pins", "notice", "saved", "update", "session", "registry", "spike-recording"}
 
 // TestPersistenceDestinationSetIsPinned: the printed promise names the set the check
 // enforces, by name — not by a count both sides read out of the same table.
@@ -159,7 +159,7 @@ func TestPersistenceDestinationSetIsPinned(t *testing.T) {
 	if strings.Join(got, ",") != strings.Join(persistenceDestinationNames, ",") {
 		t.Fatalf("declared destinations are %v, want %v", got, persistenceDestinationNames)
 	}
-	want := fmt.Sprintf("every write resolves to one of the %d named destinations: config, pins, notice, saved, update (the running tool); registry, spike-recording (a development tool)", len(persistenceDestinationNames))
+	want := fmt.Sprintf("every write resolves to one of the %d named destinations: config, pins, notice, saved, update, session (the running tool); registry, spike-recording (a development tool)", len(persistenceDestinationNames))
 	if promise := persistencePromise(); promise != want {
 		t.Fatalf("the printed promise does not name exactly the enforced set:\n got: %s\nwant: %s", promise, want)
 	}
@@ -230,6 +230,7 @@ func persistenceBaseTree() Tree {
 		File{Path: registryWriterFile, Src: []byte("package volatile\nimport (\n\"os\"\n\"path/filepath\"\n)\nfunc (r *Registry) Write(path string) error { return writeAtomically(path, nil, 0o644) }\nfunc writeAtomically(path string, data []byte, mode os.FileMode) error { _, err := os.CreateTemp(filepath.Dir(path), \"tmp\"); return err }\n")},
 		File{Path: spikeRecorderFile, Src: []byte("package main\nimport (\n\"os\"\n\"path/filepath\"\n)\nfunc recorder(dir string) func(string, []byte) {\nreturn func(n string, b []byte) { _ = os.WriteFile(filepath.Join(dir, n), b, 0o600) }\n}\n")},
 		File{Path: updaterWriterFile, Src: []byte("package release\nimport (\n\"os\"\n\"path/filepath\"\n)\nfunc Replace(target string, payload []byte) error {\ntmp, err := os.CreateTemp(filepath.Dir(target), \".x-terminal-update-*\")\nif err != nil {\nreturn err\n}\nreturn os.Rename(tmp, target)\n}\n")},
+		File{Path: sessionWriterFile, Src: []byte("package session\nimport (\n\"os\"\n\"path/filepath\"\n)\nfunc Save(path string) error {\ntmp, err := os.CreateTemp(filepath.Dir(path), \".session-*\")\nif err != nil {\nreturn err\n}\nreturn os.Rename(tmp.Name(), path)\n}\n")},
 	)
 }
 
