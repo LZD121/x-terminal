@@ -202,6 +202,13 @@ var postOperations = map[string]bool{
 	// the same feature switches, the same field toggles and the same headers on both requests.
 	// The wire method is the only difference between the two answers.
 	"SearchTimeline": true,
+	// Followers answers GET with HTTP 404 and a zero-byte body, and POST with HTTP 200 and real
+	// accounts — measured on this host on 2026-10-17 through the operator's own session cookie and
+	// the proxy, with the same query id the live bundle carries, the same variables, the same
+	// feature switches, the same field toggles and the same headers on both requests. Its siblings
+	// Following and BlueVerifiedFollowers answer the same variables over GET. The wire method is the
+	// only difference between the two answers.
+	"Followers": true,
 }
 
 // wireMethod is the one place that decides the method a request is built with: POST for the

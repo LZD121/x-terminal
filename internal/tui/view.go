@@ -143,6 +143,16 @@ func (m Model) pane(w int) []render.Block {
 		return m.scrolled(m.blocksAt(f, w), f)
 	case f.Kind == frameSaved:
 		return m.savedPane(f, w)
+	case f.Kind == frameAccounts:
+		if len(f.Accounts.Walk().Rows()) == 0 {
+			return m.searchState(f, w)
+		}
+		return m.scrolled(m.blocksAt(f, w), f)
+	case f.Kind == frameMedia:
+		if len(f.Media.Walk().Rows()) == 0 {
+			return m.searchState(f, w)
+		}
+		return m.scrolled(m.blocksAt(f, w), f)
 	case len(f.List.Posts()) == 0:
 		return []render.Block{m.emptyBlock(f, w)}
 	}
@@ -327,6 +337,24 @@ func (m Model) status() render.StatusFields {
 		}
 		fields.Loaded = f.Profile.Walk().Loaded()
 		fields.HasMore = f.Profile.Walk().HasMore()
+		return fields
+	}
+	if f.Kind == frameAccounts {
+		fields.List = render.ListLabelAccounts(m.grammar(), f.AccountsKind, f.Owner)
+		if loaded := f.Accounts.Walk().Loaded(); loaded > 0 {
+			fields.Selected = f.Accounts.Walk().Index(f.Accounts.Walk().Selected().Top().ID) + 1
+		}
+		fields.Loaded = f.Accounts.Walk().Loaded()
+		fields.HasMore = f.Accounts.Walk().HasMore()
+		return fields
+	}
+	if f.Kind == frameMedia {
+		fields.List = render.ListLabelMedia(m.grammar(), f.Owner)
+		if loaded := f.Media.Walk().Loaded(); loaded > 0 {
+			fields.Selected = f.Media.Walk().Index(f.Media.Walk().Selected().Top().ID) + 1
+		}
+		fields.Loaded = f.Media.Walk().Loaded()
+		fields.HasMore = f.Media.Walk().HasMore()
 		return fields
 	}
 	if f.Kind == frameSaved {

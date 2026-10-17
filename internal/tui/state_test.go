@@ -509,7 +509,10 @@ func TestImmersiveIsTheSameList(t *testing.T) {
 	// The covered help wording, with the overlay open, and the overlay closes as in the plain state.
 	s.press("?")
 	overlay := s.pane()
-	for _, row := range keys.Rows() {
+	// The overlay lists the rows that apply to the screen on top — the account reads are the
+	// profile's own, so they are absent here by design, and a loop over every row would ask the
+	// home overlay to print them.
+	for _, row := range keys.ForScreen(screenName(s.m.top().Kind)) {
 		if row.HelpCovered == "" {
 			continue
 		}

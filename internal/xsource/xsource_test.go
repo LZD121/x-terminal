@@ -2,6 +2,7 @@ package xsource
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"os"
 	"strconv"
@@ -816,5 +817,60 @@ func TestAdapterUserAsksByScreenName(t *testing.T) {
 		t.Errorf("User sent screen_name = %v, want the handle it was asked for", client.vars["screen_name"])
 	case user.ScreenName != "X" || user.ID != "783214":
 		t.Errorf("User returned %+v, want the profile the response carries", user)
+	}
+}
+
+// TestAMissingQuoteIsNotAnUnreadablePost is the defect a live profile page found: X answers
+// `"quoted_status_result": {"result": null}` when a post's original has been deleted or withheld,
+// and the parser treated it as a missing required path — so one such row made the whole page
+// unreadable and the profile reported that it had no posts.
+func TestAMissingQuoteIsNotAnUnreadablePost(t *testing.T) {
+	body := map[string]any{
+		"data": map[string]any{
+			"user": map[string]any{"result": map[string]any{
+				"timeline": map[string]any{"timeline": map[string]any{
+					"instructions": []any{map[string]any{
+						"type": "TimelineAddEntries",
+						"entries": []any{map[string]any{
+							"entryId": "tweet-1",
+							"content": map[string]any{
+								"__typename": "TimelineTimelineItem",
+								"itemContent": map[string]any{
+									"__typename": "TimelineTweet",
+									"tweet_results": map[string]any{"result": map[string]any{
+										"__typename": "Tweet",
+										"rest_id":    "1",
+										"legacy": map[string]any{
+											"full_text":  "the quote's original is gone",
+											"created_at": "Wed Oct 15 09:12:00 +0000 2026",
+										},
+										"core": map[string]any{"user_results": map[string]any{"result": map[string]any{
+											"__typename": "User",
+											"rest_id":    "u1",
+											"core":       map[string]any{"screen_name": "someone", "name": "Some One"},
+										}}},
+										"quoted_status_result": map[string]any{"result": nil},
+									}},
+								},
+							},
+						}},
+					}},
+				}},
+			}},
+		},
+	}
+	raw, err := json.Marshal(body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	page, err := ParseTimeline(raw)
+	if err != nil {
+		t.Fatalf("a page with one deleted quote was rejected: %v", err)
+	}
+	if len(page.Posts) != 1 {
+		t.Fatalf("%d posts, want 1", len(page.Posts))
+	}
+	if page.Posts[0].Quote != nil {
+		t.Fatal("the post carries a quote that does not exist")
 	}
 }

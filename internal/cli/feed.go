@@ -33,6 +33,14 @@ var feedSource = func(client *xweb.Client, sess session.Session) domain.Source {
 	return xsource.New(client.WithSession(sess))
 }
 
+// feedDirectory is the domain.Directory the profile's account lists and media tab read through:
+// the same adapter as feedSource, over one client.WithSession copy, so the four reads go through the
+// one limiter the status line's budget already reads. A variable for feedSource's reason — a test
+// drives the shell's account lists with internal/fake and no network.
+var feedDirectory = func(client *xweb.Client, sess session.Session) domain.Directory {
+	return xsource.New(client.WithSession(sess))
+}
+
 // threadSource is the domain.Threads the conversation reads through: the same adapter as
 // feedSource, declared beside it so a test can replace both seams and no test reaches the network.
 var threadSource = func(client *xweb.Client, sess session.Session) domain.Threads {
@@ -297,6 +305,7 @@ func Feed(ctx *Context, args []string) int {
 		// The translation read, built once here like every other port, and the language the config
 		// resolved. The port is nil only if this seam returns nil, which is what a build with no
 		// translation endpoint would look like: the `T` key then says so and spends nothing.
+		Directory:     feedDirectory(client, sess),
 		Translate:     feedTranslate(client, sess, cfg),
 		TranslateLang: cfg.TranslateLanguage,
 		Persist: func(state, cover string) {

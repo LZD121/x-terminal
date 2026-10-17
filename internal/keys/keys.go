@@ -83,6 +83,15 @@ const (
 	// Keystroke() and once as the character the user typed — which the `G` row already proves end to
 	// end.
 	ActionTranslate Action = "translate"
+
+	// The four reads of one account that a profile screen can open: its following, its followers,
+	// the verified among them, and its media tab. They are separate actions rather than one with a
+	// list kind because each has its own key and its own help line, and a reader pressing `f` should
+	// not be told about a key they did not press.
+	ActionFollowing         Action = "following"
+	ActionFollowers         Action = "followers"
+	ActionVerifiedFollowers Action = "verified-followers"
+	ActionProfileMedia      Action = "profile-media"
 )
 
 // The four groups the UI-SPEC's table sorts its rows into. Nothing prints them in this phase — the
@@ -197,6 +206,12 @@ var rows = []Row{
 	// letter (see ActionTranslate above), and the row carries a covered wording because the plain one
 	// names a post. The action itself reveals nothing a covered pane does not already carry: the body
 	// it shows is the same post's, in another language, and nothing is handed to any other program.
+	// The account lists, on a profile only: they are reads of the account the frame is about.
+	{Action: ActionFollowing, Keys: []string{"f"}, Help: "who this account follows", HelpCovered: "records this one references", Group: GroupLists, Screens: []string{"profile"}},
+	{Action: ActionFollowers, Keys: []string{"e"}, Help: "who follows this account", HelpCovered: "records referencing this one", Group: GroupLists, Screens: []string{"profile"}},
+	{Action: ActionVerifiedFollowers, Keys: []string{"v"}, Help: "this account's verified followers", HelpCovered: "verified records referencing this one", Group: GroupLists, Screens: []string{"profile"}},
+	{Action: ActionProfileMedia, Keys: []string{"M"}, Help: "this account's media", HelpCovered: "files this record attached", Group: GroupMedia, Screens: []string{"profile"}},
+
 	{Action: ActionTranslate, Keys: []string{"T"}, Help: "translate the selected post", HelpCovered: "show the selected record in the configured language", Group: GroupView, Screens: []string{"all"}},
 }
 

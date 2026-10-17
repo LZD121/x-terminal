@@ -113,6 +113,12 @@ const (
 	CopyListSearch = "search: {product} \"{query}\""
 	// CopyListPeople is the status line's list field for a people results frame.
 	CopyListPeople = "people: \"{query}\""
+	// CopyListAccounts is the status line's list field for one account list: which list, and whose.
+	// The list's own word comes from domain.UserListKind, so the three can never disagree with the
+	// operation they name.
+	CopyListAccounts = "{list}: {handle}"
+	// CopyListMedia is the status line's list field for a profile's media tab.
+	CopyListMedia = "media: {handle}"
 	// MarkerPromptSearch is the prompt row's prefix for the posts product, as a template: the
 	// product is named before the request is paid for. MarkerPromptPeople is the people
 	// product's own prefix. MarkerLoadingResults is the pane's own statement while a results
@@ -253,9 +259,13 @@ const (
 	// column, `{state:7}` a table's state column. The set is closed — a placeholder that is not one
 	// of these names nothing — so a template cannot grow a second template language, and one
 	// mechanism, this table and internal/text.Pad, places every field of every head.
-	PlaceholderStamp   = "{stamp}"
-	PlaceholderRef     = "{ref}"
-	PlaceholderName    = "{name}"
+	PlaceholderStamp = "{stamp}"
+	PlaceholderRef   = "{ref}"
+	PlaceholderName  = "{name}"
+	// PlaceholderList is the account-list field's own word: following, followers, verified
+	// followers. It is a placeholder like the rest, so the literal above stays a template a test can
+	// read rather than a string assembled in the shell.
+	PlaceholderList    = "{list}"
 	PlaceholderEmail   = "{email}"
 	PlaceholderMarkers = "{markers}"
 	PlaceholderState   = "{state}"
@@ -914,6 +924,28 @@ func ListLabelPeople(g Grammar, query string) string {
 // ListLabelProfile is the status line's list field for a profile frame: the account named once —
 // the handle the frame was opened on under the plain reader, and the account's own alias under a
 // cover, because no covered frame names a handle that exists on the upstream.
+// ListLabelAccounts is the status line's list field for an account-list frame: which list it is and
+// whose. Under a cover the handle is the cover's alias, and the list word stays: "following" is not
+// a word of the product, and a covered frame that printed no list at all would leave the reader
+// with a position in nothing.
+func ListLabelAccounts(g Grammar, kind domain.UserListKind, u domain.User) string {
+	handle := u.ScreenName
+	if _, ok := CoverOfGrammar(g); ok {
+		handle = g.Identity(u).Handle
+	}
+	label := strings.ReplaceAll(CopyListAccounts, PlaceholderList, kind.String())
+	return strings.ReplaceAll(label, PlaceholderHandle, handle)
+}
+
+// ListLabelMedia is the status line's list field for a media frame, on the same rule.
+func ListLabelMedia(g Grammar, u domain.User) string {
+	handle := u.ScreenName
+	if _, ok := CoverOfGrammar(g); ok {
+		handle = g.Identity(u).Handle
+	}
+	return strings.ReplaceAll(CopyListMedia, PlaceholderHandle, handle)
+}
+
 func ListLabelProfile(g Grammar, u domain.User) string {
 	if _, ok := CoverOfGrammar(g); ok {
 		return strings.ReplaceAll(CopyCoverListProfile, PlaceholderHandle, g.Identity(u).Handle)

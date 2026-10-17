@@ -33,6 +33,9 @@ anywhere in the build, and a repo-wide audit proves it.
   bio and recent posts.
 - **Bookmarks and likes** — read from the session, mirrored to a local `saved.db` so they open with
   the network down. The store holds those two lists and nothing else.
+- **One account's lists** — from a profile, `f` opens who it follows, `e` who follows it, `v` the
+  verified among them, and `M` its media tab. Each is its own keyset-paginated frame; `q` walks back
+  without spending a request.
 - **Media and links** — a post's images and video open in external programs (`xdg-open`, `mpv`), its
   permalink can be copied or opened. When no opener is available the URL is printed instead.
 - **Translations** — `T` shows the selected post through x.com's own translator, in the language

@@ -687,6 +687,32 @@ func frameKindChecks() []frameKindCheck {
 			},
 		},
 		{
+			kind: frameAccounts,
+			name: "one account list",
+			reach: func(t *testing.T, s *shell) {
+				t.Helper()
+				reachProfile(t, s)
+				s.press("f")
+			},
+			words: func(t *testing.T, s *shell) []string {
+				f := s.m.top()
+				return []string{render.ListLabelAccounts(grammar, f.AccountsKind, f.Owner)}
+			},
+		},
+		{
+			kind: frameMedia,
+			name: "one account's media",
+			reach: func(t *testing.T, s *shell) {
+				t.Helper()
+				reachProfile(t, s)
+				s.press("M")
+			},
+			words: func(t *testing.T, s *shell) []string {
+				f := s.m.top()
+				return []string{render.ListLabelMedia(grammar, f.Owner)}
+			},
+		},
+		{
 			kind: frameSaved,
 			name: "one saved list",
 			reach: func(t *testing.T, s *shell) {
@@ -701,6 +727,23 @@ func frameKindChecks() []frameKindCheck {
 				return []string{render.ListSaved(style, kind)}
 			},
 		},
+	}
+}
+
+// reachProfile walks a shell to a profile frame through the people search, which is the path a
+// reader takes and the one that gives the frame a header with an id — the id the account lists and
+// the media tab are addressed by.
+func reachProfile(t *testing.T, s *shell) {
+	t.Helper()
+	s.press("u")
+	typeQuery(s, "people")
+	s.press("enter")
+	s.press("enter")
+	if got := s.m.top().Kind; got != frameProfile {
+		t.Fatalf("the walk reached the frame kind %d, want the profile", got)
+	}
+	if _, ok := s.m.top().Profile.Header(); !ok {
+		t.Fatal("the profile header has not arrived: the account reads are addressed by its id")
 	}
 }
 

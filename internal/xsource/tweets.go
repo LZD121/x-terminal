@@ -259,7 +259,12 @@ func postFrom(entryID, path string, node tweet, visibility domain.Visibility, de
 	if err != nil {
 		return domain.Post{}, err
 	}
-	if node.QuotedStatusResult == nil {
+	// An absent quote is not a parse failure. X answers `"quoted_status_result": {"result": null}`
+	// for a post whose original has been deleted or withheld, and one such row must not cost the
+	// whole page: measured on this host on 2026-10-17, a profile's first page carried exactly one
+	// and the entire page was reported unreadable, so the profile showed "no posts" while the
+	// account had thousands.
+	if node.QuotedStatusResult == nil || isNullJSON(node.QuotedStatusResult.Result) {
 		return post, nil
 	}
 
@@ -549,6 +554,13 @@ func authorOf(path string, node tweet) (domain.User, error) {
 // tell "not a post" from "a post I cannot read", and the second one is the dangerous case.
 //
 // path is where the result lives in the response, and it is what every error from here names.
+// isNullJSON reports whether a raw value is absent or JSON's null. A nil RawMessage (the field was
+// missing) and the four bytes `null` (the field was there and empty) are the same fact to a reader:
+// there is no quoted post to show.
+func isNullJSON(raw json.RawMessage) bool {
+	return len(raw) == 0 || string(raw) == "null"
+}
+
 func unwrapTweet(path string, raw json.RawMessage) (tweet, domain.Visibility, error) {
 	if len(raw) == 0 {
 		return tweet{}, domain.Visible, missing(path)

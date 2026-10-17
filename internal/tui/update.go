@@ -204,6 +204,10 @@ func (m Model) update(msg tea.Msg) (Model, tea.Cmd) {
 		return m.syncStepped(msg)
 	case mediaMsg:
 		return m.mediaAnswered(msg)
+	case usersMsg:
+		return m.accountsAnswered(msg), nil
+	case mediaTabMsg:
+		return m.mediaTabAnswered(msg), nil
 	case mediaExitMsg:
 		return m.mediaExitAnswered(msg), nil
 	case copyLinkMsg:
@@ -341,6 +345,14 @@ func (m Model) dispatch(action keys.Action) (Model, tea.Cmd) {
 		return m.openPost()
 	case keys.ActionTranslate:
 		return m.translate()
+	case keys.ActionFollowing:
+		return m.pushAccounts(domain.FollowingList)
+	case keys.ActionFollowers:
+		return m.pushAccounts(domain.FollowersList)
+	case keys.ActionVerifiedFollowers:
+		return m.pushAccounts(domain.VerifiedFollowersList)
+	case keys.ActionProfileMedia:
+		return m.pushMedia()
 	case keys.ActionCover:
 		return m.toggleCover()
 	case keys.ActionNextCover:
@@ -756,6 +768,12 @@ func (m Model) request(f frame, effect screen.Effect, refresh bool) (Model, tea.
 	case screen.UserPostsRequest:
 		m.pending++
 		return m, m.fetchUserPosts(f.ID, req, refresh)
+	case screen.UsersRequest:
+		m.pending++
+		return m, m.fetchAccounts(f.ID, req, refresh)
+	case screen.MediaRequest:
+		m.pending++
+		return m, m.fetchMedia(f.ID, req, refresh)
 	}
 	return m, nil
 }
@@ -1369,6 +1387,7 @@ var handledActions = []keys.Action{
 	keys.ActionPanic,
 	keys.ActionBookmarks, keys.ActionLikes,
 	keys.ActionMedia, keys.ActionCopyLink, keys.ActionOpenPost,
+	keys.ActionFollowing, keys.ActionFollowers, keys.ActionVerifiedFollowers, keys.ActionProfileMedia,
 	keys.ActionTranslate,
 }
 

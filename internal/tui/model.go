@@ -195,6 +195,11 @@ type Deps struct {
 	Clip interface {
 		Copy(ctx context.Context, url string) media.ClipboardOutcome
 	}
+	// Directory is the account-list and media read: a profile's following, its followers, the
+	// verified among them, and its media tab. A nil Directory is a shell with no lists — the
+	// Translate precedent, a presence fact rather than a wiring mistake: the keys then say the list
+	// is unavailable and spend nothing.
+	Directory domain.Directory
 	// Translate is the translation read: one post's body in another language, as x.com's own
 	// translation service answers it. It is called from a command and nowhere else, so the request
 	// is issued where every other request is.
@@ -223,6 +228,14 @@ const (
 	frameSearch
 	frameProfile
 	frameSaved
+	// frameAccounts is one account list of one account: its following, its followers, or the
+	// verified among its followers. The reducer is the People product's own — the same walk, the
+	// same absorb rule — because a page of accounts is a page of accounts whichever question asked
+	// for it; what differs is the read, and that is the request's business.
+	frameAccounts
+	// frameMedia is one account's media tab: the same account, the same walk as any list of posts,
+	// and a read of its own.
+	frameMedia
 )
 
 // frameKinds is every surface a frame can show, in the order the consts above declare them. It is
@@ -236,7 +249,7 @@ const (
 // It is a function and not a map for the reason render.CoverStyles is: the order is a fact about
 // the program and not about a hash table.
 func frameKinds() []frameKind {
-	return []frameKind{frameHome, frameThread, frameSearch, frameProfile, frameSaved}
+	return []frameKind{frameHome, frameThread, frameSearch, frameProfile, frameSaved, frameAccounts, frameMedia}
 }
 
 // frame is one screen state on the back stack. ID is this instance's own name — unique for the
@@ -274,6 +287,17 @@ type frame struct {
 	// left (P3), and a fallback belongs to the post it was raised for. Nothing
 	// removes an entry but the next successful media action on that post.
 	Fall render.Fallbacks
+	// Accounts is the account list this frame shows, when Kind is frameAccounts: the same reducer
+	// the People product uses, carrying the list kind and the owner in its request.
+	Accounts screen.Results[domain.User, domain.UserPage]
+	// Media is the media tab this frame shows, when Kind is frameMedia.
+	Media screen.Results[domain.Post, domain.PostPage]
+	// Owner is the account whose list or media this frame is, for the status line's label and for
+	// a heading. It is the header the profile frame already read: no second lookup.
+	Owner domain.User
+	// AccountsKind is which account list Accounts holds. It is stored rather than read off the
+	// request so the status line and the keys need no type assertion.
+	AccountsKind domain.UserListKind
 	// syncRun is the in-flight Begin/Step walk for a saved frame. It lives on the
 	// frame so a pop can Abandon it; it is not part of the pure state machine.
 	syncRun domain.SyncRun
@@ -296,6 +320,10 @@ func (f frame) selected() screen.Target {
 	switch f.Kind {
 	case frameThread:
 		return f.Thread.Selected()
+	case frameAccounts:
+		return f.Accounts.Walk().Selected()
+	case frameMedia:
+		return f.Media.Walk().Selected()
 	case frameSearch:
 		if f.isPeople() {
 			return f.People.Walk().Selected()
@@ -321,6 +349,10 @@ func (f frame) targets() []screen.Target {
 		return screen.PostTargets(f.Search.Walk().Rows())
 	case frameProfile:
 		return screen.PostTargets(f.Profile.Walk().Rows())
+	case frameAccounts:
+		return screen.UserTargets(f.Accounts.Walk().Rows())
+	case frameMedia:
+		return screen.PostTargets(f.Media.Walk().Rows())
 	case frameSaved:
 		return f.Saved.List().Targets()
 	}
@@ -336,6 +368,11 @@ func (f frame) post(t screen.Target) (domain.Post, bool) {
 		return screen.PostFor(f.Search.Walk().Rows(), t)
 	case frameProfile:
 		return screen.PostFor(f.Profile.Walk().Rows(), t)
+	case frameAccounts:
+		// An account row is not a post: nothing on this frame can be opened as a conversation.
+		return domain.Post{}, false
+	case frameMedia:
+		return screen.PostFor(f.Media.Walk().Rows(), t)
 	case frameSaved:
 		return f.Saved.List().Post(t)
 	}
@@ -346,7 +383,7 @@ func (f frame) post(t screen.Target) (domain.Post, bool) {
 // instantiation lives beside Search on the same frame kind so the pane dispatch,
 // the back stack and the key applicability stay one path.
 func (f frame) isPeople() bool {
-	return f.Kind == frameSearch && f.People.Product() == domain.People
+	return f.Kind == frameAccounts || (f.Kind == frameSearch && f.People.Product() == domain.People)
 }
 
 // account resolves the account a target names in a people results frame.
@@ -354,7 +391,11 @@ func (f frame) account(t screen.Target) (domain.User, bool) {
 	if !f.isPeople() {
 		return domain.User{}, false
 	}
-	for _, u := range f.People.Walk().Rows() {
+	rows := f.People.Walk().Rows()
+	if f.Kind == frameAccounts {
+		rows = f.Accounts.Walk().Rows()
+	}
+	for _, u := range rows {
 		if u.ID == t.ID {
 			return u, true
 		}
@@ -369,7 +410,10 @@ func screenName(kind frameKind) string {
 		return "thread"
 	case frameSearch:
 		return "search"
-	case frameProfile:
+	case frameProfile, frameAccounts, frameMedia:
+		// The account lists and the media tab are the profile's own reads one level down: the
+		// profile's keys keep working there, which is what lets `f` then `e` walk one account's
+		// lists without going back first.
 		return "profile"
 	case frameSaved:
 		return "home"
@@ -552,6 +596,16 @@ func profileID(handle string, seq uint64) string {
 	return "profile:" + handle + "#" + strconv.FormatUint(seq, 10)
 }
 
+// accountsID names one account-list frame instance: which list, whose, and the sequence.
+func accountsID(kind domain.UserListKind, userID string, seq uint64) string {
+	return "accounts:" + kind.String() + ":" + userID + "#" + strconv.FormatUint(seq, 10)
+}
+
+// mediaID names one media-frame instance.
+func mediaID(userID string, seq uint64) string {
+	return "media:" + userID + "#" + strconv.FormatUint(seq, 10)
+}
+
 // savedID names one saved-frame instance.
 func savedID(kind domain.ListKind, seq uint64) string {
 	return "saved:" + kind.String() + "#" + strconv.FormatUint(seq, 10)
@@ -681,6 +735,14 @@ func (m Model) blocksIn(g render.Grammar, f frame, w int) []render.Block {
 		return render.Profile(header, m.translated(f.Profile.Walk().Rows(), sel), g, w, sel, m.deps.Now())
 	case frameSaved:
 		return render.Blocks(m.translated(f.Saved.List().Posts(), sel), g, w, sel, m.deps.Now(), falls)
+	case frameAccounts:
+		sel := ""
+		if t := f.Accounts.Walk().Selected(); t.ID != "" {
+			sel = t.ID
+		}
+		return render.UserRows(f.Accounts.Walk().Rows(), g, w, sel)
+	case frameMedia:
+		return render.Blocks(m.translated(f.Media.Walk().Rows(), sel), g, w, sel, m.deps.Now(), falls)
 	}
 	return render.Blocks(m.translated(f.List.Posts(), sel), g, w, sel, m.deps.Now(), falls)
 }

@@ -145,7 +145,13 @@ func newShellIn(t *testing.T, w, h int, display Display) *shell {
 		Display: display,
 		Persist: func(state, cover string) { s.persisted = append(s.persisted, state+"/"+cover) },
 		Media:   &fake.Renderer{Answer: media.Result{Outcome: media.OpenedImage}},
-		Clip:    &fake.Clipboard{},
+		// The account lists and the media tab: two accounts, so a list frame has rows, and no
+		// posts, so the media frame exercises its empty state — the two states the surface has.
+		Directory: &fake.Directory{Users: domain.UserPage{Rows: []domain.User{
+			{ID: "u-1", ScreenName: "pump-sign-57", Name: "Pump Sign"},
+			{ID: "u-2", ScreenName: "batch-restore-09", Name: "Batch Restore"},
+		}}},
+		Clip: &fake.Clipboard{},
 
 		Translate:     tr,
 		TranslateLang: translateLang,

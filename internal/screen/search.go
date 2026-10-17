@@ -63,7 +63,26 @@ func NewPeopleResults(query string) (Results[domain.User, domain.UserPage], Effe
 	return r, effect
 }
 
-// userKey is the people list's row key: an account's own id, as the string the walk stores.
+// NewUserResults opens an account-list frame over the same reducer and the same walk the People
+// product uses, keyed by the account id. The label is what the status line prints — the owner's
+// handle — and it is carried in the query field because that is the frame's one display string:
+// Results has no second place to put a title, and a second place would be a second thing to keep
+// in step.
+func NewUserResults(kind domain.UserListKind, userID, label string) (Results[domain.User, domain.UserPage], Effect) {
+	r, effect := NewResults[domain.User, domain.UserPage](label, domain.People, UsersRequest{Kind: kind, UserID: userID})
+	r.walk = r.walk.keys(userKey)
+	return r, effect
+}
+
+// NewMediaResults opens a media-tab frame: posts, the same walk and the same absorb rule every
+// list of posts uses, addressed by the account id the media read takes.
+func NewMediaResults(userID, label string) (Results[domain.Post, domain.PostPage], Effect) {
+	r, effect := NewResults[domain.Post, domain.PostPage](label, domain.Latest, MediaRequest{UserID: userID})
+	r.walk = r.walk.keys(postKey)
+	return r, effect
+}
+
+// userKey is the people list's row key// userKey is the people list's row key: an account's own id, as the string the walk stores.
 func userKey(u domain.User) string { return u.ID }
 
 // Rows is the frame's rows in list order. It is a convenience for the shell's people dispatch;

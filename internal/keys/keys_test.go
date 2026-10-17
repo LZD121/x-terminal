@@ -11,8 +11,8 @@ import (
 // (`enter`), Phase 5's three (`/`, `s`, `a`), Phase 6's two (`b`, `l`), Phase 7's four
 // (`i`, `y`, `o`, `T`).
 func TestTheTableIsTheUISpecsRows(t *testing.T) {
-	if got := len(Rows()); got != 31 {
-		t.Fatalf("the keymap table holds %d rows, want the UI-SPEC's 31", got)
+	if got := len(Rows()); got != 35 {
+		t.Fatalf("the keymap table holds %d rows, want the UI-SPEC's 35", got)
 	}
 }
 
@@ -272,6 +272,13 @@ var coveredHelp = map[Action]string{
 	ActionCopyLink:    "copy the record reference",
 	ActionOpenPost:    "open the record externally",
 	ActionTranslate:   "show the selected record in the configured language",
+	// The four account reads. The covered wording names no account, no list and no post: "record"
+	// and "references" are the disguise's own nouns, and the plain wording is the one that says
+	// what the keys actually do.
+	ActionFollowing:         "records this one references",
+	ActionFollowers:         "records referencing this one",
+	ActionVerifiedFollowers: "verified records referencing this one",
+	ActionProfileMedia:      "files this record attached",
 }
 
 // TestCoveredHelpIsPresentExactlyWhereTheUISpecListsIt is the covered-wording table both ways: every

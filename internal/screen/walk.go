@@ -587,6 +587,45 @@ func (FeedRequest) request()   {}
 func (ThreadRequest) request() {}
 func (SearchRequest) request() {}
 
+// UsersRequest is one page of an account list: which list, whose, and where the walk has reached.
+// It is a sibling of PeopleRequest rather than a second use of it because the read it names is a
+// different operation: a search for accounts and a profile's following are two questions, and a
+// request that could not tell them apart would be a request the shell had to disambiguate.
+type UsersRequest struct {
+	// Kind is which account list.
+	Kind domain.UserListKind
+	// UserID is the numeric id of the account whose list this is.
+	UserID string
+	// Cursor is the position to fetch, empty for page one.
+	Cursor domain.Cursor
+}
+
+// At returns this request at c.
+func (r UsersRequest) At(c domain.Cursor) Request {
+	r.Cursor = c
+	return r
+}
+
+func (UsersRequest) request() {}
+
+// MediaRequest is one page of one account's media tab: the account and where the walk has reached.
+// Its page is a PostPage, so it rides the same walk and the same absorb rule as every other list of
+// posts; the request is what says which read produced it.
+type MediaRequest struct {
+	// UserID is the numeric id of the account whose media this is.
+	UserID string
+	// Cursor is the position to fetch, empty for page one.
+	Cursor domain.Cursor
+}
+
+// At returns this request at c.
+func (r MediaRequest) At(c domain.Cursor) Request {
+	r.Cursor = c
+	return r
+}
+
+func (MediaRequest) request() {}
+
 // PeopleRequest is one page of a people search: the query and where the walk has
 // reached. It is its own case because a page of accounts is not a post SearchRequest
 // — the walk is shared, the request that names the read is not.

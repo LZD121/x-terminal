@@ -33,6 +33,10 @@ func peopleShell(t *testing.T, w, h int) *shell {
 		Persist: func(state, cover string) { s.persisted = append(s.persisted, state+"/"+cover) },
 		Media:   &fake.Renderer{Answer: media.Result{Outcome: media.OpenedImage}},
 		Clip:    &fake.Clipboard{},
+		Directory: &fake.Directory{Users: domain.UserPage{Rows: []domain.User{
+			{ID: "u-1", ScreenName: "pump-sign-57", Name: "Pump Sign"},
+			{ID: "u-2", ScreenName: "batch-restore-09", Name: "Batch Restore"},
+		}}},
 	})
 	s.send(tea.WindowSizeMsg{Width: w, Height: h})
 	s.run(s.m.Init())
