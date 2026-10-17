@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/LZD121/x-terminal/internal/render"
+	"github.com/LZD121/x-terminal/internal/text"
 	"github.com/LZD121/x-terminal/internal/vivid"
 )
 
@@ -135,4 +136,84 @@ func TestEscapeClosesTheReadingColumnThenLeaves(t *testing.T) {
 	if s.m.vivid.marked != nil || s.m.vivid.opened != nil || len(s.m.vivid.images) != 0 {
 		t.Fatal("leaving the presentation kept its marks or its images")
 	}
+}
+
+// TestTheReadingColumnDoesNotInheritTheListsScroll is the bug the smoke run found: the reading pane
+// was being skipped to the list's anchor, so a post opened from deep in the list showed only the rows
+// below its own head — the quote inside it, under a heading naming the outer author.
+func TestTheReadingColumnDoesNotInheritTheListsScroll(t *testing.T) {
+	s := vividShell(t)
+	// Move the list far down, then open whatever is selected there.
+	for range 6 {
+		s.press("j")
+	}
+	s.press("enter")
+	if s.m.vivid.reading == "" {
+		t.Fatal("setup: nothing opened")
+	}
+	view := s.m.vividView()
+	if len(view.Reading) == 0 {
+		t.Fatal("the reading column is empty")
+	}
+	post, ok := s.m.framePostByID(s.m.vivid.reading)
+	if !ok {
+		t.Fatal("the opened post is not in the frame")
+	}
+	// The column's first content row must be the post's own head: the author the heading names.
+	first := strings.Join(view.Reading[0].Rows, "\n")
+	handle := post.Author.ScreenName
+	if !strings.Contains(first, handle) {
+		t.Fatalf("the reading column starts at %q, which is not the head of %q", first, handle)
+	}
+}
+
+// TestEveryColumnRowIsExactlyItsWidth is the off-by-one the smoke run showed as a half glyph at the
+// rule's end: a column row one cell wide pushes the next column's first cell onto the following line.
+func TestEveryColumnRowIsExactlyItsWidth(t *testing.T) {
+	s := vividShell(t)
+	s.press("enter")
+	for _, w := range []int{74, 90, 110, 131, 200} {
+		s.resize(w, 24)
+		frame := s.m.Render(w, 24)
+		g := vivid.GeometryOf(w)
+		for i, row := range strings.Split(frame, "\n") {
+			if got := text.Width(stripSGR(row)); got != w {
+				t.Fatalf("width %d row %d: %d cells", w, i, got)
+			}
+		}
+		// and the two separators sit exactly where the geometry says, measured in display cells
+		// rather than in runes: the list can hold a CJK row, and a rune index would be the wrong
+		// question wherever it does.
+		for _, row := range strings.Split(frame, "\n")[:5] {
+			plain := stripSGR(row)
+			if !separatorsAt(plain, g.Nav, g.Nav+1+g.List) {
+				t.Fatalf("width %d: separators are not at %d and %d: %q", w, g.Nav, g.Nav+1+g.List, plain)
+			}
+		}
+	}
+}
+
+// separatorsAt reports whether the row's cells at two display columns are the column rule. It walks
+// clusters rather than runes so a wide glyph before either column is counted for what it occupies.
+func separatorsAt(row string, cols ...int) bool {
+	col := 0
+	next := 0
+	found := make([]bool, len(cols))
+	for _, r := range row {
+		w := text.Width(string(r))
+		if w == 0 {
+			continue
+		}
+		if next < len(cols) && col == cols[next] {
+			found[next] = r == '│'
+			next++
+		}
+		col += w
+	}
+	for _, ok := range found {
+		if !ok {
+			return false
+		}
+	}
+	return true
 }

@@ -32,6 +32,15 @@ func Render(v View) string {
 
 	nav := navRows(v.Dest, g.Nav, rows)
 	list := listRows(v, g.List, rows)
+	if !g.TwoColumn {
+		// One column is the presentation's degraded shape, not the plain reader: it keeps the
+		// presentation's own heading, so a reader on a narrow terminal can still tell which surface
+		// they are looking at and where they are in it.
+		list = append([]string{heading(v.Dest, g.List)}, list...)
+		if len(list) > rows {
+			list = list[:rows]
+		}
+	}
 	var reading []string
 	if g.TwoColumn {
 		reading = readingRows(v, g.Reading, rows)
@@ -52,6 +61,15 @@ func Render(v View) string {
 	}
 	out = append(out, text.Pad(render.StatusLine(v.Status, v.Width), v.Width))
 	return strings.Join(out, "\n")
+}
+
+// heading is the one-column surface's first row: the destination, then a rule to the column's edge.
+func heading(dest Destination, w int) string {
+	name := " " + dest.Name() + " "
+	if text.Width(name) >= w {
+		return cut(name, w)
+	}
+	return name + strings.Repeat("─", w-text.Width(name))
 }
 
 // cut is one string fitted to a column, with the module's own truncation mark when it had to lose
