@@ -24,6 +24,13 @@ is not offered as something for you to run.
 It is also strictly **read-only**: no post, reply, like, repost, follow or bookmark write call exists
 anywhere in the build, and a repo-wide audit proves it.
 
+**X lists are not readable, and not because a screen is missing.** Measured on 2026-10-17 against the
+web build this tree pins: the bundle carries no operation that returns a list's timeline (the only
+`list`-named reads are `ListSearchTimeline`, `UserSessionsList` and an audio-space privacy update),
+and `GenericTimelineById` — the generic path — answers `Internal server error at timeline` for a
+real list id in both `list-<id>` and bare forms. Nothing here draws a list screen because nothing
+here could fill one.
+
 ## What it does
 
 - **Timelines** — the Following and For-you lists, keyset-paginated, refreshed by hand.
