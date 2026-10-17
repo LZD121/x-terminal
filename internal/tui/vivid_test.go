@@ -217,3 +217,28 @@ func separatorsAt(row string, cols ...int) bool {
 	}
 	return true
 }
+
+// TestEnteringVividDoesNotPersistIt is the bug the live run found: the transition wrote "vivid" to the
+// config file. The file's vocabulary does not hold that name — StateOf refuses it on purpose — so the
+// next start read a state it could not resolve and fell back to plain while the file still said
+// vivid. A deliberate transition that is not a starting state must not be written.
+func TestEnteringVividDoesNotPersistIt(t *testing.T) {
+	s := newShell(t, 110, 30)
+	before := len(s.persisted)
+	s.m = s.m.enterVivid()
+	s.run(s.m.change())
+	for _, w := range s.persisted[before:] {
+		if strings.HasPrefix(w, "vivid/") {
+			t.Fatalf("entering the presentation wrote %q to the display config", w)
+		}
+	}
+	// Leaving it is the same: the plain reader is where a run starts, and it is already the default.
+	m := s.m.leaveVivid()
+	s.m = m
+	s.run(m.change())
+	for _, w := range s.persisted {
+		if strings.HasPrefix(w, "vivid/") {
+			t.Fatalf("the display config holds %q", w)
+		}
+	}
+}

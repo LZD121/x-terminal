@@ -1287,6 +1287,17 @@ func stepCover(style render.CoverStyle) render.CoverStyle {
 // happens to run.
 func (m Model) change() tea.Cmd {
 	name, state, style, deps := m.title(), m.state.String(), string(m.style), m.deps
+	if m.state == StateVivid {
+		// The vivid presentation is not a starting state: the config file's vocabulary does not hold
+		// its name, StateOf refuses it on purpose, and the design says the sequence is the only way
+		// in. Writing it would leave a value the next run cannot resolve — a silent fall back to the
+		// plain reader with the file still claiming otherwise. The window name is still set, because
+		// that is what is on screen.
+		return func() tea.Msg {
+			deps.Term.SetWindow(name)
+			return nil
+		}
+	}
 	return func() tea.Msg {
 		deps.Term.SetWindow(name)
 		deps.Persist(state, style)
