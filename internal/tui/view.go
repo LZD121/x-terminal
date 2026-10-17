@@ -150,6 +150,11 @@ func (m Model) pane(w int) []render.Block {
 			return m.searchState(f, w)
 		}
 		return m.scrolled(m.blocksAt(f, w), f)
+	case f.Kind == frameTrends:
+		if len(f.Trends) == 0 {
+			return m.searchState(f, w)
+		}
+		return m.scrolled(m.blocksAt(f, w), f)
 	case f.Kind == frameMedia:
 		if len(f.Media.Walk().Rows()) == 0 {
 			return m.searchState(f, w)
@@ -339,6 +344,14 @@ func (m Model) status() render.StatusFields {
 		}
 		fields.Loaded = f.Profile.Walk().Loaded()
 		fields.HasMore = f.Profile.Walk().HasMore()
+		return fields
+	}
+	if f.Kind == frameTrends {
+		fields.List = render.ListLabelTrends(m.grammar())
+		if len(f.Trends) > 0 {
+			fields.Selected = f.TrendSel + 1
+		}
+		fields.Loaded = len(f.Trends)
 		return fields
 	}
 	if f.Kind == frameAccounts {

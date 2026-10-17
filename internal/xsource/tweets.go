@@ -737,6 +737,14 @@ type itemContent struct {
 	TweetResults struct {
 		Result json.RawMessage `json:"result"`
 	} `json:"tweet_results"`
+	// Name and TrendURL are a TimelineTrend item's own two fields: the name Explore prints and the
+	// link the web client follows. Nothing else in this parser reads them.
+	Name string `json:"name"`
+	// TrendURL is a shape whose spelling has moved: the live answer carries an object
+	// (`{"url": "twitter://trending/<id>", "urlType": "DeepLink"}`) while an older one carried a
+	// string. It stays raw here and the trends parser reads both, so neither shape is a decode
+	// failure for a field only one reader uses.
+	TrendURL json.RawMessage `json:"trend_url"`
 	// UserResults is a TimelineUser item's account node. People search answers carry accounts
 	// here; the same userNode reader that builds a post's author reads them, so the two cannot
 	// drift. Empty on every TimelineTweet item.

@@ -32,6 +32,14 @@ func (k UserListKind) String() string {
 	return "following"
 }
 
+// Trend is one thing Explore lists: a name and the query following it should search for. The query
+// is separate from the name because the upstream's own link carries it — a trend's name is not
+// always a literal search string, and re-typing it would be a different question.
+type Trend struct {
+	Name  string
+	Query string
+}
+
 // Directory is the account-list and media reads: the four questions a profile screen can ask about
 // one account beyond its header and its recent posts.
 //
@@ -52,4 +60,7 @@ type Directory interface {
 	VerifiedFollowers(ctx context.Context, userID string, c Cursor) (UserPage, error)
 	// Media returns one page of the subject's posts that carry an attachment.
 	Media(ctx context.Context, userID string, c Cursor) (PostPage, error)
+	// Trends returns Explore's trend list. It is not paginated: the surface is one screen, and a
+	// walk over a fixed list would be machinery nobody uses.
+	Trends(ctx context.Context) ([]Trend, error)
 }

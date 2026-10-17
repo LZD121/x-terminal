@@ -153,7 +153,10 @@ func newShellIn(t *testing.T, w, h int, display Display) *shell {
 		Media:   &fake.Renderer{Answer: media.Result{Outcome: media.OpenedImage}},
 		// The account lists and the media tab: two accounts, so a list frame has rows, and no
 		// posts, so the media frame exercises its empty state — the two states the surface has.
-		Directory: &fake.Directory{Users: domain.UserPage{Rows: []domain.User{
+		Directory: &fake.Directory{TrendList: []domain.Trend{
+			{Name: "a trend", Query: "#a"},
+			{Name: "another trend", Query: "#b"},
+		}, Users: domain.UserPage{Rows: []domain.User{
 			{ID: "u-1", ScreenName: "pump-sign-57", Name: "Pump Sign"},
 			{ID: "u-2", ScreenName: "batch-restore-09", Name: "Batch Restore"},
 		}}},

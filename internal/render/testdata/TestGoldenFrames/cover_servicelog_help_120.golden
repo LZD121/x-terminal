@@ -32,5 +32,5 @@
  e               records referencing this one                                                                           
  v               verified records referencing this one                                                                  
  M               files this record attached                                                                             
-                 ~ 2 more keys than the pane can show                                                                   
+                 ~ 3 more keys than the pane can show                                                                   
 session expired  copy the cookie again  stream=in  2/16  200 requests, 12 rate-limited                                  

@@ -33,6 +33,8 @@ anywhere in the build, and a repo-wide audit proves it.
   bio and recent posts.
 - **Bookmarks and likes** — read from the session, mirrored to a local `saved.db` so they open with
   the network down. The store holds those two lists and nothing else.
+- **Explore** — `x` lists what is trending, and `enter` on a row searches it. One request, one
+  screen; the list is not paginated because Explore's own is not.
 - **What a post names** — `L` lists the URLs, hashtags and accounts in the selected post's body,
   numbered, and a digit follows one: a URL leaves through the same opener the permalink uses, a tag
   opens a search, a mention opens that profile. Refused under a cover, where a list of addresses is

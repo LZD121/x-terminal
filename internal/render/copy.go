@@ -119,6 +119,11 @@ const (
 	CopyListAccounts = "{list}: {handle}"
 	// CopyListMedia is the status line's list field for a profile's media tab.
 	CopyListMedia = "media: {handle}"
+	// CopyListTrends is the status line's list field for Explore's list.
+	CopyListTrends = "trends"
+	// CopyCoverListTrends is the same field under a cover: the disguise's own word for a list of
+	// topics, so the covered line is not the plain line.
+	CopyCoverListTrends = "topics"
 	// MarkerPromptSearch is the prompt row's prefix for the posts product, as a template: the
 	// product is named before the request is paid for. MarkerPromptPeople is the people
 	// product's own prefix. MarkerLoadingResults is the pane's own statement while a results
@@ -942,6 +947,15 @@ func ListLabelAccounts(g Grammar, kind domain.UserListKind, u domain.User) strin
 }
 
 // ListLabelMedia is the status line's list field for a media frame, on the same rule.
+// ListLabelTrends is the status line's list field for Explore's list, in the words of the style on
+// screen.
+func ListLabelTrends(g Grammar) string {
+	if _, ok := CoverOfGrammar(g); ok {
+		return CopyCoverListTrends
+	}
+	return CopyListTrends
+}
+
 func ListLabelMedia(g Grammar, u domain.User) string {
 	handle := u.ScreenName
 	if _, ok := CoverOfGrammar(g); ok {

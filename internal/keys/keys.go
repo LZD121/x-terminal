@@ -95,6 +95,9 @@ const (
 
 	// ActionLinks is `L`: the numbered menu of what the selected post's body names.
 	ActionLinks Action = "links"
+	// ActionExplore is `x`: Explore's trend list. `x` was the one free letter that reads as
+	// "explore" rather than as another verb already spoken for.
+	ActionExplore Action = "explore"
 )
 
 // The four groups the UI-SPEC's table sorts its rows into. Nothing prints them in this phase — the
@@ -215,6 +218,7 @@ var rows = []Row{
 	{Action: ActionVerifiedFollowers, Keys: []string{"v"}, Help: "this account's verified followers", HelpCovered: "verified records referencing this one", Group: GroupLists, Screens: []string{"profile"}},
 	{Action: ActionProfileMedia, Keys: []string{"M"}, Help: "this account's media", HelpCovered: "files this record attached", Group: GroupMedia, Screens: []string{"profile"}},
 
+	{Action: ActionExplore, Keys: []string{"x"}, Help: "Explore: what is trending", HelpCovered: "the trending list", Group: GroupFeed, Screens: []string{"home"}},
 	{Action: ActionLinks, Keys: []string{"L"}, Help: "the links, tags and accounts this post names", HelpCovered: "what this record references", Group: GroupMedia, Screens: []string{"all"}},
 
 	{Action: ActionTranslate, Keys: []string{"T"}, Help: "translate the selected post", HelpCovered: "show the selected record in the configured language", Group: GroupView, Screens: []string{"all"}},

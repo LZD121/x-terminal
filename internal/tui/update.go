@@ -212,6 +212,8 @@ func (m Model) update(msg tea.Msg) (Model, tea.Cmd) {
 		return m.imageDrawn(msg)
 	case linksMsg:
 		return m.linksAnswered(msg), nil
+	case trendsMsg:
+		return m.trendsAnswered(msg), nil
 	case mediaExitMsg:
 		return m.mediaExitAnswered(msg), nil
 	case copyLinkMsg:
@@ -366,6 +368,8 @@ func (m Model) dispatch(action keys.Action) (Model, tea.Cmd) {
 		return m.pushAccounts(domain.VerifiedFollowersList)
 	case keys.ActionProfileMedia:
 		return m.pushMedia()
+	case keys.ActionExplore:
+		return m.openTrends()
 	case keys.ActionCover:
 		return m.toggleCover()
 	case keys.ActionNextCover:
@@ -500,6 +504,12 @@ func (m Model) move(action keys.Action) (Model, tea.Cmd) {
 
 func (m Model) moveFrame(f frame, step int) frame {
 	switch f.Kind {
+	case frameTrends:
+		if len(f.Trends) == 0 {
+			return f
+		}
+		f.TrendSel = clamp(f.TrendSel+step, 0, len(f.Trends)-1)
+		return f
 	case frameThread:
 		f.Thread = f.Thread.Move(step)
 		return f
@@ -940,6 +950,10 @@ func (m Model) open() (Model, tea.Cmd) {
 	// routing a people row into it would answer "nothing to open" over a row that is right there.
 	if f.isPeople() {
 		return m.openAccount(sel)
+	}
+	if f.Kind == frameTrends {
+		// A trend row is not a post: enter searches it, in either presentation.
+		return m.followTrend()
 	}
 	if m.state == StateVivid {
 		// The presentation's `enter` fills the reading column and leaves the list where it is —
@@ -1403,7 +1417,7 @@ var handledActions = []keys.Action{
 	keys.ActionBookmarks, keys.ActionLikes,
 	keys.ActionMedia, keys.ActionCopyLink, keys.ActionOpenPost,
 	keys.ActionFollowing, keys.ActionFollowers, keys.ActionVerifiedFollowers, keys.ActionProfileMedia,
-	keys.ActionLinks,
+	keys.ActionLinks, keys.ActionExplore,
 	keys.ActionTranslate,
 }
 

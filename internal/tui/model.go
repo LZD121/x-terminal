@@ -247,6 +247,9 @@ const (
 	// frameMedia is one account's media tab: the same account, the same walk as any list of posts,
 	// and a read of its own.
 	frameMedia
+	// frameTrends is Explore's list: names, not rows of a timeline. It is a frame because it is a
+	// place the reader is, and `q` returns to the feed exactly as from any other.
+	frameTrends
 )
 
 // frameKinds is every surface a frame can show, in the order the consts above declare them. It is
@@ -260,7 +263,7 @@ const (
 // It is a function and not a map for the reason render.CoverStyles is: the order is a fact about
 // the program and not about a hash table.
 func frameKinds() []frameKind {
-	return []frameKind{frameHome, frameThread, frameSearch, frameProfile, frameSaved, frameAccounts, frameMedia}
+	return []frameKind{frameHome, frameThread, frameSearch, frameProfile, frameSaved, frameAccounts, frameMedia, frameTrends}
 }
 
 // frame is one screen state on the back stack. ID is this instance's own name — unique for the
@@ -306,6 +309,12 @@ type frame struct {
 	// Owner is the account whose list or media this frame is, for the status line's label and for
 	// a heading. It is the header the profile frame already read: no second lookup.
 	Owner domain.User
+	// Trends is Explore's list, when Kind is frameTrends. The selection is an index into it: a
+	// trend has no id of its own to key a walk by, and an index over a fixed list needs none.
+	Trends []domain.Trend
+	// TrendSel is the index the reader has moved to. It is a field rather than a walk because
+	// there is nothing to page, dedupe or stall over: the list is one screen.
+	TrendSel int
 	// AccountsKind is which account list Accounts holds. It is stored rather than read off the
 	// request so the status line and the keys need no type assertion.
 	AccountsKind domain.UserListKind
@@ -333,6 +342,8 @@ func (f frame) selected() screen.Target {
 		return f.Thread.Selected()
 	case frameAccounts:
 		return f.Accounts.Walk().Selected()
+	case frameTrends:
+		return f.trendTarget()
 	case frameMedia:
 		return f.Media.Walk().Selected()
 	case frameSearch:
@@ -362,6 +373,8 @@ func (f frame) targets() []screen.Target {
 		return screen.PostTargets(f.Profile.Walk().Rows())
 	case frameAccounts:
 		return screen.UserTargets(f.Accounts.Walk().Rows())
+	case frameTrends:
+		return f.trendTargets()
 	case frameMedia:
 		return screen.PostTargets(f.Media.Walk().Rows())
 	case frameSaved:
@@ -757,6 +770,13 @@ func (m Model) blocksIn(g render.Grammar, f frame, w int) []render.Block {
 		return render.UserRows(f.Accounts.Walk().Rows(), g, w, sel)
 	case frameMedia:
 		return render.Blocks(m.translated(f.Media.Walk().Rows(), sel), g, w, sel, m.deps.Now(), falls)
+	case frameTrends:
+		rows := render.TrendRows(g, w, f.Trends, f.trendTarget().ID)
+		blocks := make([]render.Block, 0, len(rows))
+		for i, row := range rows {
+			blocks = append(blocks, render.Block{PostID: domain.PostID(strconv.Itoa(i)), Rows: []string{row}})
+		}
+		return blocks
 	}
 	return render.Blocks(m.translated(f.List.Posts(), sel), g, w, sel, m.deps.Now(), falls)
 }
@@ -890,4 +910,33 @@ func (m Model) skip(f frame, above int) int {
 // the frame to scroll past the top of the list, and render.Frame does neither.
 func (m Model) reanchor(f frame, scroll, w int) int {
 	return clamp(m.rowsAbove(f, w)-scroll, 0, max(0, m.paneRows()-1))
+}
+
+// trendTargets is Explore's rows as the walk's own targets: the index of each trend, as a string.
+// The index is the row's identity — a trend has no id the upstream gives it, and the list is fixed
+// for the life of the frame.
+func (f frame) trendTargets() []screen.Target {
+	out := make([]screen.Target, 0, len(f.Trends))
+	for i := range f.Trends {
+		out = append(out, screen.Target{ID: strconv.Itoa(i)})
+	}
+	return out
+}
+
+// trendTarget is the selected trend's target. It is also what the pane's geometry matches a block
+// by, so the blocks built from the same list carry the same ids.
+func (f frame) trendTarget() screen.Target {
+	if len(f.Trends) == 0 {
+		return screen.Target{}
+	}
+	return screen.Target{ID: strconv.Itoa(f.TrendSel)}
+}
+
+// trendIndex is the index the selected trend target names.
+func trendIndex(t screen.Target) (int, bool) {
+	i, err := strconv.Atoi(t.ID)
+	if err != nil || i < 0 {
+		return 0, false
+	}
+	return i, true
 }

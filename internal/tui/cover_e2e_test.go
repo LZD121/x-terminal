@@ -713,6 +713,15 @@ func frameKindChecks() []frameKindCheck {
 			},
 		},
 		{
+			kind: frameTrends,
+			name: "Explore's trend list",
+			reach: func(t *testing.T, s *shell) {
+				t.Helper()
+				s.press("x")
+			},
+			words: func(t *testing.T, s *shell) []string { return []string{render.ListLabelTrends(grammar)} },
+		},
+		{
 			kind: frameSaved,
 			name: "one saved list",
 			reach: func(t *testing.T, s *shell) {

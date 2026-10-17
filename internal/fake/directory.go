@@ -32,6 +32,8 @@ type Directory struct {
 	Users domain.UserPage
 	// Posts is the posts page the media call returns.
 	Posts domain.PostPage
+	// TrendList is what the Explore read answers with. It is not `Trends`: that name is the method.
+	TrendList []domain.Trend
 	// Err, when non-nil, is returned by every call in place of a page.
 	Err error
 }
@@ -73,6 +75,14 @@ func (d *Directory) VerifiedFollowers(_ context.Context, userID string, c domain
 		return domain.UserPage{}, err
 	}
 	return d.Users, nil
+}
+
+// Trends answers Explore's list.
+func (d *Directory) Trends(_ context.Context) ([]domain.Trend, error) {
+	if err := d.record(DirectoryCall{}); err != nil {
+		return nil, err
+	}
+	return d.TrendList, nil
 }
 
 // Media answers the media tab.

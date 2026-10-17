@@ -39,6 +39,7 @@ var opClass = map[string]string{
 	"Followers":             "read",
 	"BlueVerifiedFollowers": "read",
 	"UserMedia":             "read",
+	"ExplorePage":           "read",
 
 	// Writes: the post, reply, like, repost, follow and bookmark write operations.
 	"CreateTweet":       "write",
