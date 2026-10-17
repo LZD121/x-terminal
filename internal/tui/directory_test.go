@@ -151,3 +151,21 @@ func TestTheMediaFrameIsAPostList(t *testing.T) {
 		t.Fatalf("the status line does not name the tab: %q", s.status())
 	}
 }
+
+// TestTheAccountFramesRenderInTheSecondPresentation: vivid mode is a display state, not a frame, so
+// the new frames must render through the vivid renderer too — a surface that drew only in the plain
+// reader would be a screen the second presentation could reach and not paint.
+func TestTheAccountFramesRenderInTheSecondPresentation(t *testing.T) {
+	s, _ := profileShell(t)
+	s.m = s.m.enterVivid()
+	for _, key := range []string{"f", "e", "v", "M"} {
+		s.press(key)
+		frame := s.m.Render(120, 30)
+		if rows := strings.Count(frame, "\n") + 1; rows != 30 {
+			t.Fatalf("%s: %d rows in the vivid frame, want 30", key, rows)
+		}
+		if got := s.m.top().Kind; got != frameAccounts && got != frameMedia {
+			t.Fatalf("%s left the frame kind %d", key, got)
+		}
+	}
+}
