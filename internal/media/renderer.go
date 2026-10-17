@@ -94,6 +94,10 @@ type Result struct {
 	Outcome Outcome
 	Rows    []string
 	Done    <-chan error
+	// ImageID is the id a terminal-drawing renderer placed the image under, and zero for every
+	// renderer that did not draw: the pane prints the placeholder cells itself and needs the id to
+	// address them, and the panic path needs it to delete them.
+	ImageID int
 }
 
 // Renderer is the one-file seam: Open is one call per attachment; OpenURL is the
