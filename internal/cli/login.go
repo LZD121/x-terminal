@@ -7,7 +7,9 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 
 	"github.com/charmbracelet/x/term"
 
@@ -69,6 +71,10 @@ func Login(ctx *Context, args []string) int {
 	var authToken, cto session.Secret
 	if browser {
 		authToken, cto, err = readFromBrowser(ctx)
+		if errors.Is(err, context.Canceled) {
+			fmt.Fprintln(ctx.Stderr, "login: cancelled; the browser was closed and its profile removed, nothing was written")
+			return ExitError
+		}
 		if errors.Is(err, browserlogin.ErrNoBrowser) {
 			// The machine has no browser this knows how to drive: the manual path is right there,
 			// and saying so is the whole remedy.
@@ -134,7 +140,12 @@ func readFromTerminal(ctx *Context) (session.Secret, session.Secret, error) {
 // readFromBrowser is the automated half: a throwaway Chromium window on the login page, and the two
 // cookies read out of that window's own jar once they appear.
 func readFromBrowser(ctx *Context) (session.Secret, session.Secret, error) {
-	result, err := browserlogin.Login(context.Background(), browserlogin.Options{Progress: ctx.Stdout})
+	// A cancelled sign-in must still clean up: the temporary profile holds the cookies once the
+	// reader has logged in, and a killed process would leave it there. Cancelling the context is
+	// what lets Login close the browser and delete the directory on its way out.
+	runCtx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+	result, err := browserlogin.Login(runCtx, browserlogin.Options{Progress: ctx.Stdout})
 	if err != nil {
 		return "", "", err
 	}
