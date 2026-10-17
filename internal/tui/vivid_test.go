@@ -168,9 +168,9 @@ func TestTheReadingColumnDoesNotInheritTheListsScroll(t *testing.T) {
 }
 
 // m0 is a shell that has not moved: the reference both reading-column tests compare against.
-// separatorsAt reports whether the row's cells at two display columns are the column rule. It walks
-// clusters rather than runes so a wide glyph before either column is counted for what it occupies.
-func separatorsAt(row string, cols ...int) bool {
+// bordersAt reports whether the row's cells at the given display columns are box edges. It walks
+// clusters rather than runes so a wide glyph before a column is counted for what it occupies.
+func bordersAt(row string, cols []int) bool {
 	col := 0
 	next := 0
 	found := make([]bool, len(cols))
@@ -180,7 +180,7 @@ func separatorsAt(row string, cols ...int) bool {
 			continue
 		}
 		if next < len(cols) && col == cols[next] {
-			found[next] = r == '│'
+			found[next] = strings.ContainsRune("│╭╮╰╯─", r)
 			next++
 		}
 		col += w
@@ -264,13 +264,12 @@ func TestEveryColumnRowIsExactlyItsWidth(t *testing.T) {
 				t.Fatalf("width %d row %d: %d cells", w, i, got)
 			}
 		}
-		// and the two separators sit exactly where the geometry says, measured in display cells
-		// rather than in runes: the list can hold a CJK row, and a rune index would be the wrong
-		// question wherever it does.
-		for _, row := range strings.Split(frame, "\n")[:5] {
+		// Each pane is a rounded box, and the boxes tile the surface exactly: the first box's right
+		// border, the gutter, the second box's borders, the gutter and the third box's edges.
+		for _, row := range strings.Split(frame, "\n")[:4] {
 			plain := stripSGR(row)
-			if !separatorsAt(plain, g.Nav, g.Nav+1+g.List) {
-				t.Fatalf("width %d: separators are not at %d and %d: %q", w, g.Nav, g.Nav+1+g.List, plain)
+			if !bordersAt(plain, []int{0, g.Nav - 1, g.Nav + 1, g.Nav + g.List, g.Nav + g.List + 2, w - 1}) {
+				t.Fatalf("width %d: box borders are not where the geometry says: %q", w, plain)
 			}
 		}
 	}

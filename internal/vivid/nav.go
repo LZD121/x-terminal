@@ -24,11 +24,18 @@ type Geometry struct {
 // that the panes' content widths are the widths the block grammar was measured with.
 const Separator = "│"
 
+// minNavWidth is the narrowest a nav column may be and still name every destination: the longest
+// name plus one cell of padding on each side, plus the box's two border cells. A column narrower
+// than this silently drops a destination — which is how "bookmarks" vanished from a live frame.
+func minNavWidth() int {
+	return navWidth() + 2
+}
+
 // MinTwoColumn is the width at which the second column appears. It is the plain reader's own floor
 // (render.MinPaneCols) plus the nav column and two separators: below the plain floor a post cannot be
 // laid out, so a second column beside it cannot either. It is a var because the nav column's width is
 // computed from the destination names — a new destination must move the floor rather than be cut.
-var MinTwoColumn = render.MinPaneCols + navWidth() + 2
+var MinTwoColumn = render.MinPaneCols + minNavWidth() + 1
 
 // NavWidth is the navigation column's width: the longest destination name plus one cell of padding
 // on each side. It is computed from the names rather than written down, so a new destination widens
@@ -53,7 +60,8 @@ func GeometryOf(width int) Geometry {
 	if width < MinTwoColumn {
 		return Geometry{List: width}
 	}
-	nav := navWidth()
+	nav := minNavWidth()
+	// Two one-cell gutters between the three boxes.
 	rest := width - nav - 2
 	// The list gets the smaller half of what is left and the reading pane the larger: the list is
 	// a menu of one-line heads and the pane is prose. An odd cell goes to the list, because a stray

@@ -40,8 +40,11 @@ func TestGeometry(t *testing.T) {
 			widest = n
 		}
 	}
-	if MinTwoColumn != render.MinPaneCols+widest+2+2 {
-		t.Fatalf("the floor %d does not follow the longest destination %d", MinTwoColumn, widest)
+	// The floor is the plain reader's own plus the nav box (name, its two pads, its two borders), the
+	// list's border and the one-cell gutter: a second column that cannot name its destinations is
+	// not a second column.
+	if want := render.MinPaneCols + (widest + 2 + 2) + 1; MinTwoColumn != want {
+		t.Fatalf("the floor %d does not follow the longest destination %d (want %d)", MinTwoColumn, widest, want)
 	}
 }
 
@@ -95,16 +98,16 @@ func TestTheNavigationColumnMarksTheDestination(t *testing.T) {
 				dest = d
 			}
 		}
-		rows := navRows(dest, 20, 40)
+		rows := navLines(NewTheme(render.RungMono), View{Dest: dest}, 20, 40)
 		if len(rows) != len(Destinations()) {
 			t.Fatalf("%s: %d rows, want %d", name, len(rows), len(Destinations()))
 		}
 		for i, row := range rows {
-			want := "  " + Destinations()[i].Name()
+			want := " " + Destinations()[i].Name()
 			if Destinations()[i].Name() == word {
-				want = render.MarkSelection + " " + word
+				want = " " + word
 			}
-			if row != want {
+			if strings.TrimRight(row, " ") != want {
 				t.Fatalf("%s: row %d = %q, want %q", name, i, row, want)
 			}
 		}
@@ -116,7 +119,7 @@ func TestTheNavigationColumnMarksTheDestination(t *testing.T) {
 func TestTheReadingRuleIsExactlyTheColumn(t *testing.T) {
 	for _, w := range []int{74, 90, 131, 200} {
 		g := GeometryOf(w)
-		rows := readingRows(View{ReadingTitle: "someone / 1"}, g.Reading, 10)
+		rows := readingLines(NewTheme(render.RungMono), View{ReadingTitle: "someone / 1"}, g.Reading, 10)
 		if len(rows) < 2 {
 			t.Fatalf("width %d: %d rows, want a title and a rule", w, len(rows))
 		}

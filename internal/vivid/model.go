@@ -97,4 +97,7 @@ type View struct {
 	Status   render.StatusFields
 	// Width and Height are the surface's whole size, including the status bar.
 	Width, Height int
+	// Theme is the colour the frame is drawn in. The zero value paints nothing, so a caller that
+	// never sets it gets the mono shape rather than a guess about the terminal.
+	Theme Theme
 }
