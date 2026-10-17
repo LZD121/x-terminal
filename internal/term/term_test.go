@@ -6,6 +6,8 @@ import (
 	"testing"
 
 	"github.com/charmbracelet/x/ansi"
+
+	"github.com/LZD121/x-terminal/internal/media"
 )
 
 // effects is a Sink's output file and its process runner in one value: what the sink writes and what
@@ -130,8 +132,11 @@ func TestEnterPanicIsOneWrite(t *testing.T) {
 		if e.writes != 1 {
 			t.Errorf("a %d-row frame was written in %d writes, want one", rows, e.writes)
 		}
-		if got := e.written[0]; got != Entry(frame, "make") {
-			t.Errorf("the write is not the entry's own bytes:\n%q", got)
+		// The entry is Entry plus the image delete, which is the one thing this sink adds: a bare
+		// terminal gets the bare sequence, and the frame's own bytes follow it unchanged.
+		want := media.KittyDeleteAll() + Entry(frame, "make")
+		if got := e.written[0]; got != want {
+			t.Errorf("the write is not the entry's own bytes:\n got %q\nwant %q", got, want)
 		}
 	}
 }
@@ -317,4 +322,35 @@ func indexOf(log []string, want string) int {
 		}
 	}
 	return -1
+}
+
+// TestPanicDeletesImagesBeforeTheScreen is the vivid presentation's extra promise: the terminal's own
+// image store is emptied first, so the cover paints over cells that no longer have a picture in them.
+func TestPanicDeletesImagesBeforeTheScreen(t *testing.T) {
+	e := &effects{}
+	sink(e, nil).EnterPanic(panicFrame, "make")
+	got := e.written[0]
+	del := strings.Index(got, media.KittyDeleteAll())
+	first := strings.Index(got, ansi.CursorPosition(1, 1))
+	ed3 := strings.Index(got, ansi.EraseEntireDisplay)
+	if del < 0 {
+		t.Fatal("the entry does not delete the image store")
+	}
+	if del > first || del > ed3 {
+		t.Fatalf("the delete is not first: delete %d, first row %d, ED 3 %d", del, first, ed3)
+	}
+}
+
+// TestPanicWrapsTheDeleteUnderTmux: under a multiplexer the same sequence is DCS-wrapped with its
+// inner ESC doubled, or tmux eats it and the image survives the panic.
+func TestPanicWrapsTheDeleteUnderTmux(t *testing.T) {
+	e := &effects{}
+	sink(e, map[string]string{"TMUX_PANE": "%3"}).EnterPanic(panicFrame, "make")
+	got := e.written[0]
+	if !strings.Contains(got, "\x1bPtmux;\x1b\x1b_Ga=d,d=A,q=2\x1b\x1b\\\x1b\\") {
+		t.Fatalf("the delete was not wrapped and doubled: %q", got)
+	}
+	if strings.Count(got, "\x1bPtmux;") != 1 {
+		t.Fatalf("%d DCS frames, want one", strings.Count(got, "\x1bPtmux;"))
+	}
 }

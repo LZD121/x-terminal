@@ -29,6 +29,8 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/x/ansi"
+
+	"github.com/LZD121/x-terminal/internal/media"
 )
 
 // Runner runs one program and returns its output. It is the seam the tests replace with a
@@ -79,7 +81,18 @@ const eraseScrollback = ansi.EraseEntireDisplay
 // already padded to the pane's width by its own builder (internal/render.PanicFrame), so nothing
 // here measures anything.
 func Entry(frame, title string) string {
+	return entryWith(frame, title, "")
+}
+
+// entryWith is Entry with the sequence that removes the terminal's own image store placed first. It
+// is first for two reasons: the images must be gone before the frame paints over the cells they
+// occupied (a repaint around a picture is the leak panic exists to prevent), and the delete has to be
+// inside the one write that ED 3's ordering depends on.
+//
+// An empty delete is the ordinary plain-state entry: nothing this program placed, nothing to remove.
+func entryWith(frame, title, deleteAll string) string {
 	var b strings.Builder
+	b.WriteString(deleteAll)
 	for i, row := range strings.Split(frame, "\n") {
 		b.WriteString(ansi.CursorPosition(1, i+1))
 		b.WriteString(row)
@@ -87,6 +100,17 @@ func Entry(frame, title string) string {
 	b.WriteString(eraseScrollback)
 	b.WriteString(ansi.SetWindowTitle(title))
 	return b.String()
+}
+
+// entry is the panic entry with the image delete this sink's multiplexer state needs: a DCS-wrapped
+// sequence under a multiplexer and a bare one otherwise. The wrapping is the same rule the media
+// renderer follows, and it is the one thing both must agree about.
+func (s Sink) entry(frame, title string) string {
+	del := media.KittyDeleteAll()
+	if Pane(s.env()) != "" {
+		del = media.TmuxWrap(del)
+	}
+	return entryWith(frame, title, del)
 }
 
 // EnterPanic is the panic entry: one write of Entry, then the multiplexer's own clear and the
@@ -98,7 +122,7 @@ func Entry(frame, title string) string {
 // the shell is not told what happened, because there is nothing it could do about it and nothing on
 // screen may claim otherwise.
 func (s Sink) EnterPanic(frame, title string) {
-	_, _ = s.out().Write([]byte(Entry(frame, title)))
+	_, _ = s.out().Write([]byte(s.entry(frame, title)))
 
 	pane := Pane(s.env())
 	if pane == "" {
