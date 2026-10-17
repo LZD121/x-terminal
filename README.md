@@ -67,6 +67,17 @@ x-terminal whoami          # which account the session belongs to
 x-terminal keys            # the keymap, tab-separated
 ```
 
+## A second display
+
+There is a second presentation besides the plain reader: a navigation column, a list and a reading
+pane side by side, with images drawn in the terminal. It is meant for the places where the reader
+needs no cover, and it is deliberately not documented further — this file does not say how to reach
+it, and neither does `--help`, the `?` overlay or `x-terminal keys`.
+
+What it is not: it is still read-only, it still keeps nothing on disk, and it still walks out through
+the same proxy and the same request budget. The plain reader, the covers and the panic frame are
+unchanged, and their golden frames are unmoved.
+
 The session cookie goes in `$XDG_CONFIG_HOME/x-terminal/session` — `auth_token=…` and `ct0=…`, mode
 `0600`, outside any editor round-trip. `X_TERMINAL_AUTH_TOKEN` / `X_TERMINAL_CT0` override it.
 [`RUNBOOK.md`](RUNBOOK.md) has the one-command repairs for every failure state the classifier can

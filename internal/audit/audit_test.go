@@ -104,6 +104,9 @@ var auditCheckNames = []string{
 	"account",
 	"boundaries",
 	"leak",
+	// hidden is the second display state's own promise: the design says the key sequence is the only
+	// way in, and a start-up path is the one thing that would quietly make that false.
+	"hidden",
 }
 
 func checkNames(checks []Check) []string {

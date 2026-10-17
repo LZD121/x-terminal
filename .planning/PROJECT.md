@@ -45,6 +45,24 @@ and hidden entirely with one key.
 - Export / pipeline integration (pipe posts to `grep`, dump threads to markdown) — not selected for v1; revisit if it turns out to be the real motivation
 - Distribution as a *distributable* artifact — no container image, no hosted instance, no installer, no package recipe. Internal-endpoint usage is against X's terms, so nothing a stranger can pick up and run may exist. **Narrowed 2026-10-15**, when the project was pushed to a private repository with a CI/release job: a GitHub Release carrying source and a Go binary, built out of a private repository for the operator's own machines, is the build this project already was and not a distributable form of it. **Re-opened and accepted 2026-10-16**, when the repository was made *public*: that narrowing's premise — a private repository — is gone, and the Release's source and three platform binaries are now downloadable by anyone with no credential, so a stranger can in fact pick this program up and run it. The author accepted that exposure deliberately, having been shown what a fork makes irreversible. `internal/audit`'s `distribution` check still enforces the same set (image / package / installer / hosted mode) and its comment records this second change rather than going on printing the private-repository reasoning; `RUNBOOK.md`'s "Accidental distribution" section is the repair when something does escape.
 
+### The second display mode (declared exception, 2026-10-17)
+
+The project's plain mode is built so that nothing on screen looks like social media: the reader is a
+log viewer, the four covers are work software, and the panic frame is a finished command's output. That
+rule is enforced by the banned-vocabulary tests in `internal/render` (cover, corpus, status), and it
+continues to hold for every one of those surfaces.
+
+There is now a second presentation — `internal/vivid`, entered only by a hidden key sequence, with no
+flag, config key or environment variable anywhere — worn where no disguise is needed. It is a
+**declared, narrow exception** to that rule and to nothing else:
+
+- It prints real identities and product wording because it is not a disguise. The exception is a
+  different grammar, not a flag on the plain one, so no plain or covered frame can acquire it.
+- It stays **read-only**. The write-operation checks are unchanged and vivid mode adds no operation.
+- It adds **no persistence**: the marks, the reading position and the images are session memory.
+- Its entry is not documented in the repository. `internal/audit`'s `hidden` check holds the two ways
+  a start-up path could reach it.
+
 ## Context
 
 - **Data source is unofficial.** x.com's own web front end talks to internal

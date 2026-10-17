@@ -192,6 +192,7 @@ func Checks() []Check {
 		{Name: "account", Promise: "exactly one session path and one credential pair", Run: checkAccount},
 		{Name: "boundaries", Promise: "import boundaries and volatile vocabulary still hold", Run: checkBoundaries},
 		{Name: "leak", Promise: "the fixture cookie appears in none of the named surfaces", Run: checkLeak},
+		{Name: "hidden", Promise: hiddenPromise, Run: checkHiddenMode},
 	}
 }
 
