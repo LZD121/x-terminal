@@ -73,6 +73,16 @@ func (m Marks) mark(id domain.PostID) (isNew, dim bool) {
 	return m.New[id], !m.New[id] && m.Opened[id]
 }
 
+// Image is one placed picture: the id the terminal holds it under, and the block it occupies in
+// cells. The two are all the renderer needs — the bytes went to the terminal separately, because a
+// frame is text and a picture is a protocol.
+type Image struct {
+	// ID is the image id, 0..255: the protocol carries it in a colour channel.
+	ID int
+	// Cols and Rows are the block's size in cells.
+	Cols, Rows int
+}
+
 // View is one vivid frame: everything the renderer needs and nothing it could derive twice.
 type View struct {
 	// Dest is the destination the column marks.
@@ -97,6 +107,10 @@ type View struct {
 	Status   render.StatusFields
 	// Width and Height are the surface's whole size, including the status bar.
 	Width, Height int
+	// Image is the picture the reading column is showing, or nil. Its cells are printed by the
+	// renderer and painted by the terminal — the presentation does not carry pixels, only the id
+	// and the size the terminal was told about.
+	Image *Image
 	// Theme is the colour the frame is drawn in. The zero value paints nothing, so a caller that
 	// never sets it gets the mono shape rather than a guess about the terminal.
 	Theme Theme

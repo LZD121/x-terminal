@@ -67,6 +67,10 @@ func (m Model) vividView() vivid.View {
 		Status:   m.status(),
 	}
 	v.Marks = vivid.Marks{New: m.vivid.marked, Opened: m.vivid.opened}
+	if len(m.vivid.images) > 0 {
+		img := m.vivid.images[len(m.vivid.images)-1]
+		v.Image = &vivid.Image{ID: img.id, Cols: img.cols, Rows: img.rows}
+	}
 
 	if f.Kind == frameThread {
 		// A conversation has no list beside it: the list column is the thread's own ancestors, and
@@ -181,7 +185,10 @@ func (m Model) openIntoReading() (Model, tea.Cmd) {
 	if !ok {
 		return m.setNotice(render.NoticeNothingToOpen, 0), nil
 	}
-	m.vivid.reading = post.ID
-	m.vivid = m.vivid.withOpened(post.ID)
-	return m, nil
+	// A picture of the post being replaced must go before the new one is placed: the presentation
+	// holds at most one, and a stale one would sit in the column under a new heading.
+	clearModel, clearCmd := m.clearImage()
+	clearModel.vivid.reading = post.ID
+	clearModel.vivid = clearModel.vivid.withOpened(post.ID)
+	return clearModel, tea.Batch(clearCmd, clearModel.vividImageCmd(post))
 }

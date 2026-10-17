@@ -36,6 +36,10 @@ anywhere in the build, and a repo-wide audit proves it.
 - **One account's lists** — from a profile, `f` opens who it follows, `e` who follows it, `v` the
   verified among them, and `M` its media tab. Each is its own keyset-paginated frame; `q` walks back
   without spending a request.
+- **Pictures in the reading pane** — in the second display, a post opened in the reading column has
+  its first image drawn in the terminal, through the Kitty graphics protocol with Unicode
+  placeholders (`TERM`/`TERM_PROGRAM`, or tmux's client term name behind a multiplexer). Anything the
+  terminal cannot draw, and every video or gif, stays a line of text with the external-open hint.
 - **Media and links** — a post's images and video open in external programs (`xdg-open`, `mpv`), its
   permalink can be copied or opened. When no opener is available the URL is printed instead.
 - **Translations** — `T` shows the selected post through x.com's own translator, in the language

@@ -31,7 +31,7 @@ nothing was edited — including the posts, which are public posts by their auth
 Everything visible was reached by keys alone: the plain reader is where a run starts; vivid mode is
 entered by a sequence this repository does not document; `ctrl+p` is panic.
 
-Known gap at the time of capture: the reading pane shows the post's text and its first attachment as a
-line of text (`[1] video`). The in-terminal image renderer is built and tested
-(`internal/media/kitty_payload.go`, `internal/xweb/image.go`) but is not yet wired to the pane, so no
-picture is drawn in these screenshots.
+These captures predate the reading pane's pictures, and a text capture could not show one anyway: the
+pane prints placeholder cells and the terminal paints pixels into them, which `tmux capture-pane`
+returns as cells, not as an image. The live check counted those cells — 160 of them, a 16x10 block —
+after a real fetch (a 323 kB JPEG, re-encoded to a 3.8 MB PNG) and a real placement.

@@ -66,6 +66,7 @@ func testFailure(err error, check []netcheck.Result) domain.Failure {
 type fakeTerm struct {
 	entered []panicEntry
 	windows []string
+	drawn   []string
 }
 
 // panicEntry is one EnterPanic call's two values.
@@ -79,6 +80,11 @@ func (f *fakeTerm) EnterPanic(frame, title string) {
 }
 
 func (f *fakeTerm) SetWindow(name string) { f.windows = append(f.windows, name) }
+
+// Draw records the sequences the shell hands the terminal outside the frame — the graphics
+// protocol's own bytes. It is a list rather than a string because a test asks what was drawn and in
+// which order, and the delete that follows a transmit is the interesting second entry.
+func (f *fakeTerm) Draw(seq string) { f.drawn = append(f.drawn, seq) }
 
 // shell is the shell under test: the model, the fake source it reads, and the seams a test has over
 // everything the model would otherwise reach outside itself.

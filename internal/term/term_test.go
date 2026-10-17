@@ -354,3 +354,35 @@ func TestPanicWrapsTheDeleteUnderTmux(t *testing.T) {
 		t.Fatalf("%d DCS frames, want one", strings.Count(got, "\x1bPtmux;"))
 	}
 }
+
+// TestClientTermNameAsksTheMultiplexer: inside tmux the process's TERM names the multiplexer, so the
+// outer terminal's name is one command away — and a sink with no pane asks nothing.
+func TestClientTermNameAsksTheMultiplexer(t *testing.T) {
+	e := &effects{}
+	e.output = []byte("xterm-ghostty\n")
+	s := sink(e, map[string]string{"TMUX_PANE": "%3"})
+	if got := s.ClientTermName(); got != "xterm-ghostty" {
+		t.Fatalf("ClientTermName = %q", got)
+	}
+	// The program is tmux and the rest is the command's own argv: a runner called with the args and
+	// no program would try to execute `display-message`, which is a different bug with the same
+	// symptom (an empty answer and no picture).
+	want := "tmux " + strings.Join(ClientTermNameArgs(), " ")
+	found := false
+	for _, entry := range e.log {
+		if entry == want {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("the multiplexer was not asked with %q: %v", want, e.log)
+	}
+	// No pane: no subprocess, no name.
+	e2 := &effects{}
+	if got := sink(e2, nil).ClientTermName(); got != "" {
+		t.Fatalf("a sink with no pane answered %q", got)
+	}
+	if len(e2.log) != 0 {
+		t.Fatalf("a sink with no pane ran %v", e2.log)
+	}
+}

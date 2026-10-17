@@ -208,6 +208,8 @@ func (m Model) update(msg tea.Msg) (Model, tea.Cmd) {
 		return m.accountsAnswered(msg), nil
 	case mediaTabMsg:
 		return m.mediaTabAnswered(msg), nil
+	case imageLoadedMsg:
+		return m.imageDrawn(msg)
 	case mediaExitMsg:
 		return m.mediaExitAnswered(msg), nil
 	case copyLinkMsg:
@@ -285,11 +287,13 @@ func (m Model) press(msg tea.KeyPressMsg) (Model, tea.Cmd) {
 	// reader's meaning, so quitting from the first frame still quits.
 	if m.state == StateVivid && (msg.Keystroke() == "esc" || msg.String() == "esc") {
 		if m.vivid.reading != "" {
+			m, clear := m.clearImage()
 			m.vivid.reading = ""
-			return m, nil
+			return m, clear
 		}
+		m, clear := m.clearImage()
 		m = m.leaveVivid()
-		return m, m.change()
+		return m, tea.Batch(clear, m.change())
 	}
 	if m.help {
 		if action == keys.ActionHelp || action == keys.ActionBack {
@@ -918,18 +922,20 @@ func (m Model) switchOrder() (Model, tea.Cmd) {
 // page one is asked for from ThreadRequested's effect. Opening a profile issues the header
 // request through the single command path (05-02).
 func (m Model) open() (Model, tea.Cmd) {
-	if m.state == StateVivid {
-		// The presentation's `enter` fills the reading column and leaves the list where it is —
-		// that is what the second column is for.
-		return m.openIntoReading()
-	}
 	f := m.top()
 	sel := f.selected()
 	if sel.ID == "" {
 		return m.setNotice(render.NoticeNothingToOpen, 0), nil
 	}
+	// An account row opens an account in every presentation: the reading column is for posts, and
+	// routing a people row into it would answer "nothing to open" over a row that is right there.
 	if f.isPeople() {
 		return m.openAccount(sel)
+	}
+	if m.state == StateVivid {
+		// The presentation's `enter` fills the reading column and leaves the list where it is —
+		// that is what the second column is for.
+		return m.openIntoReading()
 	}
 	post, ok := f.post(sel)
 	if !ok {

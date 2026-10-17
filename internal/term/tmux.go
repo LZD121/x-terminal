@@ -42,6 +42,13 @@ func RenameWindowArgs(pane, name string) []string {
 	return []string{"rename-window", "-t", pane, name}
 }
 
+// ClientTermNameArgs is `tmux display-message -p '#{client_termname}'`: the TERM of the terminal
+// attached to the multiplexer's client. It is how a process inside tmux learns what the outer
+// terminal is, because its own TERM names the multiplexer.
+func ClientTermNameArgs() []string {
+	return []string{"display-message", "-p", "#{client_termname}"}
+}
+
 // WindowNameArgs is `tmux display-message -p '#W'`: the window's current name, printed and nothing
 // else. It is what the exit-time restore puts back.
 func WindowNameArgs() []string {

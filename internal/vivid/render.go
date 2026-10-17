@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/LZD121/x-terminal/internal/domain"
+	"github.com/LZD121/x-terminal/internal/media"
 	"github.com/LZD121/x-terminal/internal/render"
 	"github.com/LZD121/x-terminal/internal/text"
 )
@@ -197,6 +198,17 @@ func readingLines(th Theme, v View, w, h int) []string {
 		out = append(out, th.Paint(strings.Repeat("─", w), ColourRune, ""))
 		if len(out) >= h {
 			return out[:h]
+		}
+	}
+	if v.Image != nil {
+		// The picture's own cells, then the text below them. They are ordinary cells to everything
+		// that measures this frame — that is the whole point of the placeholder form: tmux's grid
+		// knows them, so the text under them is laid out rather than drawn across.
+		for _, row := range media.KittyCells(v.Image.ID, v.Image.Cols, v.Image.Rows) {
+			out = append(out, cut(row, w))
+			if len(out) >= h {
+				return out[:h]
+			}
 		}
 	}
 	if len(v.Reading) == 0 {

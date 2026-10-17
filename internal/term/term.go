@@ -113,6 +113,41 @@ func (s Sink) entry(frame, title string) string {
 	return entryWith(frame, title, del)
 }
 
+// ClientTermName is the outer terminal's TERM, or the empty string when there is no multiplexer or
+// it cannot answer. It runs one tmux command and swallows every failure: a detection that cannot
+// read the name is a build that draws no picture, which is the safe answer.
+func (s Sink) ClientTermName() string {
+	if Pane(s.env()) == "" || s.Run == nil {
+		return ""
+	}
+	args := ClientTermNameArgs()
+	out, err := s.Run(tmuxProgram, args...)
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(out))
+}
+
+// Draw writes one terminal sequence that is not part of the frame: the graphics protocol's
+// transmit, placement and delete strings.
+//
+// It is a method on the sink and not a second writer because this is the module's one output path:
+// the frame and these bytes must not interleave through two file handles. Under a multiplexer the
+// sequence is DCS-wrapped with its escapes doubled, which is the same rule the panic entry follows
+// for the delete it carries.
+//
+// Every error is swallowed, for the reason the panic entry's are: a graphics sequence that did not
+// arrive is a cell that shows nothing, and a sentence about it on screen would be worse.
+func (s Sink) Draw(seq string) {
+	if seq == "" {
+		return
+	}
+	if Pane(s.env()) != "" {
+		seq = media.TmuxWrap(seq)
+	}
+	_, _ = s.out().Write([]byte(seq))
+}
+
 // EnterPanic is the panic entry: one write of Entry, then the multiplexer's own clear and the
 // window name, in that order.
 //

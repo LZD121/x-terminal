@@ -31,6 +31,10 @@ type vividState struct {
 	// post it belongs to, and how many rows it occupies. Panic deletes every id here, which is the
 	// one thing that must survive being forgotten by the model.
 	images []placedImage
+	// nextID is the id the next picture is transmitted under. The protocol carries the id in a
+	// colour channel, so it is kept in 1..255 and wraps: an id reused while its image is still
+	// stored replaces it, which is what the transmit does anyway.
+	nextID int
 }
 
 // placedImage is one image the program has asked the terminal to keep, and it is deliberately the
@@ -40,6 +44,7 @@ type vividState struct {
 type placedImage struct {
 	id   int
 	post domain.PostID
+	cols int
 	rows int
 }
 
@@ -72,6 +77,14 @@ func (v vividState) withOpened(id domain.PostID) vividState {
 	return v
 }
 
+// next is the id for the next picture.
+func (v vividState) next() int {
+	if v.nextID < 1 || v.nextID >= 255 {
+		return 1
+	}
+	return v.nextID + 1
+}
+
 // withImage is the value with one placed image. The slice is copied rather than appended in place
 // for the same reason every other map here is: a model value held before the answer must still
 // render the presentation it was taken from.
@@ -79,5 +92,6 @@ func (v vividState) withImage(img placedImage) vividState {
 	images := make([]placedImage, len(v.images), len(v.images)+1)
 	copy(images, v.images)
 	v.images = append(images, img)
+	v.nextID = img.id
 	return v
 }

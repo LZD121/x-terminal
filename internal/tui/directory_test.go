@@ -169,3 +169,25 @@ func TestTheAccountFramesRenderInTheSecondPresentation(t *testing.T) {
 		}
 	}
 }
+
+// TestEnterOnAnAccountRowOpensTheAccountInEitherPresentation: the reading column is for posts, and an
+// account row must open an account whatever the display state is. Before this, `enter` on a people
+// result in vivid mode answered "nothing to open" over a row that was right there.
+func TestEnterOnAnAccountRowOpensTheAccount(t *testing.T) {
+	for _, vivid := range []bool{false, true} {
+		s := peopleShell(t, 100, 30)
+		if vivid {
+			s.m = s.m.enterVivid()
+		}
+		s.press("u")
+		typeQuery(s, "people")
+		s.press("enter")
+		if got := s.m.top().Kind; got != frameSearch {
+			t.Fatalf("vivid=%v: the search reached %v", vivid, got)
+		}
+		s.press("enter")
+		if got := s.m.top().Kind; got != frameProfile {
+			t.Fatalf("vivid=%v: enter on an account row reached %v", vivid, got)
+		}
+	}
+}

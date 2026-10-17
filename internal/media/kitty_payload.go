@@ -140,3 +140,37 @@ func TmuxWrap(seq string) string {
 	}
 	return "\x1bPtmux;" + strings.ReplaceAll(seq, "\x1b", "\x1b\x1b") + "\x1b\\"
 }
+
+// KittySupported reports whether this terminal speaks the graphics protocol. It reads TERM and
+// TERM_PROGRAM and never KITTY_WINDOW_ID as its only signal, which Ghostty does not export — the
+// probe measured that.
+func KittySupported(env func(string) string) bool {
+	if env == nil {
+		return false
+	}
+	if env("KITTY_WINDOW_ID") != "" {
+		// Another kitty-protocol terminal may export it; Ghostty does not, so this is a bonus
+		// signal rather than the one the detection rests on.
+		return true
+	}
+	if KittySupportedName(env("TERM")) {
+		return true
+	}
+	return KittySupportedName(env("TERM_PROGRAM"))
+}
+
+// KittySupportedName is the detection over one terminal name: the value of TERM, of TERM_PROGRAM, or
+// — under a multiplexer — the name tmux reports for the terminal attached to its client.
+//
+// That third source is what the tmux case needs: inside tmux TERM is `tmux-256color` and the outer
+// terminal's name is nowhere in this process's environment, so a shell that only read TERM would
+// conclude no graphics on a machine whose terminal has them. Measured on this host on 2026-10-17:
+// `tmux display-message -p '#{client_termname}'` answered `xterm-ghostty` while TERM was
+// `tmux-256color`.
+func KittySupportedName(name string) bool {
+	if name == "" {
+		return false
+	}
+	lower := strings.ToLower(name)
+	return strings.Contains(lower, "ghostty") || strings.Contains(lower, "kitty")
+}

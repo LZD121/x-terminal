@@ -145,3 +145,33 @@ func TestKittySupportedReadsTheRightSignals(t *testing.T) {
 		}
 	}
 }
+
+// TestKittySupportedNameIsTheDetectionOverOneName: under a multiplexer the process's own TERM names
+// tmux, so the outer terminal's name arrives from somewhere else — tmux's client term name — and the
+// detection has to answer for that string alone.
+func TestKittySupportedNameIsTheDetectionOverOneName(t *testing.T) {
+	for _, tc := range []struct {
+		name string
+		want bool
+	}{
+		{"xterm-ghostty", true},
+		{"ghostty", true},
+		{"xterm-kitty", true},
+		{"tmux-256color", false},
+		{"xterm-256color", false},
+		{"", false},
+	} {
+		if got := KittySupportedName(tc.name); got != tc.want {
+			t.Fatalf("KittySupportedName(%q) = %v, want %v", tc.name, got, tc.want)
+		}
+	}
+	// The env form still answers for a bare terminal.
+	if !KittySupported(func(k string) string {
+		if k == "TERM" {
+			return "xterm-ghostty"
+		}
+		return ""
+	}) {
+		t.Fatal("the env form stopped reading TERM")
+	}
+}

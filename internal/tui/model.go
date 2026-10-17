@@ -115,6 +115,10 @@ type Display struct {
 // It is only ever called from a command. Update and View are pure: a state change returns the
 // command that performs its effects, and the command is what calls the port.
 type Term interface {
+	// Draw writes one terminal sequence outside the frame: the graphics protocol's transmit,
+	// placement and delete. It is the same sink as EnterPanic, so the two cannot interleave
+	// through two writers, and the sink is what wraps the sequence for a multiplexer.
+	Draw(seq string)
 	// EnterPanic replaces the pane: the frame's cells, then the scrollback's clear, then the title,
 	// in one write, and then the multiplexer's own clear and the window name.
 	EnterPanic(frame, title string)
@@ -195,6 +199,13 @@ type Deps struct {
 	Clip interface {
 		Copy(ctx context.Context, url string) media.ClipboardOutcome
 	}
+	// Image loads one attachment's bytes for the reading column. A nil port is a build with no
+	// image path; Images then decides whether the terminal could draw one at all.
+	Image func(ctx context.Context, url string) ([]byte, string, error)
+	// Images reports whether this terminal speaks the graphics protocol. It is the composition
+	// root's detection (TERM/TERM_PROGRAM, never KITTY_WINDOW_ID) handed in as a fact, so the shell
+	// holds no terminal knowledge of its own.
+	Images bool
 	// Directory is the account-list and media read: a profile's following, its followers, the
 	// verified among them, and its media tab. A nil Directory is a shell with no lists — the
 	// Translate precedent, a presence fact rather than a wiring mistake: the keys then say the list

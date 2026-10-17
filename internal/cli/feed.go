@@ -41,6 +41,27 @@ var feedDirectory = func(client *xweb.Client, sess session.Session) domain.Direc
 	return xsource.New(client.WithSession(sess))
 }
 
+// feedImage is the reading column's image read: the bytes of one attachment, through the same
+// proxy-aware transport, with no cookie and a cap. It is the only in-process fetch of something
+// other than JSON, and it is a variable for feedSource's reason.
+var feedImage = func(client *xweb.Client, cfg config.Config) func(context.Context, string) ([]byte, string, error) {
+	fetcher, err := xweb.NewImageFetcher(cfg, 8<<20)
+	if err != nil {
+		return nil
+	}
+	return fetcher.Get
+}
+
+// feedImages reports whether this terminal can draw a picture. Inside a multiplexer the process's
+// own TERM names tmux, not the terminal behind it, so the multiplexer is asked for the client's term
+// name; outside one, the environment is the whole answer.
+func feedImages() bool {
+	if os.Getenv("TMUX") == "" {
+		return media.KittySupported(os.Getenv)
+	}
+	return media.KittySupportedName(term.New(os.Stdout).ClientTermName())
+}
+
 // threadSource is the domain.Threads the conversation reads through: the same adapter as
 // feedSource, declared beside it so a test can replace both seams and no test reaches the network.
 var threadSource = func(client *xweb.Client, sess session.Session) domain.Threads {
@@ -306,6 +327,8 @@ func Feed(ctx *Context, args []string) int {
 		// resolved. The port is nil only if this seam returns nil, which is what a build with no
 		// translation endpoint would look like: the `T` key then says so and spends nothing.
 		Directory:     feedDirectory(client, sess),
+		Image:         feedImage(client, cfg),
+		Images:        feedImages(),
 		Translate:     feedTranslate(client, sess, cfg),
 		TranslateLang: cfg.TranslateLanguage,
 		Persist: func(state, cover string) {
