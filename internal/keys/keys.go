@@ -98,6 +98,9 @@ const (
 	// ActionExplore is `x`: Explore's trend list. `x` was the one free letter that reads as
 	// "explore" rather than as another verb already spoken for.
 	ActionExplore Action = "explore"
+	// ActionSwitchAccount is `A`: read the pane as the next stored session. The capital is the
+	// shifted spelling of `a` (the author), and the two are distinct bindings in this table.
+	ActionSwitchAccount Action = "switch-account"
 )
 
 // The four groups the UI-SPEC's table sorts its rows into. Nothing prints them in this phase — the
@@ -218,6 +221,7 @@ var rows = []Row{
 	{Action: ActionVerifiedFollowers, Keys: []string{"v"}, Help: "this account's verified followers", HelpCovered: "verified records referencing this one", Group: GroupLists, Screens: []string{"profile"}},
 	{Action: ActionProfileMedia, Keys: []string{"M"}, Help: "this account's media", HelpCovered: "files this record attached", Group: GroupMedia, Screens: []string{"profile"}},
 
+	{Action: ActionSwitchAccount, Keys: []string{"A"}, Help: "read as the next stored account", HelpCovered: "read as the next stored identity", Group: GroupApp, Screens: []string{"all"}},
 	{Action: ActionExplore, Keys: []string{"x"}, Help: "Explore: what is trending", HelpCovered: "the trending list", Group: GroupFeed, Screens: []string{"home"}},
 	{Action: ActionLinks, Keys: []string{"L"}, Help: "the links, tags and accounts this post names", HelpCovered: "what this record references", Group: GroupMedia, Screens: []string{"all"}},
 

@@ -99,6 +99,13 @@ func StateOf(name string) (State, bool) {
 	return StateNormal, false
 }
 
+// Account is one session this shell may read as. It is a name and nothing else: who the account is
+// upstream is not this shell's business, and a handle here would be a second identity to keep out of
+// a covered frame.
+type Account struct {
+	Name string
+}
+
 // Display is what the shell starts in: the state the pane opens in and the cover style the
 // immersive state wears. The config's two display keys resolve onto it, and it is a value the
 // composition root builds because the file's vocabulary is not this package's.
@@ -206,6 +213,15 @@ type Deps struct {
 	// root's detection (TERM/TERM_PROGRAM, never KITTY_WINDOW_ID) handed in as a fact, so the shell
 	// holds no terminal knowledge of its own.
 	Images bool
+	// Accounts is every session this shell may switch to, in store order, and Active is the one it
+	// is reading as. A single-account build sets neither: the status line then has no account field
+	// and the switch key says there is nothing to switch.
+	Accounts []Account
+	Active   string
+	// SwitchAccount rebuilds this shell's dependencies for another account: a new client with that
+	// session, its own limiter and its own mirror. It is the composition root's, because building a
+	// client is; the shell only asks for it and keeps its own state machine.
+	SwitchAccount func(name string) (Deps, error)
 	// Directory is the account-list and media read: a profile's following, its followers, the
 	// verified among them, and its media tab. A nil Directory is a shell with no lists — the
 	// Translate precedent, a presence fact rather than a wiring mistake: the keys then say the list

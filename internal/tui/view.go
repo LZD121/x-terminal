@@ -304,7 +304,11 @@ func (m Model) status() render.StatusFields {
 	used, limited, _ := m.deps.Budget()
 
 	fields := render.StatusFields{
-		Failure:     m.failure,
+		Failure: m.failure,
+		// The account field exists only where more than one session does, and only outside a
+		// cover: the name is the operator's own word for the file, and a covered line carries no
+		// identity at all.
+		Account:     m.accountField(),
 		Notice:      m.noticeFor(f),
 		NoticeCount: m.noticeCount,
 		Cover:       m.covered(),

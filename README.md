@@ -99,6 +99,24 @@ What it is not: it is still read-only, it still keeps nothing on disk, and it st
 the same proxy and the same request budget. The plain reader, the covers and the panic frame are
 unchanged, and their golden frames are unmoved.
 
+## Accounts
+
+More than one x.com account can live in `$XDG_CONFIG_HOME/x-terminal/sessions/`, one `0600` file per
+name, with the original single `session` file kept as the account called `default`:
+
+```sh
+x-terminal login --as work        # write a named account (--browser works the same way)
+x-terminal logout --as work       # remove one
+account = "work"                  # config.toml: which one to start on
+```
+
+`A` in the pane switches to the next account. A switch is a new shell, not a mutation: the frame
+stack, the walks, the translations and the failure are dropped, because every one of them belongs to
+the account that produced them; the client is rebuilt with that session's own request budget; and the
+status line names the account outside a cover (a covered line carries no identity at all). The saved
+mirror is one file with one owner — reading it as another account reports `wrong account` rather than
+showing someone else's list.
+
 `login` is the guided path. By default it names the two cookies a logged-in browser already has and
 reads them with no echo; `login --browser` instead opens a throwaway Chromium window on the login
 page, lets you sign in there, and reads the cookies out of that window's own jar over a DevTools pipe

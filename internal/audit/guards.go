@@ -588,7 +588,7 @@ func bindAddr(s string) bool {
 func checkAccount(t Tree) Report {
 	const name = "account"
 	sources := parseGoSources(t.GoFiles(), parser.ParseComments)
-	r := Report{Check: name, Promise: "exactly one session path and one credential pair", Files: len(sources)}
+	r := Report{Check: name, Promise: "one session store: one file per account name, each 0600, and one credential pair per file", Files: len(sources)}
 	if len(sources) == 0 {
 		r.Findings = append(r.Findings, emptyFinding(name, "inspected no Go files: a scan of nothing proves nothing"))
 		return r
@@ -604,11 +604,19 @@ func checkAccount(t Tree) Report {
 					return true
 				}
 				id, ok := kv.Key.(*ast.Ident)
-				if !ok || id.Name != "SessionPath" {
+				if !ok {
 					return true
 				}
+				// Two resolutions are declared: the legacy single file and the directory the named
+				// accounts live in. Each is one place, and the check counts them separately so a
+				// second store cannot appear beside them.
 				pos := s.FSet.Position(kv.Pos())
-				sessionPathHits = append(sessionPathHits, fileFinding(name, s.Path, "session-path resolution (Config.SessionPath)", pos.Line))
+				switch id.Name {
+				case "SessionPath":
+					sessionPathHits = append(sessionPathHits, fileFinding(name, s.Path, "session-path resolution (Config.SessionPath)", pos.Line))
+				case "SessionsDir":
+					sessionPathHits = append(sessionPathHits, fileFinding(name, s.Path, "session-store resolution (Config.SessionsDir)", pos.Line))
+				}
 				return true
 			})
 		}
@@ -662,16 +670,21 @@ func checkAccount(t Tree) Report {
 	if len(sessionPathHits) == 0 {
 		r.Findings = append(r.Findings, emptyFinding(name, "found 0 session-path resolutions: a build with no session path is not a build with one account"))
 	}
-	// Exactly two resolutions are declared: the Config default in
-	// internal/config/config.go and the loader in internal/session/session.go.
-	// Any other hit, and a second hit at either site, is a second account path —
-	// reported at its own file:line rather than by its position in the walk.
-	var configDefaults, loaders int
+	// Three resolutions are declared: the legacy file's path and the sessions directory, both in
+	// internal/config/config.go, and the loader in internal/session/session.go. Any other hit, and
+	// a second hit at any site, is a second credential surface — reported at its own file:line
+	// rather than by its position in the walk.
+	var configDefaults, configStores, loaders int
 	for _, h := range sessionPathHits {
 		switch h.Detail {
 		case "session-path resolution (Config.SessionPath)":
 			configDefaults++
 			if configDefaults > 1 {
+				r.Findings = append(r.Findings, secondSessionPath(h))
+			}
+		case "session-store resolution (Config.SessionsDir)":
+			configStores++
+			if configStores > 1 {
 				r.Findings = append(r.Findings, secondSessionPath(h))
 			}
 		case "session loader (session.Load)":

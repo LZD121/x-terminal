@@ -36,6 +36,8 @@ const (
 	// sessionFileName is the default session file inside ConfigDir. The loader
 	// that reads it is internal/session.
 	sessionFileName = "session"
+	// sessionsDirName is the directory the named accounts live in, beside the legacy file.
+	sessionsDirName = "sessions"
 
 	// DefaultRequestFloor is the minimum spacing between two upstream requests.
 	// The upstream tolerates roughly one request per 1.5s per account; a second
@@ -96,8 +98,16 @@ type Config struct {
 	// DataDir is where this tool keeps its own state (pins, the first-run
 	// marker). Nothing in Phase 1 writes to it yet.
 	DataDir string
-	// SessionPath is the file internal/session reads.
+	// SessionPath is the file internal/session reads: the single file `login` wrote before there
+	// could be more than one account, and the account named session.DefaultName.
 	SessionPath string
+	// SessionsDir is where the named accounts live: one 0600 file per name. It sits beside the
+	// legacy single file rather than replacing it, so a session that already exists keeps working
+	// with no migration.
+	SessionsDir string
+	// Account is the name of the account to start on, from the file's `account` key, or empty for
+	// "whichever one is there" (session.Store.Active decides, and reports what it chose).
+	Account string
 	// Proxy is the proxy setting with an http, https, socks5 or socks5h scheme,
 	// or "" for a direct dial. It may carry credentials and is therefore never
 	// printed raw: print Redacted.
@@ -159,6 +169,7 @@ func Load() (Config, error) {
 		ConfigDir:         filepath.Join(configHome, appDir),
 		DataDir:           filepath.Join(dataHome, appDir),
 		SessionPath:       filepath.Join(configHome, appDir, sessionFileName),
+		SessionsDir:       filepath.Join(configHome, appDir, sessionsDirName),
 		MediaOpener:       DefaultMediaOpener,
 		RequestFloor:      DefaultRequestFloor,
 		SessionRequestCap: DefaultSessionRequestCap,
@@ -422,6 +433,24 @@ func valueOf(raw string) (string, bool) {
 	return strings.TrimSpace(raw), true
 }
 
+// accountName is the one validation this file does of an account name, and it mirrors
+// session.ValidName: config cannot import the session package (the session package is the thing
+// that reads what this name points at, and the direction of that dependency is the wrong way), so
+// the rule is stated twice with a test on each side that they agree.
+func accountName(name string) bool {
+	if name == "" || len(name) > 64 || name[0] == '.' {
+		return false
+	}
+	for _, r := range name {
+		switch {
+		case r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z', r >= '0' && r <= '9', r == '-', r == '_':
+		default:
+			return false
+		}
+	}
+	return true
+}
+
 // applySettings folds the file's settings into cfg. Nothing here fails: a
 // config file with a typo in it must still start the tool, and a value that is
 // refused keeps the default it would have had, with a warning naming the line.
@@ -433,6 +462,12 @@ func valueOf(raw string) (string, bool) {
 func applySettings(cfg *Config, settings []setting, warnings *[]string) {
 	for _, s := range settings {
 		switch s.key {
+		case "account":
+			if !accountName(s.value) {
+				*warnings = append(*warnings, formatWarning(s.line, "account "+s.value+" is not a name this build uses (letters, digits, - and _, not starting with a dot); keeping "+cfg.Account))
+				continue
+			}
+			cfg.Account = s.value
 		case "session_path":
 			if s.value == "" {
 				*warnings = append(*warnings, formatWarning(s.line, "session_path is empty; keeping "+cfg.SessionPath))

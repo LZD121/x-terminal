@@ -32,8 +32,17 @@ import (
 // through.
 func Login(ctx *Context, args []string) int {
 	replace, verify, browser := false, true, false
-	for _, arg := range args {
+	as := session.DefaultName
+	for i := 0; i < len(args); i++ {
+		arg := args[i]
 		switch arg {
+		case "--as":
+			if i+1 >= len(args) {
+				fmt.Fprintln(ctx.Stderr, "login: --as needs a name")
+				return ExitUsage
+			}
+			as = args[i+1]
+			i++
 		case "--replace":
 			replace = true
 		case "--no-verify":
@@ -41,7 +50,12 @@ func Login(ctx *Context, args []string) int {
 		case "--browser":
 			browser = true
 		case "-h", "--help":
-			fmt.Fprintln(ctx.Stdout, "login reads auth_token and ct0, checks them with one request, and writes the session file at 0600.\n\n  --browser     open a throwaway Chromium window on the login page and read the cookies from it\n  --replace     overwrite a session that is already there\n  --no-verify   write without the check request (the cookie is unproven; doctor will tell you later)")
+			fmt.Fprintln(ctx.Stdout, `login reads auth_token and ct0, checks them with one request, and writes the session file at 0600.
+
+  --as NAME     which account to write (default "default"; named accounts live beside it)
+  --browser     open a throwaway Chromium window on the login page and read the cookies from it
+  --replace     overwrite a session that is already there
+  --no-verify   write without the check request (the cookie is unproven; doctor will tell you later)`)
 			return ExitOK
 		default:
 			fmt.Fprintf(ctx.Stderr, "login: unknown argument %q\n", arg)
@@ -57,12 +71,18 @@ func Login(ctx *Context, args []string) int {
 	for _, warning := range cfg.Warnings {
 		fmt.Fprintf(ctx.Stderr, "config warning: %s\n", warning)
 	}
+	sessions := session.Store{Dir: cfg.SessionsDir, Legacy: cfg.SessionPath}
+	path := sessions.Path(as)
+	if path == "" {
+		fmt.Fprintf(ctx.Stderr, "login: %q is not an account name this build uses\n", as)
+		return ExitUsage
+	}
 
 	// An existing session is not replaced by accident: a login that overwrote a working pair with a
 	// typo would lock the reader out of their own feed until they found the browser again.
 	// The check is on the file, not on the merged session: with X_TERMINAL_* set, those values are
 	// this verb's input and would otherwise look like a session already on disk.
-	if current, err := session.FileSession(cfg.SessionPath); err == nil && current.Valid() && !replace {
+	if current, err := session.FileSession(path); err == nil && current.Valid() && !replace {
 		fmt.Fprintf(ctx.Stdout, "a session is already here: %s\n", current.Summary())
 		fmt.Fprintf(ctx.Stdout, "pass --replace to write a new pair over it\n")
 		return ExitOK
@@ -107,11 +127,11 @@ func Login(ctx *Context, args []string) int {
 		fmt.Fprintf(ctx.Stdout, "signed in as @%s — %s\n", account.ScreenName, account.Name)
 	}
 
-	if err := session.Save(cfg.SessionPath, authToken, cto); err != nil {
+	if err := sessions.Save(as, authToken, cto); err != nil {
 		fmt.Fprintf(ctx.Stderr, "login: %v\n", err)
 		return ExitError
 	}
-	fmt.Fprintf(ctx.Stdout, "wrote %s (mode 0600, owner only)\n", cfg.SessionPath)
+	fmt.Fprintf(ctx.Stdout, "wrote %s (account %q, mode 0600, owner only)\n", path, as)
 	if !verify {
 		fmt.Fprintln(ctx.Stdout, "the pair was not checked: run `x-terminal doctor` before relying on it")
 	}

@@ -11,8 +11,8 @@ import (
 // (`enter`), Phase 5's three (`/`, `s`, `a`), Phase 6's two (`b`, `l`), Phase 7's four
 // (`i`, `y`, `o`, `T`).
 func TestTheTableIsTheUISpecsRows(t *testing.T) {
-	if got := len(Rows()); got != 37 {
-		t.Fatalf("the keymap table holds %d rows, want the UI-SPEC's 37", got)
+	if got := len(Rows()); got != 38 {
+		t.Fatalf("the keymap table holds %d rows, want the UI-SPEC's 38", got)
 	}
 }
 
@@ -281,6 +281,7 @@ var coveredHelp = map[Action]string{
 	ActionProfileMedia:      "files this record attached",
 	ActionLinks:             "what this record references",
 	ActionExplore:           "the trending list",
+	ActionSwitchAccount:     "read as the next stored identity",
 }
 
 // TestCoveredHelpIsPresentExactlyWhereTheUISpecListsIt is the covered-wording table both ways: every

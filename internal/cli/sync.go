@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/LZD121/x-terminal/internal/config"
@@ -38,20 +39,38 @@ var openMirror = func(path string, fetch store.SavedFetcher, viewer store.Viewer
 // session and stamps the adapter with WithViewerID so a later Likes page has the
 // measured userId without a second identity call outside the walk.
 type likesReady struct {
-	a *xsource.Adapter
+	mu sync.RWMutex
+	a  *xsource.Adapter
+}
+
+// set points the adapter at another account's session. It is what an account switch calls: the
+// mirror is built once for the process, and its reads follow whichever session is active now.
+func (l *likesReady) set(a *xsource.Adapter) {
+	l.mu.Lock()
+	l.a = a
+	l.mu.Unlock()
+}
+
+// current is the adapter under the lock: a switch and a sync can overlap.
+func (l *likesReady) current() *xsource.Adapter {
+	l.mu.RLock()
+	defer l.mu.RUnlock()
+	return l.a
 }
 
 func (l *likesReady) Viewer(ctx context.Context) (domain.User, error) {
-	u, err := l.a.Viewer(ctx)
+	u, err := l.current().Viewer(ctx)
 	if err != nil {
 		return domain.User{}, err
 	}
+	l.mu.Lock()
 	l.a = l.a.WithViewerID(u.ID)
+	l.mu.Unlock()
 	return u, nil
 }
 
 func (l *likesReady) Saved(ctx context.Context, kind domain.SavedKind, c domain.Cursor) (domain.PostPage, error) {
-	return l.a.Saved(ctx, kind, c)
+	return l.current().Saved(ctx, kind, c)
 }
 
 // Sync is the `sync` verb: fill the saved mirror from x.com through the same

@@ -18,9 +18,24 @@ import (
 // file that was checked), and never prints the cookie — the browser's own session, which is
 // where the credential came from, is left alone.
 func Logout(ctx *Context, args []string) int {
-	if len(args) > 0 {
-		fmt.Fprintf(ctx.Stderr, "logout takes no arguments\n")
-		usage(ctx.Stderr)
+	as := session.DefaultName
+	for i := 0; i < len(args); i++ {
+		switch args[i] {
+		case "--as":
+			if i+1 >= len(args) {
+				fmt.Fprintln(ctx.Stderr, "logout: --as needs a name")
+				return ExitUsage
+			}
+			as = args[i+1]
+			i++
+		default:
+			fmt.Fprintf(ctx.Stderr, "logout takes no arguments but --as; got %q\n", args[i])
+			usage(ctx.Stderr)
+			return ExitUsage
+		}
+	}
+	if !session.ValidName(as) {
+		fmt.Fprintf(ctx.Stderr, "logout: %q is not an account name this build uses (letters, digits, - and _, not starting with a dot)\n", as)
 		return ExitUsage
 	}
 
@@ -29,7 +44,8 @@ func Logout(ctx *Context, args []string) int {
 		fmt.Fprintf(ctx.Stderr, "logout: %v\n", err)
 		return ExitError
 	}
-	path := cfg.SessionPath
+	sessions := session.Store{Dir: cfg.SessionsDir, Legacy: cfg.SessionPath}
+	path := sessions.Path(as)
 
 	info, err := os.Lstat(path)
 	switch {

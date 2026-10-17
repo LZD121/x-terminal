@@ -881,3 +881,42 @@ func TestTheTranslateLanguageIsASettingNotACredential(t *testing.T) {
 		t.Errorf("Redacted() dropped the language: the doctor prints it, and it is a setting")
 	}
 }
+
+// TestTheAccountKeyIsAName: the file's `account` key selects the start-up account, and a name that
+// could be a path is refused with the previous value kept.
+func TestTheAccountKeyIsAName(t *testing.T) {
+	home := t.TempDir()
+	write := func(body string) {
+		t.Helper()
+		if err := os.MkdirAll(filepath.Join(home, appDir), 0o700); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(home, appDir, ConfigFileName), []byte(body), 0o600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	write("account = \"work-laptop_2\"\n")
+	t.Setenv("XDG_CONFIG_HOME", home)
+	cfg, err := Load()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cfg.Account != "work-laptop_2" {
+		t.Fatalf("account = %q", cfg.Account)
+	}
+	if cfg.SessionsDir != filepath.Join(home, appDir, "sessions") {
+		t.Fatalf("sessions dir = %q", cfg.SessionsDir)
+	}
+
+	write("account = \"../escape\"\n")
+	cfg, err = Load()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cfg.Account != "" {
+		t.Fatalf("a path-shaped name was accepted: %q", cfg.Account)
+	}
+	if len(cfg.Warnings) == 0 {
+		t.Fatal("the refusal said nothing")
+	}
+}

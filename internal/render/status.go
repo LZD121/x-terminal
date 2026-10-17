@@ -49,6 +49,12 @@ const (
 	NoticeLoadingPosts
 	// NoticeNoPosts is a profile whose posts read succeeded and carried none.
 	NoticeNoPosts
+	// NoticeNoAccount is `A` in a build that has only one session: one honest line, the same shape
+	// as NoticeNothingToSwitch.
+	NoticeNoAccount
+	// NoticeAccountFailed is `A` where the next account's session could not be read. Nothing in the
+	// pane changed, so the line is the whole report.
+	NoticeAccountFailed
 	// NoticeNoLinks is `L` on a post whose body names nothing: a successful outcome in the notice
 	// field, never a failure and never an empty menu.
 	NoticeNoLinks
@@ -143,6 +149,9 @@ type StatusFields struct {
 	Now time.Time
 	// Synced is the saved frame's provenance field: present exactly when On.
 	Synced SyncedField
+	// Account is the name of the session this pane is reading as, or empty when only one account
+	// exists. It is a store name (`work`, `home`), never a handle.
+	Account string
 	// Capability is a list-local capability state. When set it occupies the state
 	// and remedy slots and the failure's otherwise; the two are never both printed.
 	Capability domain.Capability
@@ -168,6 +177,7 @@ const (
 	fieldList
 	fieldSynced
 	fieldPosition
+	fieldAccount
 	fieldBudget
 )
 
@@ -198,7 +208,7 @@ func StatusLine(f StatusFields, w int) string {
 // status row without composing its words a second time.
 func statusLine(f StatusFields, w int, pal Palette) string {
 	parts := statusParts(f)
-	droppable := []statusField{fieldNotice, fieldPosition, fieldList, fieldSynced}
+	droppable := []statusField{fieldNotice, fieldAccount, fieldPosition, fieldList, fieldSynced}
 	for dropped := 0; dropped <= len(droppable); dropped++ {
 		kept := without(parts, droppable[:dropped])
 		if text.Width(statusText(kept)) <= w {
@@ -264,6 +274,12 @@ func statusParts(f StatusFields) []statusPart {
 	}
 	if word := positionField(f); word != "" {
 		parts = append(parts, statusPart{fieldPosition, RoleMuted, word})
+	}
+	if f.Account != "" {
+		// The account's *name*, not a handle: the name is the operator's own word for the session
+		// file, so it says nothing about who they are upstream. The shell prints it only outside a
+		// cover, where a name is still a name.
+		parts = append(parts, statusPart{fieldAccount, RoleMuted, f.Account})
 	}
 	parts = append(parts, statusPart{fieldBudget, RoleMuted, budgetField(f)})
 	return parts

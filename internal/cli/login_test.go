@@ -191,3 +191,39 @@ func TestLoginRefusesHalfAPair(t *testing.T) {
 		t.Fatal("half a pair was written")
 	}
 }
+
+// TestLoginAsWritesANamedAccount: `--as` puts the pair in the sessions directory, and the legacy
+// file is not touched.
+func TestLoginAsWritesANamedAccount(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("XDG_CONFIG_HOME", home)
+	t.Setenv("XDG_DATA_HOME", t.TempDir())
+	t.Setenv("X_TERMINAL_AUTH_TOKEN", "")
+	t.Setenv("X_TERMINAL_CT0", "")
+	code, out := loginRun(t, "a\nb\n", nil, "--no-verify", "--as", "work")
+	if code != ExitOK {
+		t.Fatalf("exit %d: %s", code, out)
+	}
+	store := session.Store{Dir: filepath.Join(home, "x-terminal", "sessions"), Legacy: filepath.Join(home, "x-terminal", "session")}
+	sess, err := store.Load("work")
+	if err != nil {
+		t.Fatalf("named account: %v", err)
+	}
+	if sess.AuthToken != "a" {
+		t.Fatal("the named account did not hold the pair")
+	}
+	if _, err := os.Stat(store.Legacy); !os.IsNotExist(err) {
+		t.Fatal("the legacy file was written by --as")
+	}
+}
+
+// TestLoginRefusesAnAccountNameThatIsAPath: the name is a file name, not a path.
+func TestLoginRefusesAnAccountNameThatIsAPath(t *testing.T) {
+	loginEnv(t)
+	for _, bad := range []string{"../escape", "a/b", ".hidden"} {
+		code, out := loginRun(t, "a\nb\n", nil, "--no-verify", "--as", bad)
+		if code != ExitUsage {
+			t.Fatalf("%q: exit %d (%s)", bad, code, out)
+		}
+	}
+}

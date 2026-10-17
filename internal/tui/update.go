@@ -370,6 +370,8 @@ func (m Model) dispatch(action keys.Action) (Model, tea.Cmd) {
 		return m.pushMedia()
 	case keys.ActionExplore:
 		return m.openTrends()
+	case keys.ActionSwitchAccount:
+		return m.switchAccount()
 	case keys.ActionCover:
 		return m.toggleCover()
 	case keys.ActionNextCover:
@@ -1417,7 +1419,7 @@ var handledActions = []keys.Action{
 	keys.ActionBookmarks, keys.ActionLikes,
 	keys.ActionMedia, keys.ActionCopyLink, keys.ActionOpenPost,
 	keys.ActionFollowing, keys.ActionFollowers, keys.ActionVerifiedFollowers, keys.ActionProfileMedia,
-	keys.ActionLinks, keys.ActionExplore,
+	keys.ActionLinks, keys.ActionExplore, keys.ActionSwitchAccount,
 	keys.ActionTranslate,
 }
 

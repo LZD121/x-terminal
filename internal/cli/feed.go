@@ -222,9 +222,25 @@ func Feed(ctx *Context, args []string) int {
 		}
 	}
 
-	sess, sessionErr := session.Load(cfg.SessionPath)
+	// The session store: the named accounts beside the legacy single file. The account to start on
+	// is the config's choice when the store holds it, then `default`, then whatever is there; an
+	// empty store is the "no session" state the frame renders, not a start-up failure.
+	sessions := session.Store{Dir: cfg.SessionsDir, Legacy: cfg.SessionPath}
+	accountNames, namesErr := sessions.Names()
+	if namesErr != nil {
+		fmt.Fprintf(ctx.Stderr, "feed: %v\n", namesErr)
+	}
+	active, _, _ := sessions.Active(cfg.Account)
+	sess, sessionErr := sessions.Load(active)
+	if active == "" {
+		sessionErr = session.ErrNoSession
+	}
 	for _, warning := range sess.Warnings {
 		fmt.Fprintf(ctx.Stderr, "session warning: %s\n", warning)
+	}
+	accounts := make([]tui.Account, 0, len(accountNames))
+	for _, name := range accountNames {
+		accounts = append(accounts, tui.Account{Name: name})
 	}
 
 	client, err := xweb.NewClient(cfg)
@@ -253,8 +269,8 @@ func Feed(ctx *Context, args []string) int {
 
 	// The saved mirror: open once here. A failure to open does not fail the verb.
 	var savedCloser func() error
-	adapter := &likesReady{a: xsource.New(client.WithSession(sess))}
-	saved, closer, openErr := openSaved(cfg, adapter, adapter)
+	savedAdapter := &likesReady{a: xsource.New(client.WithSession(sess))}
+	saved, closer, openErr := openSaved(cfg, savedAdapter, savedAdapter)
 	savedCloser = closer
 	_ = openErr
 	defer func() {
@@ -297,7 +313,7 @@ func Feed(ctx *Context, args []string) int {
 
 	// One limiter, and the budget line reads that one: client.Limiter is what every request from the
 	// adapter passes through, so the number on screen cannot drift from the requests issued.
-	model := tui.New(tui.Deps{
+	deps := tui.Deps{
 		Source:          feedSource(client, sess),
 		Threads:         threadSource(client, sess),
 		Budget:          client.Limiter.Budget,
@@ -331,6 +347,8 @@ func Feed(ctx *Context, args []string) int {
 		Images:        feedImages(),
 		Translate:     feedTranslate(client, sess, cfg),
 		TranslateLang: cfg.TranslateLanguage,
+		Accounts:      accounts,
+		Active:        active,
 		Persist: func(state, cover string) {
 			// The display's own write, from a command: the file it names is the one the loader read,
 			// and nothing else in the file is touched. A write that fails is not reported on screen —
@@ -338,7 +356,12 @@ func Feed(ctx *Context, args []string) int {
 			// and the next deliberate change tries again.
 			_ = config.SetDisplay(filepath.Join(cfg.ConfigDir, config.ConfigFileName), state, cover)
 		},
-	})
+	}
+	// Switching is the composition root's: it builds a client for the next account's session and
+	// hands the shell a dependency set whose every read is that account's. The display, the
+	// terminal, the mirror and the clipboard are the process's and are copied unchanged.
+	deps.SwitchAccount = feedSwitch(cfg, sessions, savedAdapter, deps)
+	model := tui.New(deps)
 	if sessionErr != nil {
 		// A missing or unusable session is a state, not a crash: the state line names it, the pane
 		// shows it, and no request is issued for it — `?` and `q` still work on the frame that says
@@ -359,4 +382,42 @@ func Feed(ctx *Context, args []string) int {
 		sink.SetWindow(window)
 	}
 	return ExitOK
+}
+
+// feedSwitch is the composition root's account switch: for a name, a session, a client and a
+// dependency set whose every read is that account's.
+//
+// The parts that are the account's are rebuilt — the source, the threads, the directory, the
+// translator, the image fetch, the budget (a second account has its own request budget) and the
+// reachability check. The parts that are the process's are copied: the terminal, the display, the
+// mirror, the clipboard, the clock and the failure mapper. The mirror's own adapter is pointed at
+// the new session as well, so a sync started under the new account reads as the new account.
+func feedSwitch(cfg config.Config, sessions session.Store, mirror *likesReady, base tui.Deps) func(string) (tui.Deps, error) {
+	var switchTo func(string) (tui.Deps, error)
+	switchTo = func(name string) (tui.Deps, error) {
+		sess, err := sessions.Load(name)
+		if err != nil {
+			return tui.Deps{}, err
+		}
+		client, err := xweb.NewClient(cfg)
+		if err != nil {
+			return tui.Deps{}, err
+		}
+		client = client.WithSession(sess)
+		mirror.set(xsource.New(client))
+
+		next := base
+		next.Source = feedSource(client, sess)
+		next.Threads = threadSource(client, sess)
+		next.Directory = feedDirectory(client, sess)
+		next.Translate = feedTranslate(client, sess, cfg)
+		next.Image = feedImage(client, cfg)
+		next.Budget = client.Limiter.Budget
+		next.Check = feedReach(client, cfg)
+		next.Active = name
+		next.Accounts = base.Accounts
+		next.SwitchAccount = switchTo
+		return next, nil
+	}
+	return switchTo
 }
