@@ -96,7 +96,10 @@ var distributionNameRes = []*regexp.Regexp{
 	regexp.MustCompile(`(?i)^PKGBUILD$`),
 	regexp.MustCompile(`(?i)^\.goreleaser(\..+)?$`),
 	regexp.MustCompile(`(?i)^.*\.goreleaser\.(yml|yaml)$`),
-	regexp.MustCompile(`(?i)^install(\.sh)?$`),
+	// The installer family: `install`, `install.sh`, and the variants someone reaches for when the
+	// first one is taken (`install-local.sh`, `install_latest`). The one exact path allowed is
+	// distributionAllowed's; everything else in the family is a finding.
+	regexp.MustCompile(`(?i)^install([-_a-z0-9]+)?(\.sh)?$`),
 	regexp.MustCompile(`(?i)^release(\.sh)?$`),
 }
 
@@ -106,6 +109,15 @@ var distributionPathRes = []*regexp.Regexp{
 	regexp.MustCompile(`(?i)^\.github/workflows/.*publish-image`),
 	regexp.MustCompile(`(?i)^\.github/workflows/.*container`),
 	regexp.MustCompile(`(?i)^\.github/workflows/.*package`),
+}
+
+// distributionAllowed names the one artifact the name rule below permits, by exact path. The promise
+// it belongs to is about a *distributable* form — an image, a package, a hosted instance — and this
+// is none of those: it downloads the release binary, verifies the digest the release publishes, and
+// installs it under the operator's home. It is named here, printed in the promise, and required to be
+// present, so it cannot become a silent hole for the next installer-shaped file.
+var distributionAllowed = map[string]string{
+	"install.sh": "the install helper: it fetches this repository's own release binary, verifies the published digest and writes it under $HOME; no package, no image, no hosted service",
 }
 
 var hostedConstructs = map[string]bool{
@@ -506,13 +518,18 @@ func unique(in []string) []string {
 
 func checkDistribution(t Tree) Report {
 	const name = "distribution"
-	r := Report{Check: name, Promise: "no distributable form of this program (image, package, installer) and no hosted mode", Files: len(t)}
+	r := Report{Check: name, Promise: "no distributable form of this program (image, package, installer) and no hosted mode, except the one declared install helper", Files: len(t)}
 	if len(t) == 0 {
 		r.Findings = append(r.Findings, emptyFinding(name, "inspected no files: a scan of nothing proves nothing"))
 		return r
 	}
+	allowed := map[string]bool{}
 	for _, f := range t {
 		base := path.Base(f.Path)
+		if note, ok := distributionAllowed[f.Path]; ok {
+			allowed[note] = true
+			continue
+		}
 		for _, re := range distributionNameRes {
 			if re.MatchString(base) {
 				r.Findings = append(r.Findings, fileFinding(name, f.Path, fmt.Sprintf("distributable artifact %q exists (image, package or installer)", base), 0))
@@ -524,6 +541,21 @@ func checkDistribution(t Tree) Report {
 			}
 		}
 	}
+	// The declared helper is printed with its reason, and is required when its file is in the tree:
+	// an allowance whose file is gone is a declaration to remove, not a permission to keep.
+	present := map[string]bool{}
+	for _, f := range t {
+		present[f.Path] = true
+	}
+	for path, note := range distributionAllowed {
+		if !present[path] {
+			continue
+		}
+		if allowed[note] {
+			r.Promise = fmt.Sprintf("%s (%s: %s)", r.Promise, path, note)
+		}
+	}
+
 	// The file-name and manifest arm above reads every file it was handed. This
 	// arm reads the syntax of the Go files that parse: one that does not is
 	// reported once, by name, by the source check, and is not read silently here.

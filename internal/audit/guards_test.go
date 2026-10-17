@@ -257,6 +257,28 @@ func TestDistributionAllowsAReleaseWorkflow(t *testing.T) {
 	}
 }
 
+// TestDistributionAllowsTheDeclaredInstallHelper: the one installer-shaped file the promise permits,
+// and the two arms either side of it — the same name without the extension is still a finding.
+func TestDistributionAllowsTheDeclaredInstallHelper(t *testing.T) {
+	src := []byte("#!/bin/sh\n# downloads the release binary\n")
+	if r := checkDistribution(treeOf(File{Path: "install.sh", Src: src})); len(r.Findings) != 0 {
+		t.Fatalf("the declared helper was reported: %+v", r.Findings)
+	} else if !strings.Contains(r.Promise, "install.sh") {
+		t.Fatalf("the allowance is not printed in the promise: %q", r.Promise)
+	}
+	// A file named install (no extension) is not the declared path, and stays a finding.
+	if r := checkDistribution(treeOf(File{Path: "install", Src: src})); len(r.Findings) == 0 {
+		t.Fatal("install (no .sh) is still an installer-shaped artifact and produced no finding")
+	}
+	// And a second installer-shaped file beside it is a finding too: the allowance is one path.
+	if r := checkDistribution(treeOf(
+		File{Path: "install.sh", Src: src},
+		File{Path: "install-local.sh", Src: src},
+	)); len(r.Findings) == 0 {
+		t.Fatal("a second installer-shaped file produced no finding")
+	}
+}
+
 func TestDistributionFailsPublishingAWorkflow(t *testing.T) {
 	for _, path := range []string{
 		".github/workflows/publish-image.yml",

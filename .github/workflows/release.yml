@@ -141,6 +141,13 @@ jobs:
           path: dist
           merge-multiple: true
 
+      - name: ship the install helper beside the binaries
+        run: |
+          # The one installer-shaped file the project permits, and the audit names it: it only
+          # downloads these assets, verifies the published digest and installs under $HOME.
+          cp install.sh dist/install.sh
+          (cd dist && sha256sum install.sh > install.sh.sha256)
+
       - name: assemble the checksum file
         run: |
           cd dist
@@ -165,17 +172,18 @@ jobs:
             echo "renders timelines, threads, search, profiles and the saved lists as plain text."
             echo
             echo "**What this is not.** It is not a distributable product: no container image, no"
-            echo "hosted instance, no installer, no package recipe. Using those endpoints is against"
-            echo "X's terms, so the intended use is the author's own machines and accounts."
+            echo "hosted instance, no package recipe. Using those endpoints is against X's terms, so"
+            echo "the intended use is the author's own machines and accounts."
             echo
-            echo "**Install.** Download the asset for your platform, verify it against \`SHA256SUMS\`,"
-            echo "and put the session cookie in place as \`RUNBOOK.md\` describes:"
+            echo "**Install.** One command, which picks this machine's asset, verifies its published"
+            echo "digest and puts it in \`\$HOME/.local/bin\`:"
             echo
             echo '```'
-            echo "sha256sum -c SHA256SUMS --ignore-missing"
-            echo "install -m 0755 x-terminal_${tag}_linux_amd64 \"\$HOME/.local/bin/x-terminal\""
-            echo "x-terminal doctor"
+            echo "curl -fsSLO https://github.com/LZD121/x-terminal/releases/latest/download/install.sh"
+            echo "sh install.sh"
             echo '```'
+            echo
+            echo "Then \`x-terminal login\` and \`x-terminal doctor\`; \`RUNBOOK.md\` covers the rest."
             echo
             echo "Requirements: Linux or macOS, a route to x.com (the runbook covers a local proxy),"
             echo "and a terminal — the pane is plain text by design."

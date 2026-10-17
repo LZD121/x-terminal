@@ -76,22 +76,38 @@ here could fill one.
 
 ## Install from a release
 
-There is no installer script and no package, on purpose: the project's own `audit` fails the build if
-one appears. A release is three static binaries and their digests, and installing one is two commands.
+One command, which works out the platform, downloads the matching release asset and its published
+digest, verifies the digest, and installs the binary into `$HOME/.local/bin`:
 
 ```sh
-# Linux amd64 (use _linux_arm64 or _darwin_arm64 on those machines)
+curl -fsSLO https://github.com/LZD121/x-terminal/releases/latest/download/install.sh
+sh install.sh
+```
+
+`--prefix DIR` installs somewhere else, `--version v1.4.0` pins a release, and `PREFIX` /
+`X_TERMINAL_VERSION` do the same through the environment. It needs no root, writes one file, and never
+touches the session or the configuration. A proxy is whatever `curl` already honours from
+`https_proxy`; the script never guesses one.
+
+The script is the **one installer-shaped file this project permits**, and `internal/audit`'s
+`distribution` check names it by exact path and prints it in its promise. Everything else in that
+family — a package recipe, an image, a second `install-*.sh` — is still a finding.
+
+If you would rather not run a script, these are the same steps by hand:
+
+```sh
 cd "$(mktemp -d)"
-curl -LO https://github.com/LZD121/x-terminal/releases/latest/download/x-terminal_v1.4.0_linux_amd64
-curl -LO https://github.com/LZD121/x-terminal/releases/latest/download/x-terminal_v1.4.0_linux_amd64.sha256
-sha256sum -c x-terminal_v1.4.0_linux_amd64.sha256      # macOS: shasum -a 256 -c ...
-install -Dm755 x-terminal_v1.4.0_linux_amd64 ~/.local/bin/x-terminal
+curl -LO https://github.com/LZD121/x-terminal/releases/latest/download/SHA256SUMS
+asset=x-terminal_v1.4.0_linux_amd64          # or _linux_arm64 / _darwin_arm64
+curl -LO "https://github.com/LZD121/x-terminal/releases/latest/download/$asset"
+curl -LO "https://github.com/LZD121/x-terminal/releases/latest/download/$asset.sha256"
+sha256sum -c "$asset.sha256"                  # macOS: shasum -a 256 -c
+install -Dm755 "$asset" ~/.local/bin/x-terminal
 x-terminal --version
 ```
 
-On a host where github.com is only reachable through a proxy, add `-x http://127.0.0.1:7897` (or your
-own port) to both `curl` calls. After that, `x-terminal update` upgrades in place and verifies the
-published digest itself; `--check` asks without installing.
+After that, `x-terminal update` upgrades in place and verifies the published digest itself; `--check`
+asks without installing.
 
 ## Build and run
 
