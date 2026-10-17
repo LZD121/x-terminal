@@ -810,3 +810,24 @@ func TestThePersistedStateIsTheDeliberateOne(t *testing.T) {
 		t.Fatalf("the cycle left the state %v, want the cover the blur interrupted", s.m.state)
 	}
 }
+
+// TestVividIsAStateButNotAStartState is the fourth state's two halves: the state exists and is
+// reachable through enterVivid, and it is not a word the config file can hold. The second half is
+// what keeps the hidden mode hidden: a state the file could name would be a state a config key
+// could start, and the design says the sequence is the only way in.
+func TestVividIsAStateButNotAStartState(t *testing.T) {
+	s := newShell(t, 100, 30)
+	if s.m.state != StateNormal {
+		t.Fatalf("a shell starts plain, state = %v", s.m.state)
+	}
+	if _, ok := StateOf("vivid"); ok {
+		t.Fatal("StateOf must not accept the vivid name: the config file is not a way in")
+	}
+	next := s.m.enterVivid()
+	if next.state != StateVivid {
+		t.Fatalf("enterVivid left the shell in %v", next.state)
+	}
+	if next.title() == s.m.title() {
+		t.Fatalf("the vivid frame must not share the plain title, both %q", next.title())
+	}
+}

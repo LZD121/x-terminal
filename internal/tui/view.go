@@ -67,6 +67,8 @@ func (m Model) title() string {
 	switch m.state {
 	case StateImmersive:
 		return m.style.Title()
+	case StateVivid:
+		return render.CopyTitleVivid
 	case StatePanic:
 		return render.CopyTitlePanic
 	}

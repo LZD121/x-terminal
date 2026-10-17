@@ -349,6 +349,46 @@ var Plain = Grammar{
 	ShowCounts: false,
 }
 
+// Vivid is the vivid presentation's grammar. It is the plain reader's with three differences that
+// are the presentation's rather than a second rendering path: no separator row (the list is dense),
+// a measure that is the pane's own width rather than a typographic cap (a reading pane is narrow and
+// a cap narrower still would waste it), and a body indent that leaves room for the mark column the
+// presentation draws in its own pass.
+//
+// It deliberately carries the plain identity, and it is not a cover: nothing here renames the
+// author, because vivid mode is worn where no disguise is needed and a false name would be a second
+// lie on top of the first.
+var Vivid = Grammar{
+	Name: "vivid",
+	Head: []string{
+		"{handle} {stamp:12}{markers}",
+	},
+	QuoteHead: []string{
+		"{handle} {stamp:12}{markers}",
+	},
+	UserHead: []string{
+		"{handle:16} {name}",
+	},
+	AccountFacts: []string{
+		"followers: {followers}",
+		"following: {following}",
+		"posts: {posts}",
+		"joined: {joined}",
+	},
+	MarkerPlace:   MarkersInline,
+	ReplyIndent:   2,
+	BodyIndent:    2,
+	AttachmentRow: true,
+	MeasureCap:    1 << 20,
+	Separator:     false,
+	Stamp:         StampFormat{Clock: "Jan 02 15:04", Date: "Jan 02  2006", MonthYear: "Jan 2006"},
+	Markers:       PlainMarkers,
+	Identity: func(u domain.User) CoverAlias {
+		return CoverAlias{Handle: u.ScreenName, Name: u.Name}
+	},
+	ShowCounts: false,
+}
+
 // withClock returns the grammar with its stamp format's clock set, which is how Blocks turns its
 // now argument into the year and the location every stamp in the frame is rendered against.
 func (g Grammar) withClock(now time.Time) Grammar {

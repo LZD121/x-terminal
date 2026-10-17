@@ -42,6 +42,11 @@ const (
 	StateNormal State = iota
 	// StateImmersive is the same list under a cover: same rows, same selection, different grammar.
 	StateImmersive
+	// StateVivid is the second presentation: the same read-only data, laid out as a navigation
+	// column, a list and a reading pane, with images drawn in the terminal. It is entered from the
+	// normal state by the entry sequence and from nowhere else — it is deliberately absent from
+	// StateOf, because StateOf is the config file's vocabulary and the file is not a way in.
+	StateVivid
 	// StatePanic is the one constant frame, and it is an overlay rather than a screen: it is entered
 	// from either other state with one key and left with the same key.
 	StatePanic
@@ -53,10 +58,30 @@ func (s State) String() string {
 	switch s {
 	case StateImmersive:
 		return "immersive"
+	case StateVivid:
+		return "vivid"
 	case StatePanic:
 		return "panic"
 	}
 	return "normal"
+}
+
+// enterVivid is the one way into the vivid presentation. It has no counterpart in the config file
+// and no flag: the design's rule is that the entry sequence is the only door, so this method is
+// called by the matcher and by nothing else. The cover style is left alone — vivid mode wears no
+// cover, and the remembered style is what a return to immersive will want.
+func (m Model) enterVivid() Model {
+	m.state = StateVivid
+	return m
+}
+
+// leaveVivid is the ordinary way back to the plain reader, and it discards everything vivid-only:
+// the marks and the image bookkeeping belong to the presentation that is leaving, not to the frame
+// beneath it.
+func (m Model) leaveVivid() Model {
+	m.state = StateNormal
+	m.vivid = vividState{}
+	return m
 }
 
 // StateOf reads a state's name, and reports whether it is one at all. An unknown name — including
@@ -416,6 +441,11 @@ type Model struct {
 	// through a pointer into a slice it may append to. A model value held before an answer therefore
 	// still renders the original.
 	translations map[domain.PostID]translation
+	// vivid is everything the vivid presentation owns and nothing else does: the marks it draws on
+	// the list, the nav destination it is showing, and the images it has placed. It is a value, so a
+	// model copy taken before an answer still renders the previous presentation, and leaving vivid
+	// mode zeroes it — the marks and the image ids are not facts about the plain reader.
+	vivid vividState
 }
 
 // translation is this package's own value for one answered post: the body the service gave, and

@@ -15,6 +15,12 @@ const (
 	// CopyTitlePanic is the panic frame's terminal title and tmux window name: the name of a command
 	// that a build really runs, because the title names what is on screen and the frame is output.
 	CopyTitlePanic = "make"
+	// CopyTitleVivid is the vivid presentation's title. It is a command name too, and it is a
+	// different one because the frame is a different thing: the plain reader's name would be a lie
+	// about a pane that no longer looks like a log, and a product name would be the one word the
+	// plain reader exists to avoid. It is not hidden — a window title is not a way in — and it says
+	// nothing about x.com.
+	CopyTitleVivid = "viewer"
 )
 
 // The panic frame's three columns, in cells: the `ok`, the package and the duration of a `go test`
