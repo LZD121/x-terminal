@@ -74,6 +74,25 @@ here could fill one.
 - **A terminal that speaks the Kitty keyboard protocol** for the best behaviour; Ghostty is what the
   project was built against. Nothing here draws images inside the pane — media opens externally.
 
+## Install from a release
+
+There is no installer script and no package, on purpose: the project's own `audit` fails the build if
+one appears. A release is three static binaries and their digests, and installing one is two commands.
+
+```sh
+# Linux amd64 (use _linux_arm64 or _darwin_arm64 on those machines)
+cd "$(mktemp -d)"
+curl -LO https://github.com/LZD121/x-terminal/releases/latest/download/x-terminal_v1.4.0_linux_amd64
+curl -LO https://github.com/LZD121/x-terminal/releases/latest/download/x-terminal_v1.4.0_linux_amd64.sha256
+sha256sum -c x-terminal_v1.4.0_linux_amd64.sha256      # macOS: shasum -a 256 -c ...
+install -Dm755 x-terminal_v1.4.0_linux_amd64 ~/.local/bin/x-terminal
+x-terminal --version
+```
+
+On a host where github.com is only reachable through a proxy, add `-x http://127.0.0.1:7897` (or your
+own port) to both `curl` calls. After that, `x-terminal update` upgrades in place and verifies the
+published digest itself; `--check` asks without installing.
+
 ## Build and run
 
 ```sh
