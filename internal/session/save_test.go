@@ -115,3 +115,33 @@ func TestCleanInputTrimsWhatAPasteBrings(t *testing.T) {
 		}
 	}
 }
+
+// TestSaveLeavesAPreexistingDirectoryAlone: the path a reader chooses may be a shared directory or
+// their own home. Only a directory this call creates is tightened to 0700; an existing one keeps its
+// mode, and the file inside it is still 0600.
+func TestSaveLeavesAPreexistingDirectoryAlone(t *testing.T) {
+	dir := t.TempDir()
+	shared := filepath.Join(dir, "shared")
+	if err := os.Mkdir(shared, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chmod(shared, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	path := filepath.Join(shared, "session")
+	if err := Save(path, Secret("a"), Secret("b")); err != nil {
+		t.Fatalf("Save into a 0755 directory: %v", err)
+	}
+	info, err := os.Stat(shared)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if perm := info.Mode().Perm(); perm != 0o755 {
+		t.Fatalf("the existing directory's mode changed to %04o", perm)
+	}
+	if fileInfo, err := os.Stat(path); err != nil {
+		t.Fatal(err)
+	} else if perm := fileInfo.Mode().Perm(); perm != 0o600 {
+		t.Fatalf("the file's mode is %04o", perm)
+	}
+}

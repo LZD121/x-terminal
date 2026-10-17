@@ -30,13 +30,18 @@ func Save(path string, authToken, cto Secret) error {
 		return err
 	}
 	dir := filepath.Dir(path)
-	if err := os.MkdirAll(dir, 0o700); err != nil {
-		return fmt.Errorf("session: creating %s: %w", dir, err)
+	created, err := ensureDir(dir)
+	if err != nil {
+		return err
 	}
-	// MkdirAll leaves an existing directory's mode alone, so a directory that was created by
-	// something else with a looser mode is tightened here: the file inside it is the credential.
-	if err := os.Chmod(dir, 0o700); err != nil {
-		return fmt.Errorf("session: setting %s to 0700: %w", dir, err)
+	if created {
+		// Only a directory this call created is tightened to 0700. An existing directory is left
+		// alone on purpose: the path a reader chooses may be a shared one (`/tmp`) or even their
+		// home, and chmod on either would either fail or — worse — succeed and take the mode of a
+		// directory that is not this program's. The file's own 0600 is the guarantee that matters.
+		if err := os.Chmod(dir, 0o700); err != nil {
+			return fmt.Errorf("session: setting %s to 0700: %w", dir, err)
+		}
 	}
 
 	body := "# x-terminal session, written by `x-terminal login`. mode 0600.\n" +
@@ -78,6 +83,24 @@ func Save(path string, authToken, cto Secret) error {
 		return fmt.Errorf("session: setting %s to 0600: %w", path, err)
 	}
 	return nil
+}
+
+// ensureDir makes the target's directory when it is missing, and reports whether it created it. A
+// path that exists but is not a directory is refused: the file cannot live inside it.
+func ensureDir(dir string) (created bool, err error) {
+	info, statErr := os.Stat(dir)
+	switch {
+	case errors.Is(statErr, fs.ErrNotExist):
+		if err := os.MkdirAll(dir, 0o700); err != nil {
+			return false, fmt.Errorf("session: creating %s: %w", dir, err)
+		}
+		return true, nil
+	case statErr != nil:
+		return false, fmt.Errorf("session: %w", statErr)
+	case !info.IsDir():
+		return false, fmt.Errorf("session: %s is not a directory", dir)
+	}
+	return false, nil
 }
 
 // ensureWritable refuses the two shapes Load refuses, before anything is created: a symlink could
