@@ -43,13 +43,13 @@ func navWidth() int {
 	return widest + 2
 }
 
-// geometry splits a surface width into its columns.
+// GeometryOf splits a surface width into its columns.
 //
 // Below MinTwoColumn the whole surface is the list, and the nav column is not drawn either: a
 // twelve-cell column on a fifty-cell terminal would leave the list too narrow to read a post in,
 // which is the same failure the plain reader refuses. The status bar still names the destination, so
 // the reader is never lost.
-func geometry(width int) Geometry {
+func GeometryOf(width int) Geometry {
 	if width < MinTwoColumn {
 		return Geometry{List: width}
 	}

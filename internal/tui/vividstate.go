@@ -23,6 +23,10 @@ type vividState struct {
 	// opened is the posts the reader has opened in this presentation. It is what dims a row after
 	// the reader has read it, and it is cleared with the rest when the presentation is left.
 	opened map[domain.PostID]bool
+	// reading is the post the reading column is showing, or the empty id before the reader has
+	// opened one. It is a post id and not a frame: the list stays where it is, which is the whole
+	// reason the column exists.
+	reading domain.PostID
 	// images is the images this presentation has placed: the id the terminal knows each by, which
 	// post it belongs to, and how many rows it occupies. Panic deletes every id here, which is the
 	// one thing that must survive being forgotten by the model.

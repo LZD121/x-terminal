@@ -14,7 +14,7 @@ import (
 // the second column appears exactly at the floor, and nothing is ever given a negative cell.
 func TestGeometry(t *testing.T) {
 	for _, w := range []int{1, 20, 59, 73, 74, 75, 80, 120, 200, 997} {
-		g := geometry(w)
+		g := GeometryOf(w)
 		if g.Nav < 0 || g.List < 0 || g.Reading < 0 {
 			t.Fatalf("width %d: a column is negative: %+v", w, g)
 		}
@@ -29,7 +29,7 @@ func TestGeometry(t *testing.T) {
 			t.Fatalf("width %d: one column must own the surface, list = %d", w, g.List)
 		}
 	}
-	if geometry(MinTwoColumn-1).TwoColumn || !geometry(MinTwoColumn).TwoColumn {
+	if GeometryOf(MinTwoColumn-1).TwoColumn || !GeometryOf(MinTwoColumn).TwoColumn {
 		t.Fatalf("the floor is not where the second column appears: %d", MinTwoColumn)
 	}
 	// The floor is derived, not written down: the widest destination plus padding plus the plain

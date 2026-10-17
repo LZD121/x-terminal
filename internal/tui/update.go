@@ -276,6 +276,17 @@ func (m Model) press(msg tea.KeyPressMsg) (Model, tea.Cmd) {
 	if !ok {
 		return m, nil
 	}
+	// The vivid presentation's `esc` is its own way out, and it is not the plain reader's `back`:
+	// one press closes the reading column, the next leaves the presentation. `q` keeps the plain
+	// reader's meaning, so quitting from the first frame still quits.
+	if m.state == StateVivid && (msg.Keystroke() == "esc" || msg.String() == "esc") {
+		if m.vivid.reading != "" {
+			m.vivid.reading = ""
+			return m, nil
+		}
+		m = m.leaveVivid()
+		return m, m.change()
+	}
 	if m.help {
 		if action == keys.ActionHelp || action == keys.ActionBack {
 			m.help = false
@@ -889,6 +900,11 @@ func (m Model) switchOrder() (Model, tea.Cmd) {
 // page one is asked for from ThreadRequested's effect. Opening a profile issues the header
 // request through the single command path (05-02).
 func (m Model) open() (Model, tea.Cmd) {
+	if m.state == StateVivid {
+		// The presentation's `enter` fills the reading column and leaves the list where it is —
+		// that is what the second column is for.
+		return m.openIntoReading()
+	}
 	f := m.top()
 	sel := f.selected()
 	if sel.ID == "" {

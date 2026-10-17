@@ -26,7 +26,7 @@ func Render(v View) string {
 	if v.Width <= 0 || v.Height <= 0 {
 		return ""
 	}
-	g := geometry(v.Width)
+	g := GeometryOf(v.Width)
 	rows := Rows(v.Height)
 	out := make([]string, 0, v.Height)
 

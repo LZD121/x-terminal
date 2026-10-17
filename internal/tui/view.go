@@ -6,6 +6,7 @@ import (
 	"github.com/LZD121/x-terminal/internal/domain"
 	"github.com/LZD121/x-terminal/internal/keys"
 	"github.com/LZD121/x-terminal/internal/render"
+	"github.com/LZD121/x-terminal/internal/vivid"
 )
 
 // Render composes the frame: the pane's blocks from the top frame's list, the one status line from
@@ -25,6 +26,12 @@ func (m Model) Render(w, h int) string {
 	if m.state == StatePanic {
 		// The whole terminal, with no status line and no list: the frame owns every row.
 		return render.PanicFrame(w, h)
+	}
+	if m.state == StateVivid {
+		// The second presentation is its own renderer: two columns and a bar, not the plain
+		// reader's single pane. Its own package composes it, so the frame's bytes are a function
+		// of the value the shell hands it and nothing else.
+		return vivid.Render(m.vividView())
 	}
 	return render.Frame(m.pane(w), m.status(), w, h)
 }
