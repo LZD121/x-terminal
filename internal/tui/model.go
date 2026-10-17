@@ -446,6 +446,8 @@ type Model struct {
 	// model copy taken before an answer still renders the previous presentation, and leaving vivid
 	// mode zeroes it — the marks and the image ids are not facts about the plain reader.
 	vivid vividState
+	// konami is the entry sequence's progress, at rest in every state but the two it watches.
+	konami konami
 }
 
 // translation is this package's own value for one answered post: the body the service gave, and

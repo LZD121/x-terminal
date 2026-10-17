@@ -247,6 +247,31 @@ func (m Model) press(msg tea.KeyPressMsg) (Model, tea.Cmd) {
 		// bound one (`g`, `c`, `r`) must not reach its action.
 		return m.promptKey(msg)
 	}
+	// The entry sequence is consulted before the keymap, in the two states where a key means what
+	// the table says. It holds at most one key, and only after eight arrows have arrived in order:
+	// the eight themselves pass through, because movement costs nothing and a reader must not feel
+	// a delay for it. See konami.go.
+	if m.state == StateNormal || m.state == StateVivid {
+		var effect konamiEffect
+		m.konami, effect = m.konami.advance(msg.Keystroke())
+		switch effect {
+		case konamiHeld:
+			return m, nil
+		case konamiEnter:
+			m = m.enterVivid()
+			return m, m.change()
+		case konamiReplay:
+			// The held key was bookmarks all along. Replaying it goes back through press with a
+			// `b`, which cannot re-enter this arm: a `b` with nothing matched is an ordinary key.
+			held, cmd := m.press(tea.KeyPressMsg(tea.Key{Code: 'b', Text: "b"}))
+			m = held
+			if action, ok := keyAction(msg, screenName(m.top().Kind)); ok {
+				state, second := m.dispatch(action)
+				return state, tea.Batch(cmd, second)
+			}
+			return m, cmd
+		}
+	}
 	action, ok := keyAction(msg, screenName(m.top().Kind))
 	if !ok {
 		return m, nil
@@ -264,6 +289,13 @@ func (m Model) press(msg tea.KeyPressMsg) (Model, tea.Cmd) {
 		return m.setNotice(render.NoticeGated, 0), nil
 	}
 
+	return m.dispatch(action)
+}
+
+// dispatch is the armed switch: one action, one effect. press reaches it for an ordinary key, and
+// once more for a replayed one — the held key is dispatched without a second copy of the switch,
+// which is what keeps the dispatch join's one-arm-per-action rule true.
+func (m Model) dispatch(action keys.Action) (Model, tea.Cmd) {
 	switch action {
 	case keys.ActionQuit:
 		return m, tea.Quit

@@ -234,6 +234,8 @@ func press(spelling string) tea.KeyPressMsg {
 		"pgup":   tea.KeyPgUp,
 		"home":   tea.KeyHome,
 		"end":    tea.KeyEnd,
+		"left":   tea.KeyLeft,
+		"right":  tea.KeyRight,
 		"esc":    tea.KeyEscape,
 	}
 	if code, ok := named[spelling]; ok {
