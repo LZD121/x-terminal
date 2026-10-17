@@ -71,29 +71,36 @@ func (m Model) vividView() vivid.View {
 	if f.Kind == frameThread {
 		// A conversation has no list beside it: the list column is the thread's own ancestors, and
 		// the reading column holds the focal post and its replies.
-		v.List = m.scrolledBlocks(m.threadAncestors(f, measure))
-		v.Reading = m.scrolledBlocks(m.threadReading(f, g.Reading))
+		v.List = m.listBlocks(m.threadAncestors(f, measure))
+		v.Reading = m.threadReading(f, g.Reading)
 		if title := m.readingTitle(f); title != "" {
 			v.ReadingTitle = title
 		}
 		return v
 	}
 
-	v.List = m.scrolledBlocks(m.blocksAt(f, measure-1))
+	v.List = m.listBlocks(m.blocksAt(f, measure-1))
 	v.Notice = "open a post to read it here"
 	if m.vivid.reading != "" {
 		if post, ok := m.framePostByID(m.vivid.reading); ok {
-			v.Reading = m.scrolledBlocks(m.threadReadingOf(post, g.Reading))
+			// The reading column starts at the post's own head, always: the list's anchor is the
+			// list's place, and applying it here opened a post six rows in — a heading naming the
+			// outer author over a row of somebody's quote.
+			v.Reading = m.threadReadingOf(post, g.Reading)
 			v.ReadingTitle = m.postHeading(post)
 		}
 	}
 	return v
 }
 
-// scrolledBlocks drops the rows above the pane's first row — the plain reader's own skip, applied to
-// a column. The columns scroll together on the frame's one anchor: two independent scroll positions
-// would be two places for the reader to lose, and the list is the column that is being navigated.
-func (m Model) scrolledBlocks(blocks []render.Block) []render.Block {
+// listBlocks drops the rows above the list column's first row — the plain reader's own skip, applied
+// to the list.
+//
+// It is only ever the list's. The reading column is a different document: its row numbers have no
+// relation to the list's, so the list's anchor is not a place in it, and passing the reading column
+// through here opened a post part way down — a heading naming the outer author over a row of a quote
+// of somebody else. The two functions are separate on purpose: there is no call that scrolls both.
+func (m Model) listBlocks(blocks []render.Block) []render.Block {
 	return m.scrolled(blocks, m.top())
 }
 

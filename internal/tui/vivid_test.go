@@ -167,32 +167,7 @@ func TestTheReadingColumnDoesNotInheritTheListsScroll(t *testing.T) {
 	}
 }
 
-// TestEveryColumnRowIsExactlyItsWidth is the off-by-one the smoke run showed as a half glyph at the
-// rule's end: a column row one cell wide pushes the next column's first cell onto the following line.
-func TestEveryColumnRowIsExactlyItsWidth(t *testing.T) {
-	s := vividShell(t)
-	s.press("enter")
-	for _, w := range []int{74, 90, 110, 131, 200} {
-		s.resize(w, 24)
-		frame := s.m.Render(w, 24)
-		g := vivid.GeometryOf(w)
-		for i, row := range strings.Split(frame, "\n") {
-			if got := text.Width(stripSGR(row)); got != w {
-				t.Fatalf("width %d row %d: %d cells", w, i, got)
-			}
-		}
-		// and the two separators sit exactly where the geometry says, measured in display cells
-		// rather than in runes: the list can hold a CJK row, and a rune index would be the wrong
-		// question wherever it does.
-		for _, row := range strings.Split(frame, "\n")[:5] {
-			plain := stripSGR(row)
-			if !separatorsAt(plain, g.Nav, g.Nav+1+g.List) {
-				t.Fatalf("width %d: separators are not at %d and %d: %q", w, g.Nav, g.Nav+1+g.List, plain)
-			}
-		}
-	}
-}
-
+// m0 is a shell that has not moved: the reference both reading-column tests compare against.
 // separatorsAt reports whether the row's cells at two display columns are the column rule. It walks
 // clusters rather than runes so a wide glyph before either column is counted for what it occupies.
 func separatorsAt(row string, cols ...int) bool {
@@ -239,6 +214,64 @@ func TestEnteringVividDoesNotPersistIt(t *testing.T) {
 	for _, w := range s.persisted {
 		if strings.HasPrefix(w, "vivid/") {
 			t.Fatalf("the display config holds %q", w)
+		}
+	}
+}
+
+// TestTheReadingColumnIsNotSkippedByTheListAnchor is the defect the screenshot showed: the reading
+// column was composed through the same skip the list uses, so a post opened from deep in a scrolled
+// list began at the skip's offset — a heading naming one author over a row of a quote of another.
+//
+// The reference is the same post composed by a shell that has never moved, so the assertion is about
+// the skip and not about which row happens to mention whom.
+func TestTheReadingColumnIsNotSkippedByTheListAnchor(t *testing.T) {
+	s := vividShell(t)
+	for range 12 {
+		s.press("j")
+	}
+	if !s.m.top().Moved {
+		t.Fatal("setup: the list did not move, so this test would not exercise the skip")
+	}
+	s.press("enter")
+	if s.m.vivid.reading == "" {
+		t.Fatal("setup: nothing opened")
+	}
+	view := s.m.vividView()
+	post, _ := s.m.framePostByID(s.m.vivid.reading)
+	unscrolled := m0(t).m.threadReadingOf(post, vivid.GeometryOf(110).Reading)
+	if len(view.Reading) == 0 || len(unscrolled) == 0 {
+		t.Fatal("the reading column is empty")
+	}
+	if got, want := strings.Join(view.Reading[0].Rows, "\n"), strings.Join(unscrolled[0].Rows, "\n"); got != want {
+		t.Fatalf("the reading column is scrolled:\n got %q\nwant %q", got, want)
+	}
+}
+
+// m0 is a shell that has not moved: the reference both reading-column tests compare against.
+func m0(t *testing.T) *shell { t.Helper(); return newShell(t, 110, 30) }
+
+// TestEveryColumnRowIsExactlyItsWidth is the off-by-one the smoke run showed as a half glyph at the
+// rule's end: a column row one cell wide pushes the next column's first cell onto the following line.
+func TestEveryColumnRowIsExactlyItsWidth(t *testing.T) {
+	s := vividShell(t)
+	s.press("enter")
+	for _, w := range []int{74, 90, 110, 131, 200} {
+		s.resize(w, 24)
+		frame := s.m.Render(w, 24)
+		g := vivid.GeometryOf(w)
+		for i, row := range strings.Split(frame, "\n") {
+			if got := text.Width(stripSGR(row)); got != w {
+				t.Fatalf("width %d row %d: %d cells", w, i, got)
+			}
+		}
+		// and the two separators sit exactly where the geometry says, measured in display cells
+		// rather than in runes: the list can hold a CJK row, and a rune index would be the wrong
+		// question wherever it does.
+		for _, row := range strings.Split(frame, "\n")[:5] {
+			plain := stripSGR(row)
+			if !separatorsAt(plain, g.Nav, g.Nav+1+g.List) {
+				t.Fatalf("width %d: separators are not at %d and %d: %q", w, g.Nav, g.Nav+1+g.List, plain)
+			}
 		}
 	}
 }
