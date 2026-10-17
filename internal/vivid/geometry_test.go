@@ -110,3 +110,25 @@ func TestTheNavigationColumnMarksTheDestination(t *testing.T) {
 		}
 	}
 }
+
+// TestTheReadingRuleIsExactlyTheColumn is the half glyph the live run showed at the rule's end: the
+// rule was made one cell too long and cut, so the truncation mark replaced a cell of the rule itself.
+func TestTheReadingRuleIsExactlyTheColumn(t *testing.T) {
+	for _, w := range []int{74, 90, 131, 200} {
+		g := GeometryOf(w)
+		rows := readingRows(View{ReadingTitle: "someone / 1"}, g.Reading, 10)
+		if len(rows) < 2 {
+			t.Fatalf("width %d: %d rows, want a title and a rule", w, len(rows))
+		}
+		rule := rows[1]
+		if text.Width(rule) != g.Reading {
+			t.Fatalf("width %d: the rule is %d cells, want %d", w, text.Width(rule), g.Reading)
+		}
+		if strings.ContainsRune(rule, '~') {
+			t.Fatalf("width %d: the rule carries the truncation mark: %q", w, rule)
+		}
+		if strings.Trim(rule, "─") != "" {
+			t.Fatalf("width %d: the rule is not uniform: %q", w, rule)
+		}
+	}
+}

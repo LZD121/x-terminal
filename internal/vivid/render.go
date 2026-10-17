@@ -161,7 +161,11 @@ func readingRows(v View, w, rows int) []string {
 	out := make([]string, 0, rows)
 	if v.ReadingTitle != "" {
 		out = append(out, cut(v.ReadingTitle, w))
-		out = append(out, cut(strings.Repeat("─", w), w))
+		// The rule is exactly the column's width, and it is built from that width rather than made
+		// long and cut: cutting a run of a wide character is where the half glyph in the live run
+		// came from — the cut landed one cell short and the truncation mark replaced a cell of the
+		// rule, which reads as a broken dash.
+		out = append(out, strings.Repeat("─", w))
 	}
 	if len(v.Reading) == 0 {
 		if v.Notice != "" && len(out) < rows {
