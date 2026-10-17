@@ -99,10 +99,13 @@ What it is not: it is still read-only, it still keeps nothing on disk, and it st
 the same proxy and the same request budget. The plain reader, the covers and the panic frame are
 unchanged, and their golden frames are unmoved.
 
-`login` is the guided path: it names the two cookies a logged-in browser already has, reads them with
-no echo, spends one request to check them against x.com, and writes the file only if they work. It
-never opens a browser and never reads one's cookie store; `--no-verify` writes without the check,
-`--replace` writes over a pair that is already there.
+`login` is the guided path. By default it names the two cookies a logged-in browser already has and
+reads them with no echo; `login --browser` instead opens a throwaway Chromium window on the login
+page, lets you sign in there, and reads the cookies out of that window's own jar over a DevTools pipe
+— never a debugging port, and never your own profile, which is neither read nor locked. Either way it
+spends one request to check the pair against x.com and writes the file only if that request is
+accepted. `--no-verify` writes without the check; `--replace` writes over a pair that is already
+there.
 
 The session cookie goes in `$XDG_CONFIG_HOME/x-terminal/session` — `auth_token=…` and `ct0=…`, mode
 `0600`, outside any editor round-trip. `X_TERMINAL_AUTH_TOKEN` / `X_TERMINAL_CT0` override it.

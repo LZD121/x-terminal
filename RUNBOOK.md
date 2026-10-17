@@ -55,7 +55,7 @@ A repair is one request. There is no retry loop. A failed repair is a second dia
 
 **What doctor shows.** The session summary line (`session.Summary()`): path, presence, mode. A file anyone can read is a failure, not a state — `session.Load` refuses modes other than `0600`.
 
-**Repair.** `x-terminal logout` (deletes the local copy; the browser session is untouched), then `x-terminal login`: it names the two cookies, reads them with no echo, and writes the session file at `0600` only after one check request accepts them. Doing it by hand — `auth_token=…` and `ct0=…` in `$XDG_CONFIG_HOME/x-terminal/session`, mode `0600` — still works and is what the verb automates.
+**Repair.** `x-terminal logout` (deletes the local copy; the browser session is untouched), then `x-terminal login` (add `--browser` to sign in through a throwaway Chromium window instead of pasting): it names the two cookies, reads them with no echo, and writes the session file at `0600` only after one check request accepts them. Doing it by hand — `auth_token=…` and `ct0=…` in `$XDG_CONFIG_HOME/x-terminal/session`, mode `0600` — still works and is what the verb automates.
 
 **Verify.** `x-terminal doctor`
 

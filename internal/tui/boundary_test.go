@@ -259,15 +259,20 @@ func TestProcessSpawnsAreOnlyInTermAndMedia(t *testing.T) {
 	if files < len(dirs) || importsOf(t, dirs) == 0 {
 		t.Fatalf("the scan parsed %d files across %d packages and found no imports: an empty scan fails", files, len(dirs))
 	}
+	// internal/browserlogin is the third and last declared spawner: the `login --browser` verb
+	// launches a throwaway Chromium. It is named here rather than skipped, so the next package that
+	// reaches for os/exec has to say why in this list.
 	allowed := func(path string) bool {
-		return strings.HasPrefix(path, "internal/term/") || strings.HasPrefix(path, "internal/media/")
+		return strings.HasPrefix(path, "internal/term/") ||
+			strings.HasPrefix(path, "internal/media/") ||
+			strings.HasPrefix(path, "internal/browserlogin/")
 	}
 	for _, path := range importers {
 		if !allowed(path) {
-			t.Errorf("%s imports os/exec, and only internal/term and internal/media may", path)
+			t.Errorf("%s imports os/exec, and only internal/term, internal/media and internal/browserlogin may", path)
 		}
 	}
-	var haveTerm, haveMedia bool
+	var haveTerm, haveMedia, haveBrowser bool
 	for _, path := range importers {
 		if strings.HasPrefix(path, "internal/term/") {
 			haveTerm = true
@@ -275,9 +280,12 @@ func TestProcessSpawnsAreOnlyInTermAndMedia(t *testing.T) {
 		if strings.HasPrefix(path, "internal/media/") {
 			haveMedia = true
 		}
+		if strings.HasPrefix(path, "internal/browserlogin/") {
+			haveBrowser = true
+		}
 	}
-	if !haveTerm || !haveMedia {
-		t.Fatalf("the scan found os/exec in %q: both internal/term and internal/media must be importing it", importers)
+	if !haveTerm || !haveMedia || !haveBrowser {
+		t.Fatalf("the scan found os/exec in %q: internal/term, internal/media and internal/browserlogin must all be importing it", importers)
 	}
 
 	// The scanner's own arm: the same reader, on a source that does carry the import.

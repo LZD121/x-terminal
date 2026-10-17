@@ -11,6 +11,7 @@ import (
 
 	"github.com/charmbracelet/x/term"
 
+	"github.com/LZD121/x-terminal/internal/browserlogin"
 	"github.com/LZD121/x-terminal/internal/config"
 	"github.com/LZD121/x-terminal/internal/session"
 	"github.com/LZD121/x-terminal/internal/xsource"
@@ -28,15 +29,17 @@ import (
 // typed or pasted at a prompt with no echo, which is the one path this project will put a credential
 // through.
 func Login(ctx *Context, args []string) int {
-	replace, verify := false, true
+	replace, verify, browser := false, true, false
 	for _, arg := range args {
 		switch arg {
 		case "--replace":
 			replace = true
 		case "--no-verify":
 			verify = false
+		case "--browser":
+			browser = true
 		case "-h", "--help":
-			fmt.Fprintln(ctx.Stdout, "login reads auth_token and ct0 from the terminal (no echo), checks them with one request, and writes the session file at 0600.\n\n  --replace     overwrite a session that is already there\n  --no-verify   write without the check request (the cookie is unproven; doctor will tell you later)")
+			fmt.Fprintln(ctx.Stdout, "login reads auth_token and ct0, checks them with one request, and writes the session file at 0600.\n\n  --browser     open a throwaway Chromium window on the login page and read the cookies from it\n  --replace     overwrite a session that is already there\n  --no-verify   write without the check request (the cookie is unproven; doctor will tell you later)")
 			return ExitOK
 		default:
 			fmt.Fprintf(ctx.Stderr, "login: unknown argument %q\n", arg)
@@ -63,18 +66,19 @@ func Login(ctx *Context, args []string) int {
 		return ExitOK
 	}
 
-	guide(ctx.Stdout)
-
-	// One reader for both lines: a bufio.Reader buffers past the first newline, and a second one
-	// built over the same input would lose the bytes the first had already read. (That is not a
-	// hypothetical: the piped form of this verb failed exactly that way.)
-	input := bufio.NewReader(ctx.Stdin)
-	authToken, err := readSecret(ctx, input, "auth_token", "X_TERMINAL_AUTH_TOKEN")
-	if err != nil {
-		fmt.Fprintf(ctx.Stderr, "login: %v\n", err)
-		return ExitError
+	var authToken, cto session.Secret
+	if browser {
+		authToken, cto, err = readFromBrowser(ctx)
+		if errors.Is(err, browserlogin.ErrNoBrowser) {
+			// The machine has no browser this knows how to drive: the manual path is right there,
+			// and saying so is the whole remedy.
+			fmt.Fprintf(ctx.Stderr, "login: %v; run the same command without --browser and paste the two values instead\n", err)
+			return ExitError
+		}
+	} else {
+		guide(ctx.Stdout)
+		authToken, cto, err = readFromTerminal(ctx)
 	}
-	cto, err := readSecret(ctx, input, "ct0", "X_TERMINAL_CT0")
 	if err != nil {
 		fmt.Fprintf(ctx.Stderr, "login: %v\n", err)
 		return ExitError
@@ -84,7 +88,7 @@ func Login(ctx *Context, args []string) int {
 		return ExitError
 	}
 
-	candidate := session.Session{AuthToken: authToken, CTO: cto, Source: "typed"}
+	candidate := session.Session{AuthToken: authToken, CTO: cto, Source: "login"}
 
 	if verify {
 		account, err := loginVerify(cfg, candidate)
@@ -107,6 +111,35 @@ func Login(ctx *Context, args []string) int {
 	}
 	fmt.Fprintln(ctx.Stdout, "next: `x-terminal doctor` checks the session against x.com; `x-terminal logout` removes this copy")
 	return ExitOK
+}
+
+// readFromTerminal is the manual half: the guide, then two lines with no echo.
+//
+// One reader for both lines: a bufio.Reader buffers past the first newline, and a second one built
+// over the same input would lose the bytes the first had already read. (That is not a hypothetical:
+// the piped form of this verb failed exactly that way.)
+func readFromTerminal(ctx *Context) (session.Secret, session.Secret, error) {
+	input := bufio.NewReader(ctx.Stdin)
+	authToken, err := readSecret(ctx, input, "auth_token", "X_TERMINAL_AUTH_TOKEN")
+	if err != nil {
+		return "", "", err
+	}
+	cto, err := readSecret(ctx, input, "ct0", "X_TERMINAL_CT0")
+	if err != nil {
+		return "", "", err
+	}
+	return authToken, cto, nil
+}
+
+// readFromBrowser is the automated half: a throwaway Chromium window on the login page, and the two
+// cookies read out of that window's own jar once they appear.
+func readFromBrowser(ctx *Context) (session.Secret, session.Secret, error) {
+	result, err := browserlogin.Login(context.Background(), browserlogin.Options{Progress: ctx.Stdout})
+	if err != nil {
+		return "", "", err
+	}
+	fmt.Fprintln(ctx.Stdout, "the browser handed over both cookies; it is closing")
+	return session.CleanInput("auth_token", result.AuthToken), session.CleanInput("ct0", result.CTO), nil
 }
 
 // loginVerify is the one check request: the Viewer read, through the same client and classifier

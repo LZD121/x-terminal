@@ -17,6 +17,35 @@ const (
 	limiterFloorFunc = "sleepContext"
 )
 
+// timerExemption is one declared place a timer may live. Each entry names the file, the function
+// and why the wait is not the thing the promise is about — a request floor or a local sign-in wait,
+// never a poll of the upstream. Every entry is required to be reached: an exemption nothing uses is
+// a hole nobody is watching.
+type timerExemption struct {
+	File string
+	Func string
+	Note string
+}
+
+var timerExemptions = []timerExemption{
+	{limiterFloorFile, limiterFloorFunc, "the request floor"},
+	// login --browser waits for a human to sign in and for a local browser to hand its cookies
+	// over. Nothing here is requested from x.com, and the wait ends when the verb does.
+	{"internal/browserlogin/browser.go", "Login", "the sign-in deadline"},
+	{"internal/browserlogin/browser.go", "poll", "the sign-in polling interval"},
+}
+
+// timerExempt is the declared exemption covering one call, or nil.
+func timerExempt(filePath string, file *ast.File, pos token.Pos) *timerExemption {
+	for i := range timerExemptions {
+		e := &timerExemptions[i]
+		if filePath == e.File && inFunc(file, pos, e.Func) {
+			return e
+		}
+	}
+	return nil
+}
+
 var bannedTimerSels = map[string]bool{
 	"NewTicker": true,
 	"NewTimer":  true,
@@ -123,8 +152,7 @@ func checkTimers(t Tree) Report {
 		r.Findings = append(r.Findings, emptyFinding(name, "inspected no Go files: a scan of nothing proves nothing"))
 		return r
 	}
-	var sawExemption bool
-	var exemptionLine int
+	reached := map[string]int{}
 	for _, s := range sources {
 		ast.Inspect(s.AST, func(n ast.Node) bool {
 			call, ok := n.(*ast.CallExpr)
@@ -143,20 +171,37 @@ func checkTimers(t Tree) Report {
 				return true
 			}
 			pos := s.FSet.Position(call.Pos())
-			if s.Path == limiterFloorFile && inFunc(s.AST, call.Pos(), limiterFloorFunc) {
-				sawExemption = true
-				exemptionLine = pos.Line
+			if exempt := timerExempt(s.Path, s.AST, call.Pos()); exempt != nil {
+				key := exempt.File + "." + exempt.Func
+				if _, seen := reached[key]; !seen {
+					reached[key] = pos.Line
+				}
 				return true
 			}
 			r.Findings = append(r.Findings, fileFinding(name, s.Path, fmt.Sprintf("banned timer call time.%s", sel.Sel.Name), pos.Line))
 			return true
 		})
 	}
-	if !sawExemption {
-		r.Findings = append(r.Findings, emptyFinding(name, fmt.Sprintf("expected exemption %s.%s absent from the tree: a tree with no limiter is not a tree this check proved anything about", limiterFloorFile, limiterFloorFunc)))
-	} else {
-		// Print the exemption so it is counted, not silent.
-		r.Promise = fmt.Sprintf("%s (exemption %s:%d %s)", r.Promise, limiterFloorFile, exemptionLine, limiterFloorFunc)
+	// Every declared exemption must be reached when its file is in the tree under test, and each
+	// is printed so it is counted rather than silent. A tree that does not hold the file at all is
+	// a partial scan (a fixture), not a stale declaration.
+	present := map[string]bool{}
+	for _, src := range sources {
+		present[src.Path] = true
+	}
+	for _, e := range timerExemptions {
+		key := e.File + "." + e.Func
+		line, ok := reached[key]
+		if !ok {
+			// The limiter's floor is required of every tree: a tree with no limiter is a tree this
+			// check proved nothing about. The others are required only when their file is here, so
+			// a fixture that deliberately holds one package does not fail the check.
+			if e.File == limiterFloorFile || present[e.File] {
+				r.Findings = append(r.Findings, emptyFinding(name, fmt.Sprintf("declared timer exemption %s absent from %s: a file that no longer needs it is a declaration to remove", key, e.File)))
+			}
+			continue
+		}
+		r.Promise = fmt.Sprintf("%s (exemption %s:%d %s: %s)", r.Promise, e.File, line, e.Func, e.Note)
 	}
 	return r
 }
@@ -199,6 +244,10 @@ const (
 	// sessionWriterFile is the one place a credential is written. It is anchored to the file for
 	// the same reason the others are: a write beside it must not inherit the destination.
 	sessionWriterFile = "internal/session/save.go"
+	// browserProfileDir is the package that creates a throwaway browser profile for `login
+	// --browser`: a directory the browser then writes into, and this program deletes on the way
+	// out. Anchored to the package, because every file of it is about that one directory.
+	browserProfileDir = "internal/browserlogin/"
 )
 
 // Destination kinds: the running tool's own state, and the repository's
@@ -226,6 +275,7 @@ var writeDestinations = []writeDestination{
 	{"saved", runningTool, "saved.db and its wal/shm"},
 	{"update", runningTool, "the installed binary the update verb replaces: a temporary file in the target's own directory, renamed over it, removed on every failure path"},
 	{"session", runningTool, "the credential file `login` writes: 0600 from creation, a temporary file in the same directory, fsynced, renamed over the target, removed on every failure path"},
+	{"browser-profile", runningTool, "the throwaway browser profile `login --browser` creates for one sign-in: a 0700 directory, removed on every path out, never the user's own profile"},
 	{"registry", developmentTool, "cmd/x-opsgen writes the checked-in operation-id snapshot through internal/xweb/volatile"},
 	{"spike-recording", developmentTool, "cmd/spike --record writes fetched response bodies into the operator's own directory"},
 }
@@ -290,7 +340,7 @@ func checkPersistence(t Tree) Report {
 			}
 			line := s.FSet.Position(call.Pos()).Line
 			switch fn {
-			case "os.Create", "os.OpenFile", "os.WriteFile", "os.CreateTemp", "writeAtomically", "writeFile":
+			case "os.Create", "os.OpenFile", "os.WriteFile", "os.CreateTemp", "os.MkdirTemp", "writeAtomically", "writeFile":
 				record(classifyWrite(s.Path, s.AST, call.Pos(), hints), line, fn)
 			case "sql.Open":
 				dest := "saved"
@@ -409,6 +459,9 @@ func classifyWrite(filePath string, file *ast.File, pos token.Pos, hints map[str
 		// The credential's temporary file, renamed over the session path: the one
 		// write of a cookie this tree performs.
 		return "session"
+	case strings.HasPrefix(filePath, browserProfileDir):
+		// The throwaway profile the sign-in browser is given, and its removal.
+		return "browser-profile"
 	case strings.Contains(filePath, "internal/cli/notice.go"):
 		return "notice"
 	case strings.Contains(filePath, "internal/xweb/volatile/pins.go"):
@@ -654,7 +707,7 @@ func checkBoundaries(t Tree) Report {
 		r.Findings = append(r.Findings, emptyFinding(name, "inspected no Go files: a scan of nothing proves nothing"))
 		return r
 	}
-	var tuiFiles, sawOsExecTerm, sawOsExecMedia int
+	var tuiFiles, sawOsExecTerm, sawOsExecMedia, sawOsExecBrowser int
 	for _, s := range sources {
 		if strings.HasPrefix(s.Path, "internal/tui/") {
 			tuiFiles++
@@ -674,12 +727,15 @@ func checkBoundaries(t Tree) Report {
 				sawOsExecTerm++
 			case strings.HasPrefix(s.Path, "internal/media/"):
 				sawOsExecMedia++
+			case strings.HasPrefix(s.Path, browserProfileDir):
+				// The third declared spawner: `login --browser` starts a throwaway Chromium.
+				sawOsExecBrowser++
 			default:
 				// Confirm it is an import, not a comment string.
 				for _, imp := range s.AST.Imports {
 					if strings.Trim(imp.Path.Value, `"`) == "os/exec" {
 						pos := s.FSet.Position(imp.Pos())
-						r.Findings = append(r.Findings, fileFinding(name, s.Path, "os/exec import outside internal/term and internal/media", pos.Line))
+						r.Findings = append(r.Findings, fileFinding(name, s.Path, "os/exec import outside internal/term, internal/media and internal/browserlogin", pos.Line))
 					}
 				}
 			}
@@ -699,8 +755,8 @@ func checkBoundaries(t Tree) Report {
 	if tuiFiles == 0 {
 		r.Findings = append(r.Findings, emptyFinding(name, "found 0 internal/tui Go files: anti-vacuity"))
 	}
-	if sawOsExecTerm == 0 || sawOsExecMedia == 0 {
-		r.Findings = append(r.Findings, emptyFinding(name, fmt.Sprintf("os/exec allowlist incomplete: term=%d media=%d (both must appear)", sawOsExecTerm, sawOsExecMedia)))
+	if sawOsExecTerm == 0 || sawOsExecMedia == 0 || sawOsExecBrowser == 0 {
+		r.Findings = append(r.Findings, emptyFinding(name, fmt.Sprintf("os/exec allowlist incomplete: term=%d media=%d browserlogin=%d (all three must appear)", sawOsExecTerm, sawOsExecMedia, sawOsExecBrowser)))
 	}
 	return r
 }
