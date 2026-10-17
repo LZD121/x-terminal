@@ -131,6 +131,30 @@ type Counts struct {
 	Views     int
 }
 
+// LinkKind is what one thing a post's body names is: a URL, a hashtag, or an account.
+//
+// The three are one type because the reader's act is one — follow the thing under the cursor —
+// and three types would be three menus. They are three kinds because following each one lands in a
+// different place: a URL leaves the program, a hashtag is a search, and a mention is a profile.
+type LinkKind uint8
+
+const (
+	// LinkURL is an absolute http(s) address, the expanded form when the upstream carried one.
+	LinkURL LinkKind = iota
+	// LinkHashtag is a tag, stored without its leading '#'.
+	LinkHashtag
+	// LinkMention is an account's handle, stored without its leading '@'.
+	LinkMention
+)
+
+// Link is one thing a post's body names, as the upstream's entities list it. It is a value rather
+// than a string because what the reader can do with it depends on which of the three it is, and a
+// string would make every caller re-parse the difference.
+type Link struct {
+	Kind   LinkKind
+	Target string
+}
+
 // Post is one post as a timeline carries it.
 type Post struct {
 	// ID is the post's own id (the upstream's rest_id).
@@ -159,6 +183,10 @@ type Post struct {
 	// the same response (bounded in xsource), so a renderer can show it without a second
 	// request.
 	Quote *Post
+	// Links are the URLs, hashtags and accounts the body names, in the upstream's entities order:
+	// URLs first, then tags, then mentions, each in the answer's own order. They are deduplicated by
+	// kind and target, because a body that repeats a link names it once.
+	Links []Link
 	// Media are the post's attachments, in the order the upstream listed them. Refs only: no
 	// bytes and no URL the renderer may print (Phase 7 owns opening media).
 	//

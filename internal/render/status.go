@@ -49,6 +49,9 @@ const (
 	NoticeLoadingPosts
 	// NoticeNoPosts is a profile whose posts read succeeded and carried none.
 	NoticeNoPosts
+	// NoticeNoLinks is `L` on a post whose body names nothing: a successful outcome in the notice
+	// field, never a failure and never an empty menu.
+	NoticeNoLinks
 	// NoticeNoAuthor is `a` where the selected row has no author.
 	NoticeNoAuthor
 	// NoticeSyncing is a saved-frame sync walk in progress, counted in NoticeCount.

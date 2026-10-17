@@ -17,6 +17,7 @@
       "ConversationID": "2106019976381689871",
       "ReplyTo": "",
       "Quote": null,
+      "Links": null,
       "Media": null,
       "Visibility": 0,
       "Counts": {
@@ -50,6 +51,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -84,6 +91,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": [
               {
                 "Kind": 0,
@@ -125,6 +138,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -159,6 +178,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -193,6 +218,16 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              },
+              {
+                "Kind": 2,
+                "Target": "NickJFuentes"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -227,6 +262,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -261,6 +302,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": [
               {
                 "Kind": 0,
@@ -302,6 +349,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": [
               {
                 "Kind": 0,
@@ -343,6 +396,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -377,6 +436,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": [
               {
                 "Kind": 0,
@@ -418,6 +483,16 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              },
+              {
+                "Kind": 2,
+                "Target": "NickJFuentes"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -452,6 +527,16 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              },
+              {
+                "Kind": 2,
+                "Target": "NickJFuentes"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -486,6 +571,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": [
               {
                 "Kind": 0,
@@ -527,6 +618,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -561,6 +658,16 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              },
+              {
+                "Kind": 2,
+                "Target": "grok"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -595,6 +702,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": [
               {
                 "Kind": 0,
@@ -636,6 +749,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -670,6 +789,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -704,6 +829,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -738,6 +869,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -772,6 +909,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -806,6 +949,16 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              },
+              {
+                "Kind": 2,
+                "Target": "NickJFuentes"
+              }
+            ],
             "Media": [
               {
                 "Kind": 1,
@@ -847,6 +1000,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -881,6 +1040,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": [
               {
                 "Kind": 0,
@@ -922,6 +1087,16 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              },
+              {
+                "Kind": 2,
+                "Target": "NickJFuentes"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -956,6 +1131,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -990,6 +1171,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -1024,6 +1211,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -1058,6 +1251,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -1092,6 +1291,16 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              },
+              {
+                "Kind": 2,
+                "Target": "grok"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -1126,6 +1335,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -1160,6 +1375,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": [
               {
                 "Kind": 2,
@@ -1201,6 +1422,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": [
               {
                 "Kind": 0,
@@ -1242,6 +1469,16 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              },
+              {
+                "Kind": 2,
+                "Target": "stormypatriot21"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -1276,6 +1513,12 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              }
+            ],
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -1310,6 +1553,16 @@
             "ConversationID": "2106019976381689871",
             "ReplyTo": "2106019976381689871",
             "Quote": null,
+            "Links": [
+              {
+                "Kind": 2,
+                "Target": "X"
+              },
+              {
+                "Kind": 2,
+                "Target": "FFT1776"
+              }
+            ],
             "Media": [
               {
                 "Kind": 0,

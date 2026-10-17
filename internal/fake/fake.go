@@ -323,6 +323,13 @@ func adversarialPages() [][]domain.Post {
 	// visible: one that fills the 120-column measure (96 cells) exactly and one a cell shorter, and
 	// the same pair for the 80-column measure (77). Their widths are built, not counted by hand.
 	url := adversarialPost(4, "lzd", "the link that runs past the measure: https://example.invalid/2026/10/14/a-path-that-cannot-fit-on-one-line/a-fragment#and-a-query?after=that")
+	// The body's own links, one of each kind: the corpus's case for the links menu, and the one
+	// post in the set whose body names things a reader can follow.
+	url.Links = []domain.Link{
+		{Kind: domain.LinkURL, Target: "https://example.invalid/2026/10/14/a-path-that-cannot-fit-on-one-line/a-fragment#and-a-query?after=that"},
+		{Kind: domain.LinkHashtag, Target: "example"},
+		{Kind: domain.LinkMention, Target: "someone"},
+	}
 	widths := adversarialPost(5, "lzd", strings.Join([]string{
 		measure(96, "exactly the measure at 120 columns"),
 		measure(95, "one cell shorter than that"),

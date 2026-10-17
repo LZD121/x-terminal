@@ -203,6 +203,8 @@ const (
 
 	CopyNoticeNoPosts  = "no posts"
 	CopyNoticeNoAuthor = "no author to open"
+	// CopyNoticeNoLinks is `L` on a post whose body names no link.
+	CopyNoticeNoLinks = "this post names no link"
 	// Media action notices (MEDIA-03). One attachment uses CopyNoticeMediaOne with
 	// {noun}; a set uses CopyNoticeMediaMany with the count of successes; a missing
 	// opener prints the URL in the pane and says so here.
@@ -650,6 +652,8 @@ func NoticeLine(cover CoverStyle, notice NoticeKind, count int) string {
 		return coverOr(cover, coverLoadingPosts(cover), CopyNoticeLoadingPosts)
 	case NoticeNoPosts:
 		return coverOr(cover, coverNoPosts(cover), CopyNoticeNoPosts)
+	case NoticeNoLinks:
+		return coverOr(cover, coverNothingToOpen(cover), CopyNoticeNoLinks)
 	case NoticeNoAuthor:
 		return coverOr(cover, coverNoAuthor(cover), CopyNoticeNoAuthor)
 	// The four notices a mirror read leaves. They are reachable under a cover — `r` on a saved

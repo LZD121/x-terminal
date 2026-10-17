@@ -17,6 +17,7 @@
       "ConversationID": "",
       "ReplyTo": "",
       "Quote": null,
+      "Links": null,
       "Media": null,
       "Visibility": 2,
       "Counts": {
@@ -50,6 +51,7 @@
             "ConversationID": "9000000000000000300",
             "ReplyTo": "9000000000000000300",
             "Quote": null,
+            "Links": null,
             "Media": null,
             "Visibility": 0,
             "Counts": {
@@ -84,6 +86,7 @@
             "ConversationID": "9000000000000000300",
             "ReplyTo": "9000000000000000300",
             "Quote": null,
+            "Links": null,
             "Media": null,
             "Visibility": 0,
             "Counts": {

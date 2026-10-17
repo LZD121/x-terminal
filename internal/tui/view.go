@@ -114,6 +114,8 @@ func (m Model) grammar() render.Grammar {
 func (m Model) pane(w int) []render.Block {
 	f := m.top()
 	switch {
+	case m.links != nil:
+		return []render.Block{{Rows: render.Links(m.grammar(), w, m.links.links)}}
 	case m.help:
 		// The overlay is the pane's whole height: the keymap is taller than a 24-row terminal, and
 		// render.Help names the rows it cannot hold rather than dropping them silently.

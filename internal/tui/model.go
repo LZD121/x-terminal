@@ -447,7 +447,10 @@ type Model struct {
 	// the help overlay, not a frame: nothing is pushed while it is open, no request is issued, and
 	// the status line is composed exactly as before, which is what keeps the budget on screen.
 	prompt *screen.Prompt
-	w, h   int
+	// links is the body-links menu while it is open, and nil when it is not. Like the prompt it is
+	// model state beside the help overlay, not a frame: opening it spends nothing.
+	links *linkMenu
+	w, h  int
 
 	// state is which of the three display states the pane is in, and style the cover it wears when
 	// it is immersive — remembered in normal too, where it is not worn, because the key that puts

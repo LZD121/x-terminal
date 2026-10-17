@@ -346,6 +346,7 @@ func postBody(entryID, path string, node tweet, visibility domain.Visibility) (d
 		ConversationID: node.Legacy.ConversationIDStr,
 		ReplyTo:        domain.PostID(node.Legacy.InReplyToStatusIDStr),
 		Media:          media,
+		Links:          linksOf(node.Legacy),
 		Visibility:     visibility,
 		Counts:         counts,
 	}, nil
@@ -383,6 +384,50 @@ func tombstoneID(entryID string) string {
 	return entryID
 }
 
+// linksOf reads the three kinds of thing a body names, in the entities' order: URLs, then tags,
+// then mentions, each in the answer's own order. Repeat names are dropped — a body that names one
+// link twice names it once — and an entry with no target is skipped rather than carried as an empty
+// row.
+//
+// The URL target is the expanded form when the answer carries one: the text holds t.co short links,
+// and following one should land where the author meant, not in the shortener.
+func linksOf(legacy *tweetLegacy) []domain.Link {
+	if legacy == nil || legacy.Entities == nil {
+		return nil
+	}
+	e := legacy.Entities
+	out := make([]domain.Link, 0, len(e.URLs)+len(e.Hashtags)+len(e.UserMentions))
+	seen := map[domain.Link]bool{}
+	add := func(kind domain.LinkKind, target string) {
+		if target == "" {
+			return
+		}
+		link := domain.Link{Kind: kind, Target: target}
+		if seen[link] {
+			return
+		}
+		seen[link] = true
+		out = append(out, link)
+	}
+	for _, u := range e.URLs {
+		if u.ExpandedURL != "" {
+			add(domain.LinkURL, u.ExpandedURL)
+			continue
+		}
+		add(domain.LinkURL, u.URL)
+	}
+	for _, h := range e.Hashtags {
+		add(domain.LinkHashtag, h.Text)
+	}
+	for _, m := range e.UserMentions {
+		add(domain.LinkMention, m.ScreenName)
+	}
+	if len(out) == 0 {
+		return nil
+	}
+	return out
+}
+
 // mediaOf reads a post's attachments.
 //
 // extended_entities is preferred over entities and entities is the fallback: a post whose video
@@ -391,18 +436,22 @@ func tombstoneID(entryID string) string {
 // has neither is a post with no attachment and gets no refs at all — an empty list would say
 // "attachments, none of which I could read".
 func mediaOf(path string, legacy *tweetLegacy) ([]domain.MediaRef, error) {
-	entities := legacy.ExtendedEntities
-	name := "extended_entities"
-	if entities == nil {
-		entities = legacy.Entities
-		name = "entities"
+	var (
+		media []mediaEntity
+		name  string
+	)
+	switch {
+	case legacy.ExtendedEntities != nil && len(legacy.ExtendedEntities.Media) > 0:
+		media, name = legacy.ExtendedEntities.Media, "extended_entities"
+	case legacy.Entities != nil && len(legacy.Entities.Media) > 0:
+		media, name = legacy.Entities.Media, "entities"
 	}
-	if entities == nil || len(entities.Media) == 0 {
+	if len(media) == 0 {
 		return nil, nil
 	}
 
-	refs := make([]domain.MediaRef, 0, len(entities.Media))
-	for i, media := range entities.Media {
+	refs := make([]domain.MediaRef, 0, len(media))
+	for i, media := range media {
 		at := path + ": legacy." + name + ".media[" + strconv.Itoa(i) + "]"
 		kind, err := mediaKind(at+".type", media.Type)
 		if err != nil {
@@ -755,8 +804,9 @@ type tweetLegacy struct {
 	// absent one means "answers nothing" rather than "a field I could not find".
 	InReplyToStatusIDStr string `json:"in_reply_to_status_id_str"`
 	// Entities and ExtendedEntities both carry media, and which of the two is current has moved
-	// before; mediaOf prefers extended_entities and falls back to entities.
-	Entities         *mediaEntities `json:"entities"`
+	// before; mediaOf prefers extended_entities and falls back to entities. entities also carries
+	// the three lists linksOf reads: a post's URLs, tags and mentions.
+	Entities         *tweetEntities `json:"entities"`
 	ExtendedEntities *mediaEntities `json:"extended_entities"`
 	// RetweetedStatusResult is where a repost's original tweet lives in the current responses.
 	RetweetedStatusResult *resultHolder `json:"retweeted_status_result"`
@@ -766,9 +816,37 @@ type tweetLegacy struct {
 	WithheldInCountries []string `json:"withheld_in_countries"`
 }
 
-// mediaEntities is the part of legacy.entities and legacy.extended_entities this package reads.
+// mediaEntities is the part of extended_entities this package reads: that object carries media and
+// nothing else.
 type mediaEntities struct {
 	Media []mediaEntity `json:"media"`
+}
+
+// tweetEntities is the part of legacy.entities this package reads: media, and the three kinds of
+// thing a body names. The URL list is read for its expanded form — the text itself holds t.co short
+// links, and a reader who follows one wants the destination the upstream already resolved, not a
+// redirect hop through an ad domain.
+type tweetEntities struct {
+	Media        []mediaEntity   `json:"media"`
+	URLs         []urlEntity     `json:"urls"`
+	Hashtags     []hashtagEntity `json:"hashtags"`
+	UserMentions []mentionEntity `json:"user_mentions"`
+}
+
+// urlEntity is one URL a body names.
+type urlEntity struct {
+	URL         string `json:"url"`
+	ExpandedURL string `json:"expanded_url"`
+}
+
+// hashtagEntity is one tag a body names.
+type hashtagEntity struct {
+	Text string `json:"text"`
+}
+
+// mentionEntity is one account a body names.
+type mentionEntity struct {
+	ScreenName string `json:"screen_name"`
 }
 
 // mediaEntity is one attachment as the response carries it: the upstream's own type name, the

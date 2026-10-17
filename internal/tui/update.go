@@ -210,6 +210,8 @@ func (m Model) update(msg tea.Msg) (Model, tea.Cmd) {
 		return m.mediaTabAnswered(msg), nil
 	case imageLoadedMsg:
 		return m.imageDrawn(msg)
+	case linksMsg:
+		return m.linksAnswered(msg), nil
 	case mediaExitMsg:
 		return m.mediaExitAnswered(msg), nil
 	case copyLinkMsg:
@@ -245,6 +247,11 @@ func (m Model) press(msg tea.KeyPressMsg) (Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 		return m, nil
+	}
+	if m.links != nil {
+		// A menu owns every key while it is open: a digit follows a link, escape closes, and the
+		// rest are swallowed rather than moving a list the reader cannot see.
+		return m.linksKey(msg)
 	}
 	if m.prompt != nil {
 		// While the prompt is open every printable key is text — `?`, `/`, `u`, `s` and `a`
@@ -347,6 +354,8 @@ func (m Model) dispatch(action keys.Action) (Model, tea.Cmd) {
 		return m.copyLink()
 	case keys.ActionOpenPost:
 		return m.openPost()
+	case keys.ActionLinks:
+		return m.openLinks()
 	case keys.ActionTranslate:
 		return m.translate()
 	case keys.ActionFollowing:
@@ -1394,6 +1403,7 @@ var handledActions = []keys.Action{
 	keys.ActionBookmarks, keys.ActionLikes,
 	keys.ActionMedia, keys.ActionCopyLink, keys.ActionOpenPost,
 	keys.ActionFollowing, keys.ActionFollowers, keys.ActionVerifiedFollowers, keys.ActionProfileMedia,
+	keys.ActionLinks,
 	keys.ActionTranslate,
 }
 

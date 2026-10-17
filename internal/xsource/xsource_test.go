@@ -874,3 +874,38 @@ func TestAMissingQuoteIsNotAnUnreadablePost(t *testing.T) {
 		t.Fatal("the post carries a quote that does not exist")
 	}
 }
+
+// TestLinksOfReadsTheThreeKinds is the body-links reader: expanded URLs over short ones, tags,
+// mentions, the entities' order, and one row per distinct thing.
+func TestLinksOfReadsTheThreeKinds(t *testing.T) {
+	legacy := &tweetLegacy{Entities: &tweetEntities{
+		URLs: []urlEntity{
+			{URL: "https://t.co/aaa", ExpandedURL: "https://example.com/a"},
+			{URL: "https://t.co/bbb", ExpandedURL: "https://example.com/a"}, // a repeat, named once
+			{URL: "https://t.co/ccc"}, // no expanded form: the short one
+		},
+		Hashtags:     []hashtagEntity{{Text: "go"}, {Text: "go"}, {Text: "rust"}},
+		UserMentions: []mentionEntity{{ScreenName: "someone"}, {ScreenName: ""}},
+	}}
+	got := linksOf(legacy)
+	want := []domain.Link{
+		{Kind: domain.LinkURL, Target: "https://example.com/a"},
+		{Kind: domain.LinkURL, Target: "https://t.co/ccc"},
+		{Kind: domain.LinkHashtag, Target: "go"},
+		{Kind: domain.LinkHashtag, Target: "rust"},
+		{Kind: domain.LinkMention, Target: "someone"},
+	}
+	if len(got) != len(want) {
+		t.Fatalf("%d links, want %d: %v", len(got), len(want), got)
+	}
+	for i := range want {
+		if got[i] != want[i] {
+			t.Fatalf("link %d = %+v, want %+v", i, got[i], want[i])
+		}
+	}
+	// A post with no entities has no links, and not an empty slice that reads as "links, none of
+	// which could be read".
+	if links := linksOf(&tweetLegacy{}); links != nil {
+		t.Fatalf("a post with no entities answered %v", links)
+	}
+}
