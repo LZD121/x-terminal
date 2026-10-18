@@ -97,9 +97,10 @@ var distributionNameRes = []*regexp.Regexp{
 	regexp.MustCompile(`(?i)^\.goreleaser(\..+)?$`),
 	regexp.MustCompile(`(?i)^.*\.goreleaser\.(yml|yaml)$`),
 	// The installer family: `install`, `install.sh`, and the variants someone reaches for when the
-	// first one is taken (`install-local.sh`, `install_latest`). The one exact path allowed is
-	// distributionAllowed's; everything else in the family is a finding.
-	regexp.MustCompile(`(?i)^install([-_a-z0-9]+)?(\.sh)?$`),
+	// first one is taken (`install-local.sh`, `install_latest`, `install.cmd`, `install.bat`). The
+	// exact paths distributionAllowed declares are the only ones permitted; everything else in the
+	// family is a finding. A document named `installation.md` is not in the family.
+	regexp.MustCompile(`(?i)^install([-_][a-z0-9]+)*(\.(sh|ps1|cmd|bat|bash|zsh|fish|exe|msi))?$`),
 	regexp.MustCompile(`(?i)^release(\.sh)?$`),
 }
 
@@ -111,13 +112,15 @@ var distributionPathRes = []*regexp.Regexp{
 	regexp.MustCompile(`(?i)^\.github/workflows/.*package`),
 }
 
-// distributionAllowed names the one artifact the name rule below permits, by exact path. The promise
-// it belongs to is about a *distributable* form — an image, a package, a hosted instance — and this
-// is none of those: it downloads the release binary, verifies the digest the release publishes, and
-// installs it under the operator's home. It is named here, printed in the promise, and required to be
-// present, so it cannot become a silent hole for the next installer-shaped file.
+// distributionAllowed names the artifacts the name rule below permits, by exact path. The promise
+// they belong to is about a *distributable* form — an image, a package, a hosted instance — and
+// these are none of those: each downloads the release binary, verifies the digest the release
+// publishes, and installs it under the operator's home. Each is named here, printed in the promise,
+// and required to be present when its file is in the tree, so the set cannot become a silent hole
+// for the next installer-shaped file.
 var distributionAllowed = map[string]string{
-	"install.sh": "the install helper: it fetches this repository's own release binary, verifies the published digest and writes it under $HOME; no package, no image, no hosted service",
+	"install.sh":  "the POSIX install helper: it fetches this repository's own release binary, verifies the published digest and writes it under $HOME; no package, no image, no hosted service",
+	"install.ps1": "the Windows install helper: the same three steps for PowerShell, into %LOCALAPPDATA% by default",
 }
 
 var hostedConstructs = map[string]bool{
@@ -518,7 +521,7 @@ func unique(in []string) []string {
 
 func checkDistribution(t Tree) Report {
 	const name = "distribution"
-	r := Report{Check: name, Promise: "no distributable form of this program (image, package, installer) and no hosted mode, except the one declared install helper", Files: len(t)}
+	r := Report{Check: name, Promise: "no distributable form of this program (image, package, installer) and no hosted mode, except the declared install helpers", Files: len(t)}
 	if len(t) == 0 {
 		r.Findings = append(r.Findings, emptyFinding(name, "inspected no files: a scan of nothing proves nothing"))
 		return r

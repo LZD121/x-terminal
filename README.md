@@ -67,8 +67,9 @@ here could fill one.
 ## Requirements
 
 - **Go 1.27+** to build. The shipping build is `CGO_ENABLED=0` — a static binary, no cgo anywhere.
-- **Linux** (developed and measured on Arch + Ghostty + tmux). macOS should build; nothing has been
-  measured there.
+- **Linux** (developed and measured on Arch + Ghostty + tmux). macOS and Windows builds are
+  published; neither has been measured here — the Windows note under "Install from a release"
+  lists what is unverified.
 - **A route to x.com.** On a network where x.com is unreachable directly, a local proxy (the author
   uses Clash/mihomo on `127.0.0.1:7890`-ish ports) and the session cookie from a logged-in browser.
 - **A terminal that speaks the Kitty keyboard protocol** for the best behaviour; Ghostty is what the
@@ -77,7 +78,9 @@ here could fill one.
 ## Install from a release
 
 One command, which works out the platform, downloads the matching release asset and its published
-digest, verifies the digest, and installs the binary into `$HOME/.local/bin`:
+digest, verifies the digest, and installs the binary into `$HOME/.local/bin`.
+
+**Linux and macOS** (POSIX shell):
 
 ```sh
 curl -fsSLO https://github.com/LZD121/x-terminal/releases/latest/download/install.sh
@@ -89,9 +92,35 @@ sh install.sh
 touches the session or the configuration. A proxy is whatever `curl` already honours from
 `https_proxy`; the script never guesses one.
 
-The script is the **one installer-shaped file this project permits**, and `internal/audit`'s
-`distribution` check names it by exact path and prints it in its promise. Everything else in that
-family — a package recipe, an image, a second `install-*.sh` — is still a finding.
+**Windows** (PowerShell 5.1 or later):
+
+```powershell
+irm https://github.com/LZD121/x-terminal/releases/latest/download/install.ps1 | iex
+```
+
+It installs to `%LOCALAPPDATA%\x-terminal\bin` and prints the line to add that directory to `PATH`.
+Flags need the script saved first:
+
+```powershell
+irm https://github.com/LZD121/x-terminal/releases/latest/download/install.ps1 -OutFile install.ps1
+.\install.ps1 -Version v1.4.1 -AddToPath
+```
+
+`-AddToPath` appends the directory to the user's `PATH` instead of printing the line, `-Prefix` and
+`-Version` do what their names say, and `-Proxy http://host:port` overrides the system proxy for the
+two downloads. Upgrades are the same command again: `x-terminal update` replaces the running file in
+place, which is implemented for the Unix binaries, not for a running `.exe`.
+
+Windows builds are published for `amd64` and `arm64`, and **they have not been run on Windows by the
+author**: the program compiles and vets for the target, the release job cross-compiles it, and
+everything Windows-specific is unmeasured — colours need `TERM` set (Windows Terminal leaves it
+empty, which the palette reads as mono), opening media needs a `media.opener` that Windows
+understands (the default is `xdg-open`), there are no in-terminal images, and the session file's
+`0600` mode is a Unix permission rather than an NTFS ACL.
+
+The two scripts are the **only installer-shaped files this project permits**, and `internal/audit`'s
+`distribution` check names both by exact path and prints them in its promise. Everything else in that
+family — a package recipe, an image, `install-local.sh`, an `install.cmd` — is still a finding.
 
 If you would rather not run a script, these are the same steps by hand:
 

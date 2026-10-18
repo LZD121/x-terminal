@@ -1,3 +1,9 @@
+//go:build linux || darwin
+
+// This file drives a real pseudo-terminal, which is a unix shape: the build tag keeps the package's
+// tests compiling on the Windows release target, where this file's ioctl has no meaning and the
+// behaviour it checks is the one thing that machine cannot exercise.
+
 package render
 
 // This file is the bare-terminal half of the environment specification: the stored 80-column frame

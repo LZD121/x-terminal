@@ -75,7 +75,7 @@ var manifestGlobs = []string{
 	".goreleaser.*",
 	"*.goreleaser.yml",
 	"*.goreleaser.yaml",
-	"install.sh",
+	"install.*",
 	"install",
 	"release.sh",
 	"scripts/install*",

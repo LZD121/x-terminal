@@ -257,25 +257,33 @@ func TestDistributionAllowsAReleaseWorkflow(t *testing.T) {
 	}
 }
 
-// TestDistributionAllowsTheDeclaredInstallHelper: the one installer-shaped file the promise permits,
-// and the two arms either side of it — the same name without the extension is still a finding.
-func TestDistributionAllowsTheDeclaredInstallHelper(t *testing.T) {
+// TestDistributionAllowsTheDeclaredInstallHelpers: the two installer-shaped files the promise
+// permits, and the arms either side of them — the same name without the extension, a Windows script
+// that is not declared, and a document that merely starts with "install" are all still findings.
+func TestDistributionAllowsTheDeclaredInstallHelpers(t *testing.T) {
 	src := []byte("#!/bin/sh\n# downloads the release binary\n")
-	if r := checkDistribution(treeOf(File{Path: "install.sh", Src: src})); len(r.Findings) != 0 {
-		t.Fatalf("the declared helper was reported: %+v", r.Findings)
-	} else if !strings.Contains(r.Promise, "install.sh") {
-		t.Fatalf("the allowance is not printed in the promise: %q", r.Promise)
+	for _, path := range []string{"install.sh", "install.ps1"} {
+		r := checkDistribution(treeOf(File{Path: path, Src: src}))
+		if len(r.Findings) != 0 {
+			t.Fatalf("%s was reported: %+v", path, r.Findings)
+		}
+		if !strings.Contains(r.Promise, path) {
+			t.Fatalf("the %s allowance is not printed in the promise: %q", path, r.Promise)
+		}
 	}
-	// A file named install (no extension) is not the declared path, and stays a finding.
+	// A file named install (no extension) is not a declared path, and stays a finding.
 	if r := checkDistribution(treeOf(File{Path: "install", Src: src})); len(r.Findings) == 0 {
-		t.Fatal("install (no .sh) is still an installer-shaped artifact and produced no finding")
+		t.Fatal("install (no extension) is still an installer-shaped artifact and produced no finding")
 	}
-	// And a second installer-shaped file beside it is a finding too: the allowance is one path.
-	if r := checkDistribution(treeOf(
-		File{Path: "install.sh", Src: src},
-		File{Path: "install-local.sh", Src: src},
-	)); len(r.Findings) == 0 {
-		t.Fatal("a second installer-shaped file produced no finding")
+	// Nor is another installer script: the allowance names exact paths, not a family.
+	for _, path := range []string{"install-local.sh", "install.cmd", "install.bat"} {
+		if r := checkDistribution(treeOf(File{Path: path, Src: src})); len(r.Findings) == 0 {
+			t.Errorf("%s is installer-shaped and produced no finding", path)
+		}
+	}
+	// A document whose name starts with "install" is not an installer.
+	if r := checkDistribution(treeOf(File{Path: "installation.md", Src: src})); len(r.Findings) != 0 {
+		t.Errorf("installation.md was treated as an installer: %+v", r.Findings)
 	}
 }
 

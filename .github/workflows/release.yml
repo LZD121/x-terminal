@@ -41,6 +41,10 @@ jobs:
           - { goos: linux, goarch: amd64 }
           - { goos: linux, goarch: arm64 }
           - { goos: darwin, goarch: arm64 }
+          # Windows builds and is published; it has not been run on Windows by the author. The
+          # install helper there is install.ps1, and the README says what is unmeasured.
+          - { goos: windows, goarch: amd64 }
+          - { goos: windows, goarch: arm64 }
     steps:
       - uses: actions/checkout@v4
         with:
@@ -93,7 +97,10 @@ jobs:
           GOARCH: ${{ matrix.goarch }}
         run: |
           set -eu
-          name="x-terminal_${{ steps.v.outputs.tag }}_${GOOS}_${GOARCH}"
+          # Windows needs the extension for its loader and for anyone double-clicking the file.
+          ext=""
+          [ "${GOOS}" = "windows" ] && ext=".exe"
+          name="x-terminal_${{ steps.v.outputs.tag }}_${GOOS}_${GOARCH}${ext}"
           mkdir -p dist
           CGO_ENABLED=0 go build \
             -trimpath \
@@ -141,12 +148,14 @@ jobs:
           path: dist
           merge-multiple: true
 
-      - name: ship the install helper beside the binaries
+      - name: ship the install helpers beside the binaries
         run: |
-          # The one installer-shaped file the project permits, and the audit names it: it only
-          # downloads these assets, verifies the published digest and installs under $HOME.
+          # The two installer-shaped files the project permits, one per platform family, and the
+          # audit names both: each only downloads these assets, verifies the published digest and
+          # installs under the user's home.
           cp install.sh dist/install.sh
-          (cd dist && sha256sum install.sh > install.sh.sha256)
+          cp install.ps1 dist/install.ps1
+          (cd dist && sha256sum install.sh > install.sh.sha256 && sha256sum install.ps1 > install.ps1.sha256)
 
       - name: assemble the checksum file
         run: |
@@ -185,8 +194,12 @@ jobs:
             echo
             echo "Then \`x-terminal login\` and \`x-terminal doctor\`; \`RUNBOOK.md\` covers the rest."
             echo
-            echo "Requirements: Linux or macOS, a route to x.com (the runbook covers a local proxy),"
-            echo "and a terminal — the pane is plain text by design."
+            echo "Windows: run \`install.ps1\` instead (PowerShell 5.1+). The Windows builds are"
+            echo "published but unmeasured: colours need TERM set, media opening needs a configured"
+            echo "opener, and there are no in-terminal images."
+            echo
+            echo "Requirements: Linux, macOS or Windows, a route to x.com (the runbook covers a local"
+            echo "proxy), and a terminal — the pane is plain text by design."
           } > RELEASE_NOTES.md
           cat RELEASE_NOTES.md
 
