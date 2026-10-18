@@ -131,9 +131,18 @@ param(
         try { Unblock-File -LiteralPath $target -ErrorAction SilentlyContinue } catch { }
 
         # The binary's own report is the last check: a file that runs and names the release it came
-        # from.
-        $versionLine = & $target --version
-        if ($LASTEXITCODE -ne 0) { Fail "$target was installed but does not run on this machine" }
+        # from. `$LASTEXITCODE` is only set once a native command has started, and StrictMode turns a
+        # read of the unset variable into its own error; the null check keeps this message instead.
+        $versionLine = $null
+        $exit = $null
+        try {
+            $versionLine = & $target --version
+            $exit = Get-Variable -Name LASTEXITCODE -ValueOnly -ErrorAction SilentlyContinue
+        }
+        catch {
+            $exit = $null
+        }
+        if ($null -eq $exit -or $exit -ne 0) { Fail "$target was installed but does not run on this machine" }
         Say ($versionLine -join ' ')
 
         # The PATH targets are a Windows-only .NET surface; skip them anywhere else, where the
