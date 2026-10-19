@@ -124,8 +124,17 @@ fi
 # from having to know the version it is installing.
 say "downloading $label for $os/$arch"
 fetch "$base/SHA256SUMS" "$tmp/SHA256SUMS"
+# `substr` equality, not `index`: `index` returns 0 for "not found", and 0 equals
+# `length($i) - length(suffix) + 1` whenever the field is exactly one character shorter than the
+# suffix — which is how v1.5.1's installer chose `install.ps1` (11 chars) for `_linux_amd64`
+# (12 chars), verified its published digest and installed a PowerShell script as the binary.
 asset=$(awk -v suffix="_${os}_${arch}" '
-	{ for (i = 1; i <= NF; i++) if (index($i, suffix) == length($i) - length(suffix) + 1) { print $i; exit } }
+	{
+		for (i = 1; i <= NF; i++) {
+			n = length($i)
+			if (n > length(suffix) && substr($i, n - length(suffix) + 1) == suffix) { print $i; exit }
+		}
+	}
 ' "$tmp/SHA256SUMS")
 [ -n "$asset" ] || die "SHA256SUMS lists no asset for $os/$arch"
 
